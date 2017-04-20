@@ -12,6 +12,38 @@
 # EM算法
 EM算法(期望最大化算法,Expectation Maximization Algorithm)是一种迭代算法,用于隐变量(hidden variable)的概率模型参数的极大似然估计,或极大后延概率估计。
 
+
+在存在隐变量的情况,由于隐变量未知,以下为似然函数
+$LL(X|\theta) = \displaystyle{\sum_{i = 1}^m} \ln \displaystyle{\sum_z} P(X,z|\theta)$
+令其导数为0,由于$\ln$ 后面的 $\Sigma$ 和 $P$ 本身的复杂性,导致解析解难以求出。
+
+而在完全数据的情况下,我们能很轻易地计算出解析解。
+$LL(X,Z|\theta) = \displaystyle{\sum_{i = 1}^m} \ln P(X,Z|\theta) = \displaystyle{\sum_{i = 1}^m} \ln P(Z)P(X|\theta,Z)$
+
+EM算法的核心思想是:使用$z_i$的期望(或者使用所用的$z_i$,不同的$z_i$赋予不同的权重)来代替缺失的$Z$隐变量的数据,这样就能使用完全数据的计算方法来计算。
+(这么近似处理之后,表达式就变成了似然函数关于$Z$的后验概率的期望)
+
+EM算法有几个要点:
+1. 是上面提到的,通过构造$z_i$,把计算方法转换到完全数据上来
+2. 使用$Z$的后验概率,而不是其他
+3. 迭代求解
+
+EM算法主要分两个步骤:
+1. E步
+		这一步实际上就是求似然函数在新的参数下的表达式,具体就是求隐变量$Z$的后验概率
+
+2. M步
+		最大化似然函数的期望,具体方法就是令似然函数(或其拉格朗日形式)的导数为0
+
+EM算法对初始值敏感,不同的初始值可能会得到不同的结果。
+常用的做法是,使用多几组初始值进行迭代
+(对于高斯混合模型)使用$k-means$算法进行预处理,其结果作为EM算法的初始值
+
+k-means算法可以看成是高斯混合聚类在混合成分 方差均等、且每个样本仅指派给一个混合成分的特例加。
+
+EM算法证明示意图:
+![2]
+
 疑问:关于PRML上的关于奇异点的描述没看明白。
 
 ## 从极大似然法说起-一个简单的例子
@@ -282,6 +314,13 @@ $H(\theta|\theta^{t}) = - \displaystyle{\sum_z}P(Z|Y,\theta^{(t)})\ln P(Z|,Y,\th
 从整体上来看,只有$\theta = \theta{(t)}$的时候,整个式子才能取等号。
 因此随着迭代,似然函数的值不断变大(除非参数不再变化,收敛)
 
+图示理解:
+![1]
+
+PRML上的证明类似,只不过构造的函数形式不太一样。
+
+- [ ] : PRML上的证明
+
 ## 其他
 EM算法可能走到鞍点,故需要多次进行,
 也就是说EM算法对初始值敏感,常用的做法是使用k-means的结果作为初始值。
@@ -412,8 +451,8 @@ $\begin{align}
 
 $\begin{align}
 \frac{\partial \bigg(LL(\theta|X,Z) + \lambda(\displaystyle{\sum_{i = 1}^k} \alpha_i - 1)\bigg)}{\partial \alpha_i}
-&= \displaystyle{\sum_{j = 1}^m} \displaystyle{\sum_{l = 1}^k} P_\mathcal{M}(z_j = l | x_j,\theta^{(t)}) \frac{p(x_j|\mu_i,\Sigma_i)}{P_\mathcal{M}(x_j,z_j = l |\theta\_l)}\frac{\partial \alpha_l}{\partial \alpha_i} + lambda &(1)\\
-&=\displaystyle{\sum_{j = 1}^m} P_\mathcal{M}(z_j = i | x_j,\theta^{(t)}) \frac{p(x_j|\mu_i,\Sigma_i)}{P_\mathcal{M}(x_j,z_j = i |\theta\_i)} + lambda &(2)\\
+&= \displaystyle{\sum_{j = 1}^m} \displaystyle{\sum_{l = 1}^k} P_\mathcal{M}(z_j = l | x_j,\theta^{(t)}) \frac{p(x_j|\mu_i,\Sigma_i)}{P_\mathcal{M}(x_j,z_j = l |\theta\_l)}\frac{\partial \alpha_l}{\partial \alpha_i} + \lambda &(1)\\
+&=\displaystyle{\sum_{j = 1}^m} P_\mathcal{M}(z_j = i | x_j,\theta^{(t)}) \frac{p(x_j|\mu_i,\Sigma_i)}{P_\mathcal{M}(x_j,z_j = i |\theta\_i)} + \lambda &(2)\\
 &= 0
 \end{align}$
 
@@ -437,3 +476,6 @@ EM算法的结果对初始值敏感,对于高斯混合模型,一般先采用k-me
 
 如果有k个混合成分,那么就应该有$k!$个等价的解,为什么EM算法只会得到其中一个?
 根据参数初始值,一开始就决定了最终会导向哪一个形式的解。
+
+[1]:assets/机器学习-EM算法-e8373.png
+[2]:assets/机器学习-EM算法-96f58.png
