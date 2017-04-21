@@ -139,7 +139,7 @@ EM算法就是使用通过迭代上面提到的两个步骤来实现参数的估
 
 基于上面规避$z_i$的方法,
 我们得到:
-$\begin{align}\theta^{(i+1)} &= \begin{matrix}
+$\begin{align}\theta^{(t+1)} &= \begin{matrix}
 argmax \\
 \theta
 \end{matrix} LL(\theta|Y,Z) \\
@@ -173,13 +173,13 @@ argmax \\
 (5):上面的形式,可以理解成似然函数的期望
 >期望:$E\bigg(\ln\big(g(x)\big)\bigg) = \displaystyle{\sum_z}P(z)\ln\big(g(x)\big)$
 
-即从$\theta^{(i+1)} =
+即从$\theta^{(t+1)} =
 \begin{matrix}
 argmax \\
 \theta
 \end{matrix} LL(\theta|Y)$
 变成了
-$\theta^{(i+1)} =
+$\theta^{(t+1)} =
 \begin{matrix}
 argmax \\
 \theta
@@ -284,7 +284,7 @@ ln P(Y|\theta)&= Q(\theta|\theta^{t}) +  H(\theta|\theta^{t})&,(2)
 令$\theta = \theta^{(t)}$
 有$\ln P(Y|\theta^{(t)}) = Q(\theta^{(t)}|\theta^{(t)}) +  H(\theta^{(t)}|\theta^{(t)})$
 
-$Q(\theta^{(t)}|\theta^{(t)})$就是$E_{Z|Y,\theta^{(t)}}\big( LL(\theta|Y,Z) \big)$
+$Q(\theta|\theta^{(t)})$就是$E_{Z|Y,\theta^{(t)}}\big( LL(\theta|Y,Z) \big)$
 
 则上面两个方程式相减有:
 $\begin{align}\ln P(Y|\theta) - \ln P(Y|\theta^{(t))}) &= \bigg (Q(\theta|\theta^{t})  - Q(\theta^{t}|\theta^{t}) \bigg) + \bigg(H(\theta|\theta^{t})  - H(\theta^{t}|\theta^{t})\bigg) \\
@@ -349,8 +349,8 @@ $p(\boldsymbol x) = \frac{1}{(2\pi)^\frac{n}{2}|\Sigma|^\frac{1}{2}} e^{ -\frac{
 为明确显示高斯分布与相应参数的依赖关系，将概率密度函数记为$p(\boldsymbol x | \boldsymbol \mu,\Sigma) = p(\boldsymbol x)$
 
 高斯混合分布的定义:
-高斯混合分布：$p_{\mathcal{M}}(x) = \displaystyle{\sum_{i - 1}^k} \alpha_i \cdot p(\boldsymbol x | \boldsymbol \mu_i,\Sigma_i)$
-该分布由k个混合成分组成，每个混合成分对应一个高斯分布。其中$\mu_i$和$\Sigma_i$为第i个高斯混合成分的参数，而$\alpha_i>0$为相应的 **混合系数(mixture coefficient)** ,且$\displaystyle{\sum_{i - 1}^k} \alpha_i = 1$
+高斯混合分布：$p_{\mathcal{M}}(x) = \displaystyle{\sum_{i = 1}^k} \alpha_i \cdot p(\boldsymbol x | \boldsymbol \mu_i,\Sigma_i)$
+该分布由k个混合成分组成，每个混合成分对应一个高斯分布。其中$\mu_i$和$\Sigma_i$为第i个高斯混合成分的参数，而$\alpha_i>0$为相应的 **混合系数(mixture coefficient)** ,且$\displaystyle{\sum_{i = 1}^k} \alpha_i = 1$
 
 高斯混合分布样本的生成过程:
 首先,根据$\alpha_1,\alpha_2,\ldots,\alpha_k$定义的先验分布选择高斯混合成分,其中$\alpha_i$为第i个混合成分的概率;
@@ -368,7 +368,7 @@ $p(\boldsymbol x) = \frac{1}{(2\pi)^\frac{n}{2}|\Sigma|^\frac{1}{2}} e^{ -\frac{
 
 $ \displaystyle{\sum_{j = 1}^m} \displaystyle{\sum_{l = 1}^k} p_{\mathcal{M}}(z_j = l|x_j,\theta^{(t)}) \ln P_{\mathcal{M}}(x_j.z_j = l|\theta_l)$
 
- 期望为:$\begin{align}E_{Z|X,\theta^{(i)}}\big(LL(\theta|X,Z)\big) &=  \displaystyle{\sum_{j = 1}^m}  P_{\mathcal{M}}(x_j,z_j|\theta_j) &(1)\\
+ 期望为:$\begin{align}E_{Z|X,\theta^{(t)}}\big(LL(\theta|X,Z)\big) &=  \displaystyle{\sum_{j = 1}^m}  \ln P_{\mathcal{M}}(x_j,z_j|\theta_j) &(1)\\
 &= \displaystyle{\sum_{j = 1}^m} \displaystyle{\sum_{l = 1}^k} p_{\mathcal{M}}(z_j = l|x_j,\theta^{(t)}) \ln P_{\mathcal{M}}(x_j,z_j = l|\theta_l) &(2)
 \end{align}$
 (1)是定义
@@ -377,7 +377,8 @@ $ \displaystyle{\sum_{j = 1}^m} \displaystyle{\sum_{l = 1}^k} p_{\mathcal{M}}(z_
 隐变量z的后验概率为:$\begin{align}
 p_{\mathcal{M}}(z_j = i|x_j,\theta^{(t)}) &= \frac{ p_{\mathcal{M}}(z_j = i,x_j|\theta^{(t)})}{p_{\mathcal{M}}(x_j|\theta^{(t)})} &(1) \\
 &= \frac{ p_{\mathcal{M}}(z_j = i,x_j|\theta^{(t)})}{\displaystyle{\sum_{l = 1}^k}p_{\mathcal{M}}(x_j,z_j = l|\theta^{(t)})} &(2)\\
-&= \frac{ p_{\mathcal{M}}(z_j = i,x_j|\theta^{(t)})}{\displaystyle{\sum_{l = 1}^k} \alpha_lP(x_j|\mu_l,\Sigma_l)}
+&= \frac{
+	\alpha_ip(x_j|\mu_i,\Sigma_i)}{\displaystyle{\sum_{l = 1}^k} \alpha_lP(x_j|\mu_l,\Sigma_l)}
 \end{align}$
 (1)贝叶斯公式
 (2)隐变量z使用其概率分布展开
@@ -417,9 +418,9 @@ $\begin{align}
 
 $\begin{align}
 \frac{\partial p(x_j|\mu_i,\Sigma_i)}{\partial \Sigma_i}
-&= \frac{\partial \frac{1}{t}e^p}{\partial Sigma_i} &(1)\\
-&= e^p\frac{\partial \frac{1}{t}}{\partial Sigma_i} + \frac{1}{t}\frac{\partial e^p}{\partial Sigma_i} &(2)\\
-&=e^p\frac{1}{(2\pi)^{\frac{\pi}{2}}} (-\frac{1}{2})|\Sigma_i|^{-\frac{3}{2}}\frac{\partial |Sigma_i|}{\partial \Sigma_i} + e^p (-\frac{1}{2})\frac{\partial (x_j - \mu_i)^T\Sigma_i^{-1}(X_j - \mu_i)} {\partial \Sigma_i}
+&= \frac{\partial \frac{1}{t}e^p}{\partial \Sigma_i} &(1)\\
+&= e^p\frac{\partial \frac{1}{t}}{\partial \Sigma_i} + \frac{1}{t}\frac{\partial e^p}{\partial \Sigma_i} &(2)\\
+&=e^p\frac{1}{(2\pi)^{\frac{\pi}{2}}} (-\frac{1}{2})|\Sigma_i|^{-\frac{3}{2}}\frac{\partial |\Sigma_i|}{\partial \Sigma_i} + e^p (-\frac{1}{2})\frac{\partial (x_j - \mu_i)^T\Sigma_i^{-1}(X_j - \mu_i)} {\partial \Sigma_i}
 &(3)\\
 &= p(x_j|\mu_i,\Sigma_i)((E^{-1})^T - (x_j - \mu_i)(x_j - \mu_i)^T\Sigma_i^{-2})&(4)\\
 \end{align}$
