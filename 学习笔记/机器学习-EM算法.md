@@ -236,7 +236,7 @@ argmax\\
 
 
 我们整理一下这题EM算法的具体过程:
-0. 随机取参数$\theta$ (或者 取k-means的结果作为初始参数)
+0. 随机取参数$\theta$ (对于高斯混合模型 取k-means的结果作为初始参数)
 		采用k-means的时候,
 		均值作为初始化的均值,
 		协方差矩阵初始化为各类的样本的协方差
@@ -260,12 +260,14 @@ $L(\theta|Y,Z) = \displaystyle{\prod_{i = 1}^m} P(y_i,z_i|\theta) = \displaystyl
 p(z|y_i,\theta^{(t)})\displaystyle{\prod_{i = 1}^m}  P(y_i,z)$
 两种选择,为什么采用后者?
 
-前者取对数之后为:$\displaystyle{\sum_{i = 1}^m} \ln \displaystyle{\sum_{z = 0}^1}
+前者取对数之后为:$LL(\theta|Y,Z) = \displaystyle{\sum_{i = 1}^m} \ln P(y_i,z_i|\theta) =\displaystyle{\sum_{i = 1}^m} \ln \displaystyle{\sum_{z = 0}^1}
 p(z|y_i,\theta^{(t)})P(y_i,z)$
 
-后者取对数之后为::$  \displaystyle{\sum_{z = 0}^1}
+后者取对数之后为::$$LL(\theta|Y,Z) = \displaystyle{\sum_{i = 1}^m} \ln P(y_i,z_i|\theta) =   \displaystyle{\sum_{z = 0}^1}
 p(z|y_i,\theta^{(t)})
 \bigg(\displaystyle{\sum_{i = 1}^m}\ln P(y_i,z)\bigg)$
+
+这里赢是指似然函数和对数似然函数分别进行z的替换之后的结果,而不是似然函数替换z之后再取对数
 
 无论是没取对数(有连乘),还是前者取了对数(有$\ln \sum$),其求导运算都不好算,而后者取对数之后,则把$\ln$放在了$\sum$的里面,显然运算更加简单。
 
