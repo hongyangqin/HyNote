@@ -37,7 +37,7 @@
                   \caption{三级存储体系}
                   \label{fig1}
                 \end{figure}
-                
+
                 在三级存储体系中,\emph{Cache-主存}和\emph{主存-辅存}这两个存储层次的相同点:
                 \begin{itemize}
                   \item 出发点相同
@@ -83,10 +83,18 @@
           \end{itemize}
       \subsection{管理方式}
           \begin{itemize}
-            \item 段式管理
+            \item 段式管理(见图\ref{fig2})
+                \begin{figure}[!htp]
+                  \centering
+                  \includegraphics[scale=0.3]{assets/jisuanjizucheng2_9e284.png}
+                  \caption{段式管理}
+                  \label{fig2}
+                \end{figure}
 
                 程序按逻辑结构分段,主存按段来分配存储管理方式。
-
+                程序按逻辑结构分段。
+                每一段的长度可以不一样,可以装入主存中的任意位置。
+                使用段表来描述程序段在主存空间的位置。
 
                 优缺点:
                 \begin{itemize}
@@ -104,6 +112,110 @@
                       段间的零碎空间(碎片)不好利用。
 
                 \end{itemize}
+
+            \item 页式管理(见图\ref{fig3})
+                \begin{figure}[!htp]
+                  \centering
+                  \includegraphics[scale=0.3]{assets/jisuanjizucheng2_5f756.png}
+                  \caption{段式管理}
+                  \label{fig3}
+                \end{figure}
+
+                辅存和主存空间分为页,主存按页来分配的管理方式。
+                每一页的大小是相同的。
+                \begin{itemize}
+                  \item 优点
+                      \begin{itemize}
+                        \item 造页表方便
+                        \item 新页调入容易
+                        \item 主存空间利用率高
+                      \end{itemize}
+                  \item 缺点
+
+                      程序的处理,保护和共享不方便。
+                \end{itemize}
+
+            \item 段页式管理
+
+                程序分段:段内分页的管理方式。
+                也就是前面两种方式的结合。
+
+                虚实地址的变换过程:
+                \begin{itemize}
+                  \item [1] 形成访问段表项地址
+                  \item [2] 将段表项的页表首地址与段内虚页号相加,形成访问页表项的地址
+                  \item[3] 将页表项(装入位为1)的实业号和虚地址的页内地址拼接形成访问实存地址。
+                \end{itemize}
+
+                优缺点:
+                \begin{itemize}
+                  \item 优点:兼有段式和页式管理方式的优点。
+                  \item 地址变换过程需要多次查表,速度慢。
+                \end{itemize}
           \end{itemize}
       \subsection{工作过程}
+          \subsubsection*{使用快表加快虚、实地址变换}
+
+              用高速小容量的相联存储器存放最"活跃页"的地址,加快查表过程。
+
+              快表(转换后援缓冲器 TLB):
+              由于页表通常在内存中,因而即使逻辑页已经在主存中,也至少要访问两次物理存储器才能实现一次访存,这将是虚拟存储器的存取时间加倍。为了避免对主存访问次数的增多,可以对页表本身实行二级缓存,把页表中最活跃的部分存放在高速存储器中,组成快表。这个专用页表缓存的高速存储部件通常称为\emph{转换后援缓冲器 TLB}。保存在主存中的完整页表称为慢表。
+
+          \subsubsection*{虚拟存储器的工作过程}
+              工作过程(见\ref{fig4}):
+              \begin{itemize}
+                \item [1] 根据用户号、虚页号同时查询页内表和快表。
+                \item [2] 若快表不命中而页内表命中,则页可以得到实页地址
+                \item [3] 都不命中 ,则查询外页表得到该页的辅存地址。
+                \item [4] 按辅存地址将所缺页装入主存,并更换内页表和快表的内容。
+              \end{itemize}
+
+
+              \begin{figure}[!htp]
+                \centering
+                \includegraphics[scale=0.3]{assets/jisuanjizucheng2_94b04.png}
+                \caption{页式虚拟存储器工作示意图}
+                \label{fig4}
+              \end{figure}
+
+              帧页表:用以记录当前主存使用的情况。(主存实业号,占用位,程序号,虚页号,其他)
+
+              外页表:用以登记程序虚页号与辅存地址的对应关系。(虚页号,辅存地址[柱面号,盘面号,扇区号],装入位)
+
+          \subsection{常用的页面替换算法}
+              \begin{itemize}
+                \item 先进先出算法(FIFO)
+
+                    又称轮转法(RR),先进入内存的页面先替换
+                    优点:实现简单
+                    缺点:常用的也会被淘汰
+
+                \item 循环检测法
+
+                    让循环多的页面留在主存,记录对页面的访问时间间隔,淘汰时间间隔大的页面。
+
+                    优点:适合循环多的大程序
+                    缺点:费时、费空间。
+
+                \item 最近最少使用页面先淘汰(LRU)
+
+                    淘汰最近一段时间最久没有访问的页面。系统开销小。
+
+                \item 最不经常使用的页面先淘汰(LFU)
+
+                    淘汰最近一段时间访问次数最少的页面,对每一页设访问计数器。
+
+                \item 最近没有使用页面先淘汰(NUR)
+
+                    设访问位,选访问位为0的页面进行淘汰。
+
+                \item 最优替换算法(OPT)
+
+                    是理想算法,系统预测作业将要访问的页面,替换预测不被访问或长时间后才被访问的页面。
+
+                \item 随机数替换页面算法
+
+                    无法确定哪些被访问页是最可能不使用时,随机替换一页。
+              \end{itemize}
+
 \end{document}
