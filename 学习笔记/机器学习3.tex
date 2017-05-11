@@ -31,6 +31,10 @@
       \item [2.] 利用BP算法等来确定参数$\omega_i$和$\beta_i$
     \end{itemize}
 
+    {\color{blue}
+    简单地说,就是使用径向基函数作为隐层的激活函数的单隐层网络,(径向基函数初被用来进行精确的函数内插),每一个径向基函数局部地逼近目标函数的一部分。
+    }
+
   \section{极限学习机 Extream Learning Machine ELM}
 
       \subsection{简介}
@@ -282,8 +286,57 @@
               2: 根据式\eqref{bijdijdi*d*jd**}计算矩阵$\mathbf{B}$\\
               3: 对矩阵$\mathbf{B}$做特征值分解\\
               4: 取$\tilde{\Lambda}$为$d'$个最大特征值所构成的对角矩阵,$\tilde{V}$为相应的特征向量矩阵\\
-              \textbf{输出:}矩阵$\tilde{\Lambda}^{1/2}\tilde{V}^T \in \mathbb{R}^{d' \times m}$,每一是一个样本的低维坐标。\\
+              \textbf{输出:}矩阵$\tilde{\Lambda}^{1/2}\tilde{V}^T \in \mathbb{R}^{d' \times m}$,每一列是一个样本的低维坐标。{\color{red} 西瓜书是$\tilde{\tilde{V}^\Lambda}^{1/2} \in \mathbb{R}^{m \times d'}$,把两个量交换了位置,不知道这么写有什么深意。}\\
               \hline
             \end{tabular}
+      \subsection{主成分分析 Principal Component Analysis PAC}
+          \subsubsection{线性降维方法}
+              一般来说,欲获得低维子空间,最简单的是对原始空间进行线性变换。
 
+              给定$d$维空间中的样本$X = {x_1,x_1,\cdots ,x_m} \in \mathbb{R}^{d\times m }$,变换之后得到$d' \leqslant d$维的空间中的样本:
+              \begin{equation}
+                \mathbf{Z = W^TX}
+              \end{equation}
+              其中$\mathbf{W}\in \mathbb{R}^{d\times d'}$是变换矩阵,$\mathbf{Z}\in \mathbb{R}^{d' \times m}$是样本在新空间中的表达。
+
+              {\color{blue}
+                  这里Z的每一维度的坐标,都是原始空间上的所有坐标的一个线性组合,这个值可以看成是新低维空间中,当前前以变换矩阵中某一列为基的值。
+
+                  \textbf{矩阵乘法的物理意义:}将右边矩阵中的每一列列向量变换到左边矩阵中每一行行向量为基所表示的空间中去
+
+                  从另一个角度来理解的话,降维是对样本在原始空间上进行一定的转换,再根据某个评价标准(比如特征值的大小),取转换后的样本的一部分维度作为低维空间的组成。
+              }
+
+              基于线性变换来进行降维的方法,称为\textbf{线性降维方法}
+          \subsubsection{PAC 简介}
+              PAC是有种线性降维方法,它要求降维后的样本具有最大的可分性。
+
+          \subsubsection{基于最近重构性的推导}
+
+          \subsubsection{基于最大可分性的推导}
+
+          \subsubsection{PAC 算法}
+
+      \subsection{核主成分分析 Kernelized PAC KPAC}
+          \subsubsection{KPCA 简介}
+              KPCA的想法是,先把数据升维,再进行降维操作。
+
+              {\color{blue}
+              在降维的时候,我们希望在保持原有特性的情况下,把样本映射到低维空间来达到减小时间开销的目的,但是如果样本的特性不明显,或者是降维之后特性消失了,那么降维之后的学习效果就不会很好。
+
+              基于高维空间往往更线性可分的想法,可以考虑把样本先升维到高维空间,使得样本的特性更加明显,再进行降维。
+
+              核主成分分析就是把样本映射到了高维空间,再进行降维操作。
+              }
+
+          \subsubsection{KPCA 推导}
+
+
+    \section{核函数}
+        核函数:高维空间和低维空间的一个桥梁,从效果上看,就是把低维空间的样本映射到了高维空间,高维空间的计算,则是通过核函数来进行,避免了维数灾难的问题。
+
+    \section{隐马尔可夫模型 Hidden Markoy Model HMM}
+        {\color{blue}
+          之前我们考虑样本之间都是相互独立的,而隐马尔可夫模型则是考虑样本之间不是独立的模型。
+        }
 \end{document}
