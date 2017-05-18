@@ -7,6 +7,7 @@
 \usepackage{color}
 \usepackage{amssymb}
 \usepackage{bm}
+\usepackage{cancel}
 \author{qhy}%作者
 \title{机器学习笔记4}%标题
 \date{\today}%日期
@@ -18,6 +19,17 @@
     \section{隐马尔可夫模型 Hidden Markoy Model HMM}
         {\color{blue}
           之前我们考虑样本之间都是相互独立的,而隐马尔可夫模型则是考虑样本之间不是独立的模型。
+
+          隐马尔可夫模型则是最简单的一种模型。
+
+          概率图模型则是用来描述样本之间的关系的工具。
+
+          隐马尔可夫模型有三个基本问题,分别是评估问题,解码问题,学习问题。前两者可用动态规划算法求解,后者则可以用EM算法求解。
+
+          但是,研究这三个问题的前提是有足够充分的观测空间和状态空间,否则,模型的泛华能力将会很弱。
+          但是足够充分的空间,也意味着更大的时间开销。从时间来看,隐马尔可夫模型的时间开销会很巨大。
+
+          在统计学习方法一书中,在进行EM算法的推导的时候,乘上了一个常数因子,不知道有什么深意。
         }
         \subsection{概率图模型}
             \textbf{概率图模型 probabilistic graphical model}是一类用图来表达变量相关关系的概率模型。
@@ -39,6 +51,7 @@
 
             \end{itemize}
         \subsection{隐马尔可夫模型}
+
             马尔可夫链:系统下一时刻的状态仅由当前状态决定,不依赖以往的任何状态。
 
             隐马尔可夫模型是一个生成模型。
@@ -119,9 +132,24 @@
                   给定模型参数$\lambda = \{\bm{A,B,\pi}\}$,如何有效计算其产生观测序列$\{x_1, x_2, \cdots , x_n\}$ 的概率$P(\bm{x} | \lambda)$?换言之,如何评估模型与观测序列之间的匹配程度?
 
                   {\color{blue}
-                      1. 评估模型与观测序列匹配程度:判断赌场骰子是否被动手脚\\(这里假设有多个骰子,隐变量是选择了哪个骰子,每个骰子选中的概率一样,虽然这个隐变量实际上并没有什么作用,但却和隐马尔可夫模型建立了关系,可以用隐马尔可夫模型求解)\\
-                      2. 给定$\{x_1, x_2, \cdots , x_{n-1}\}$预测$x_n$,即在不同$x_n$下,求$P(\bm{x} | \lambda)$,取概率最大的$x_n$,即
-                          \[ x_n^* = arg \max_{x_n} P(\bm{x} | \lambda) \]
+
+                  评估问题,具体来说,就是计算观测样本的出现的概率,这个概率的主要用于三个方面:
+
+                  \begin{itemize}
+                    \item [1.] 用于预测下一个最可能出现的观测值
+
+                          给定$\{x_1, x_2, \cdots , x_{n-1}\}$预测$x_n$,即在不同$x_n$下,求$P(\bm{x} | \lambda)$,取概率最大的$x_n$,即
+                              \[ x_n^* = arg \max_{x_n} P(\bm{x} | \lambda) \]
+
+                    \item [2.] 用来评价当前序列对应的模型和我们猜测的模型的匹配程度
+
+                          如果匹配的话,则观测序列出现的概率应该会比较大(极大似然法的思想)
+
+                          如果使用我们猜测的模型参数计算出来的观测序列的概率大,我们就有理由相信这个序列有可能是由这个模型产生的。{\color{red},但是,这个判断的阈值具体取多少,不知道这里是否一个评价的标准。}
+                          具体的例子:骰子产生的序列和骰子有关系,但是如果骰子被庄家都手脚了,那么,出现的序列有更大的可能性对庄家有利,也就是说如果出现大部分的序列都是对买家有利的,我们就有理由相信骰子被动过手脚。(这里假设有多个骰子,隐变量是选择了哪个骰子,每个骰子选中的概率一样,虽然这个隐变量实际上并没有什么作用,但却和隐马尔可夫模型建立了关系,可以用隐马尔可夫模型求解,也可以看成是状态空间只有一个状态的隐马尔科夫模型)\\
+
+                    \item [3.] 用于EM算法过程的计算
+                  \end{itemize}
                   }
 
               \item 解码问题
@@ -181,6 +209,24 @@
 
                 而前向算法和后向算法则是同一种动态规划算法在不同方向上的实现。
             }
+
+
+            图\ref{fig2017-5-1819:40:09}是概率计算示意图。
+
+            每一条路径表示一个可能的选择,由全概率公式,总的概率就是所有路径对应的概率之和 。
+
+            从第一列和第二列来看,两列的任意组合是三列组合的一个公共因子。
+
+            前面直接展开运算的结果,就是对这个公共因子进行的多次重复的计算。
+
+            前向-后向算法则是把这些重复运算的结果保存起来的一个动态规划算法。
+
+            \begin{figure}[!htbp]
+              \centering
+              \includegraphics[scale=0.5]{assets/jiqixuexi4_36b94.png}
+              \caption{前向后向算法概率计算示意图}
+              \label{fig2017-5-1819:40:09}
+            \end{figure}
 
             \begin{itemize}
               \item 前向算法
@@ -304,28 +350,28 @@
             根据EM算法,每次迭代优化目标为:
             $\lambda = arg \max_{\lambda} Q(\lambda , \hat{\lambda}) = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda)$
 
-            优化目标乘上一个常数$P(\bm{x}|\hat{\lambda})$,则优化目标等价于
-              \[ \lambda = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{x}|\hat{\lambda})P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda) = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{x,y}|\hat{\lambda})P(\bm{x,y}|\lambda) \]
+            \sout{优化目标乘上一个常数$P(\bm{x}|\hat{\lambda})$,则优化目标等价于}
+              \[ \cancel{\lambda = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{x}|\hat{\lambda})P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda) = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{x,y}|\hat{\lambda})P(\bm{x,y}|\lambda)} \]
 
-            记:$Q'(\lambda,\hat{\lambda}) = \sum_{\bm{y}} P(\bm{x,y}|\hat{\lambda})P(\bm{x,y}|\lambda)$
+            \sout{记:}$\cancel{Q'(\lambda,\hat{\lambda}) = \sum_{\bm{y}} P(\bm{x,y}|\hat{\lambda})P(\bm{x,y}|\lambda)}$
 
             \begin{align}
-              Q'(\lambda,\hat{\lambda}) &= \sum_{\bm{y}} P(\bm{x,y}|\hat{\lambda})P(\bm{x,y}|\lambda)\\
-                &= \sum_{y} P(\bm{x,y}|\hat{\lambda}) \left( \ln P(y_1) + \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i}) + \sum_{i = 1}^n \ln P(x_i|y_i) \right )\\
-                &= \sum_{y} P(\bm{x,y}|\hat{\lambda}) \ln P(y_1)
-                  + \sum_{y} P(\bm{x,y}|\hat{\lambda})  \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i})\\
-                  &\quad + \sum_{y} P(\bm{x,y}|\hat{\lambda}) \sum_{i = 1}^n \ln P(x_i|y_i) \notag \\
+              Q(\lambda,\hat{\lambda}) &= \sum_{\bm{y}} P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda)\\
+                &= \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda}) \left( \ln P(y_1) + \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i}) + \sum_{i = 1}^n \ln P(x_i|y_i) \right )\\
+                &= \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda}) \ln P(y_1)
+                  + \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda})  \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i})\\
+                  &\quad + \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda}) \sum_{i = 1}^n \ln P(x_i|y_i) \notag \\
                 &= {\color{red}
-                \sum_{i = 1}^N  P(\bm{x},y_1 = s_i|\hat{\lambda}) \ln P(y_1 = s_i)}\\
+                \sum_{i = 1}^N  P(y_1 = s_i|\bm{x},\hat{\lambda}) \ln P(y_1 = s_i)}\\
                   &\quad{\color{red}
                   + \sum_{i = 1}^N \sum_{j = 1}^N \sum_{t = 1}^{n-1}
-                       P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda}) \ln P(y_{t+1} = s_j|y_{t} = s_i)} \notag \\
+                       P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda}) \ln P(y_{t+1} = s_j|y_{t} = s_i)} \notag \\
                   &\quad{\color{red}
-                   + \sum_{i = 1}^N \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda}) \ln P(x_t|y_t = s_i)} \notag \\
-                &= \sum_{i = 1}^N  P(\bm{x},y_1 = s_i|\hat{\lambda}) \ln \pi_i\\
+                   + \sum_{i = 1}^N \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda}) \ln P(x_t|y_t = s_i)} \notag \\
+                &= \sum_{i = 1}^N  P(y_1 = s_i|\bm{x},\hat{\lambda}) \ln \pi_i\\
                   &\quad+ \sum_{i = 1}^N \sum_{j = 1}^N \sum_{t = 1}^{n-1}
-                      P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda}) \ln a_{ij} \notag\\
-                  &\quad + \sum_{i = 1}^N \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda}) \ln b_i(x_t) \notag
+                      P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda}) \ln a_{ij} \notag\\
+                  &\quad + \sum_{i = 1}^N \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda}) \ln b_i(x_t) \notag
             \end{align}
 
             \textbf{求$\bm{\pi}$}
@@ -336,20 +382,19 @@
             \end{equation}
             得到:
             \begin{equation}
-              P(y_1 = s_i , \bm{x}|\hat{\lambda}) + \lambda \pi_i = 0
+              P(y_1 = s_i|\bm{x},\hat{\lambda}) + \lambda \pi_i = 0
               \label{eq-2017-5-1722:28:47}
             \end{equation}
             对所有$N$个$\pi_i$累加,得到:
             \begin{equation}
-              \sum_{i = 1}^N P(y_1 = s_i , \bm{x}|\hat{\lambda}) + \lambda = 0
+              \begin{split}
+              \sum_{i = 1}^N P(y_1 = s_i|\bm{x},\hat{\lambda}) + \lambda = 0\\
+              1 + \lambda = 0
+              \end{split}
             \end{equation}
             代入式\eqref{eq-2017-5-1722:28:47}得:
             \begin{equation}
-              \begin{split}
-              \pi_i &= \frac{P(y_1 = s_i , \bm{x}|\hat{\lambda}) }{\sum_{j = 1}^N P(y_1 = s_j , \bm{x}|\hat{\lambda})}\\
-              &= \frac{P(y_1 = s_i , \bm{x}|\hat{\lambda}) }{ P( \bm{x}|\hat{\lambda})}\\
-              &= P(y_1 = s_i|\bm{x},\hat{\lambda})
-              \end{split}
+              \pi_i = P(y_1 = s_i|\bm{x},\hat{\lambda})
             \end{equation}
 
             \textbf{求$\bm{A}$}
@@ -361,23 +406,20 @@
             得到:
             \begin{equation}
               \sum_{t = 1}^{n-1}
-                  P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda})  + \lambda a_{i,j} = 0
+                  P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda})  + \lambda a_{i,j} = 0
               \label{eq-2017-5-1722:35:38}
             \end{equation}
             对所有$N$个$a_{i,j}$累加,得到:
             \begin{equation}
               \sum_{k = 1}^N \sum_{t = 1}^{n-1}
-                  P(\bm{x},y_t = s_i , y_{t+1} = s_k|\hat{\lambda})  + \lambda = 0
+                  P(y_t = s_i , y_{t+1} = s_k|\bm{x},\hat{\lambda})  + \lambda = 0
             \end{equation}
             代入式\eqref{eq-2017-5-1722:35:38}得:
             \begin{equation}
               \begin{split}
               a_{i,j} &= \frac{ \sum_{t = 1}^{n-1}
-                  P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda}) }{\sum_{k = 1}^N \sum_{t = 1}^{n-1}
-                  P(\bm{x},y_t = s_i , y_{t+1} = s_k|\hat{\lambda})}\\
-                  &= \frac{ \sum_{t = 1}^{n-1}
-                      P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda}) }{ \sum_{t = 1}^{n-1}
-                      P(\bm{x},y_t = s_i|\hat{\lambda})}\\
+                  P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda}) }{\sum_{k = 1}^N \sum_{t = 1}^{n-1}
+                  P(y_t = s_i , y_{t+1} = s_k|\bm{x},\hat{\lambda})}\\
                   &= \frac{ \sum_{t = 1}^{n-1}
                       P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda}) }{ \sum_{t = 1}^{n-1}
                       P(y_t = s_i|\bm{x},\hat{\lambda})}
@@ -392,40 +434,38 @@
             \end{equation}
             得到:
             \begin{equation}
-               \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})I(x_t = o_k)  + \lambda b_{i,k} = 0
+               \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})I(x_t = o_k)  + \lambda b_{i,k} = 0
               \label{2017-5-1722:44:14}
             \end{equation}
             对所有$N$个$b_{i,k}$累加,得到:
             \begin{equation}
-              \sum_{j = 1}^N \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})I(x_t = o_j)  + \lambda = 0
+              \sum_{j = 1}^N \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})I(x_t = o_j)  + \lambda = 0
             \end{equation}
             代入式\eqref{2017-5-1722:44:14}得:
             \begin{equation}
               \begin{split}
-              b_{i,k} &= \frac{\sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})I(x_t = o_k)}
-                  {\sum_{j = 1}^N \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})I(x_t = o_j)}\\
-              &= \frac{\sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})I(x_t = o_k)}
-              { \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})}\\
+              b_{i,k} &= \frac{\sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})I(x_t = o_k)}
+                  {\sum_{j = 1}^N \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})I(x_t = o_j)}\\
               &= \frac{\sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})I(x_t = o_k)}
               { \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})}
             \end{split}
             \end{equation}
 
-            可以用前向-后向算法来计算$P(\bm{x},y_t = s_i|\hat{\lambda})$和$P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda})$
+            可以用前向-后向算法来计算$P(y_t = s_i|\bm{x},\hat{\lambda})$和$P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda})$
 
             \begin{equation}
               \begin{split}
               P(y_t = s_i|\bm{x},\hat{\lambda}) &= \frac{P(\bm{x},y_t = s_i|\hat{\lambda})}
                 {P(\bm{x}|\hat{\lambda})} \\
-                &= \frac{\alpha_t(i)\beta_t(i)}{ \sum_{i = 1}^N \sum_{j = 1}^N \alpha_t(i) a_{i,j} b_j(x_{t+1}) \beta_{t+1}(j)}
+                &= \frac{\alpha_t(i)\beta_t(i)}{\sum_{i = 1}^N \alpha_t(i) \beta_t(i)}
               \end{split}
             \end{equation}
 
             \begin{equation}
               \begin{split}
               P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda})
-              &= \frac{P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda}) }{P(\bm{x}|\hat{\lambda})} \\
-              &= \frac{\alpha_t(i)a_{i,j}b_j(x_{t+1})\beta_{t+1}(j)}{ \sum_{i = 1}^N \sum_{j = 1}^N \alpha_t(i) a_{i,j} b_j(x_{t+1}) \beta_{t+1}(j)}
+              &= \frac{  P(y_t = s_i , y_{t+1} = s_j,\bm{x}|\hat{\lambda})}{  P(\bm{x}|\hat{\lambda})}\\
+              &= \frac{\alpha_t(i)a_{i,j}b_j(x_{t+1})\beta_{t+1}(j)}{\sum_{i = 1}^N \alpha_t(i) \beta_t(i)}
             \end{split}
             \end{equation}
 
