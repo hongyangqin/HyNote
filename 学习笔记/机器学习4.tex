@@ -7,7 +7,6 @@
 \usepackage{color}
 \usepackage{amssymb}
 \usepackage{bm}
-\usepackage{cancel}
 \author{qhy}%作者
 \title{机器学习笔记4}%标题
 \date{\today}%日期
@@ -305,28 +304,28 @@
             根据EM算法,每次迭代优化目标为:
             $\lambda = arg \max_{\lambda} Q(\lambda , \hat{\lambda}) = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda)$
 
-            \sout{优化目标乘上一个常数$P(\bm{x}|\hat{\lambda})$,则优化目标等价于}
-              \[ \cancel{\lambda = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{x}|\hat{\lambda})P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda) = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{x,y}|\hat{\lambda})P(\bm{x,y}|\lambda)} \]
+            优化目标乘上一个常数$P(\bm{x}|\hat{\lambda})$,则优化目标等价于
+              \[ \lambda = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{x}|\hat{\lambda})P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda) = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{x,y}|\hat{\lambda})P(\bm{x,y}|\lambda) \]
 
             记:$Q'(\lambda,\hat{\lambda}) = \sum_{\bm{y}} P(\bm{x,y}|\hat{\lambda})P(\bm{x,y}|\lambda)$
 
             \begin{align}
-              Q'(\lambda,\hat{\lambda}) &= \sum_{\bm{y}} P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda)\\
-                &= \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda}) \left( \ln P(y_1) + \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i}) + \sum_{i = 1}^n \ln P(x_i|y_i) \right )\\
-                &= \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda}) \ln P(y_1)
-                  + \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda})  \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i})\\
-                  &\quad + \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda}) \sum_{i = 1}^n \ln P(x_i|y_i) \notag \\
+              Q'(\lambda,\hat{\lambda}) &= \sum_{\bm{y}} P(\bm{x,y}|\hat{\lambda})P(\bm{x,y}|\lambda)\\
+                &= \sum_{y} P(\bm{x,y}|\hat{\lambda}) \left( \ln P(y_1) + \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i}) + \sum_{i = 1}^n \ln P(x_i|y_i) \right )\\
+                &= \sum_{y} P(\bm{x,y}|\hat{\lambda}) \ln P(y_1)
+                  + \sum_{y} P(\bm{x,y}|\hat{\lambda})  \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i})\\
+                  &\quad + \sum_{y} P(\bm{x,y}|\hat{\lambda}) \sum_{i = 1}^n \ln P(x_i|y_i) \notag \\
                 &= {\color{red}
-                \sum_{i = 1}^N  P(y_1 = s_i|\bm{x},\hat{\lambda}) \ln P(y_1 = s_i)}\\
+                \sum_{i = 1}^N  P(\bm{x},y_1 = s_i|\hat{\lambda}) \ln P(y_1 = s_i)}\\
                   &\quad{\color{red}
                   + \sum_{i = 1}^N \sum_{j = 1}^N \sum_{t = 1}^{n-1}
-                       P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda}) \ln P(y_{t+1} = s_j|y_{t} = s_i)} \notag \\
+                       P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda}) \ln P(y_{t+1} = s_j|y_{t} = s_i)} \notag \\
                   &\quad{\color{red}
-                   + \sum_{i = 1}^N \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda}) \ln P(x_t|y_t = s_i)} \notag \\
-                &= \sum_{i = 1}^N  P(y_1 = s_i|\bm{x},\hat{\lambda}) \ln \pi_i\\
+                   + \sum_{i = 1}^N \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda}) \ln P(x_t|y_t = s_i)} \notag \\
+                &= \sum_{i = 1}^N  P(\bm{x},y_1 = s_i|\hat{\lambda}) \ln \pi_i\\
                   &\quad+ \sum_{i = 1}^N \sum_{j = 1}^N \sum_{t = 1}^{n-1}
-                      P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda}) \ln a_{ij} \notag\\
-                  &\quad + \sum_{i = 1}^N \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda}) \ln b_i(x_t) \notag
+                      P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda}) \ln a_{ij} \notag\\
+                  &\quad + \sum_{i = 1}^N \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda}) \ln b_i(x_t) \notag
             \end{align}
 
             \textbf{求$\bm{\pi}$}
@@ -337,17 +336,18 @@
             \end{equation}
             得到:
             \begin{equation}
-              P(y_1 = s_i|\bm{x},\hat{\lambda}) + \lambda \pi_i = 0
+              P(y_1 = s_i , \bm{x}|\hat{\lambda}) + \lambda \pi_i = 0
               \label{eq-2017-5-1722:28:47}
             \end{equation}
             对所有$N$个$\pi_i$累加,得到:
             \begin{equation}
-              \sum_{i = 1}^N P(y_1 = s_i|\bm{x},\hat{\lambda}) + \lambda = 0
+              \sum_{i = 1}^N P(y_1 = s_i , \bm{x}|\hat{\lambda}) + \lambda = 0
             \end{equation}
             代入式\eqref{eq-2017-5-1722:28:47}得:
             \begin{equation}
               \begin{split}
-              \pi_i &= \frac{P(y_1 = s_i|\bm{x},\hat{\lambda}) }{\sum_{j = 1}^N P(y_1 = s_j|\bm{x},\hat{\lambda})}\\
+              \pi_i &= \frac{P(y_1 = s_i , \bm{x}|\hat{\lambda}) }{\sum_{j = 1}^N P(y_1 = s_j , \bm{x}|\hat{\lambda})}\\
+              &= \frac{P(y_1 = s_i , \bm{x}|\hat{\lambda}) }{ P( \bm{x}|\hat{\lambda})}\\
               &= P(y_1 = s_i|\bm{x},\hat{\lambda})
               \end{split}
             \end{equation}
@@ -361,20 +361,23 @@
             得到:
             \begin{equation}
               \sum_{t = 1}^{n-1}
-                  P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda})  + \lambda a_{i,j} = 0
+                  P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda})  + \lambda a_{i,j} = 0
               \label{eq-2017-5-1722:35:38}
             \end{equation}
             对所有$N$个$a_{i,j}$累加,得到:
             \begin{equation}
               \sum_{k = 1}^N \sum_{t = 1}^{n-1}
-                  P(y_t = s_i , y_{t+1} = s_k|\bm{x},\hat{\lambda})  + \lambda = 0
+                  P(\bm{x},y_t = s_i , y_{t+1} = s_k|\hat{\lambda})  + \lambda = 0
             \end{equation}
             代入式\eqref{eq-2017-5-1722:35:38}得:
             \begin{equation}
               \begin{split}
               a_{i,j} &= \frac{ \sum_{t = 1}^{n-1}
-                  P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda}) }{\sum_{k = 1}^N \sum_{t = 1}^{n-1}
-                  P(y_t = s_i , y_{t+1} = s_k|\bm{x},\hat{\lambda})}\\
+                  P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda}) }{\sum_{k = 1}^N \sum_{t = 1}^{n-1}
+                  P(\bm{x},y_t = s_i , y_{t+1} = s_k|\hat{\lambda})}\\
+                  &= \frac{ \sum_{t = 1}^{n-1}
+                      P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda}) }{ \sum_{t = 1}^{n-1}
+                      P(\bm{x},y_t = s_i|\hat{\lambda})}\\
                   &= \frac{ \sum_{t = 1}^{n-1}
                       P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda}) }{ \sum_{t = 1}^{n-1}
                       P(y_t = s_i|\bm{x},\hat{\lambda})}
@@ -389,24 +392,26 @@
             \end{equation}
             得到:
             \begin{equation}
-               \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})I(x_t = o_k)  + \lambda b_{i,k} = 0
+               \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})I(x_t = o_k)  + \lambda b_{i,k} = 0
               \label{2017-5-1722:44:14}
             \end{equation}
             对所有$N$个$b_{i,k}$累加,得到:
             \begin{equation}
-              \sum_{j = 1}^N \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})I(x_t = o_j)  + \lambda = 0
+              \sum_{j = 1}^N \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})I(x_t = o_j)  + \lambda = 0
             \end{equation}
             代入式\eqref{2017-5-1722:44:14}得:
             \begin{equation}
               \begin{split}
-              b_{i,k} &= \frac{\sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})I(x_t = o_k)}
-                  {\sum_{j = 1}^N \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})I(x_t = o_j)}\\
+              b_{i,k} &= \frac{\sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})I(x_t = o_k)}
+                  {\sum_{j = 1}^N \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})I(x_t = o_j)}\\
+              &= \frac{\sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})I(x_t = o_k)}
+              { \sum_{t = 1}^n P(\bm{x},y_t = s_i|\hat{\lambda})}\\
               &= \frac{\sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})I(x_t = o_k)}
               { \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda})}
             \end{split}
             \end{equation}
 
-            可以用前向-后向算法来计算$P(y_t = s_i|\bm{x},\hat{\lambda})$和$P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda})$
+            可以用前向-后向算法来计算$P(\bm{x},y_t = s_i|\hat{\lambda})$和$P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda})$
 
             \begin{equation}
               \begin{split}
@@ -419,7 +424,7 @@
             \begin{equation}
               \begin{split}
               P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda})
-              &= \frac{  P(y_t = s_i , y_{t+1} = s_j,\bm{x}|\hat{\lambda})}{  P(\bm{x}|\hat{\lambda})}\\
+              &= \frac{P(\bm{x},y_t = s_i , y_{t+1} = s_j|\hat{\lambda}) }{P(\bm{x}|\hat{\lambda})} \\
               &= \frac{\alpha_t(i)a_{i,j}b_j(x_{t+1})\beta_{t+1}(j)}{ \sum_{i = 1}^N \sum_{j = 1}^N \alpha_t(i) a_{i,j} b_j(x_{t+1}) \beta_{t+1}(j)}
             \end{split}
             \end{equation}
