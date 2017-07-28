@@ -28,8 +28,6 @@
 
           但是,研究这三个问题的前提是有足够充分的观测空间和状态空间,否则,模型的泛华能力将会很弱。
           但是足够充分的空间,也意味着更大的时间开销。从时间来看,隐马尔可夫模型的时间开销会很巨大。
-
-          在统计学习方法一书中,在进行EM算法的推导的时候,乘上了一个常数因子,不知道有什么深意。
         }
         \subsection{概率图模型}
             \textbf{概率图模型 probabilistic graphical model}是一类用图来表达变量相关关系的概率模型。
@@ -51,6 +49,7 @@
 
             \end{itemize}
         \subsection{隐马尔可夫模型}
+            \textbf{隐马尔可夫模型}:隐马尔可夫模型是关于时序的概率模型,描述由一个隐藏的马尔可夫链随机生成不可观测的状态随机序列,再由各个状态生成一个观测而产生观测随机序列的过程。
 
             马尔可夫链:系统下一时刻的状态仅由当前状态决定,不依赖以往的任何状态。
 
@@ -106,17 +105,20 @@
 
             给定状态空间$\mathcal{Y}$ , 观测空间$\mathcal{X}$ , 参数$\lambda$ , 就能确定一个隐马尔可夫模型。
 
-            下面是给定$\lambda$下,模型产生观测序列$\{x_1, x_2, \cdots , x_n\}$的过程(见图\ref{generationOfHMM}):
+            \textbf{下面是给定$\lambda$下,模型产生观测序列$\{x_1, x_2, \cdots , x_n\}$的过程(见图\ref{generationOfHMM}):}
 
             {\color{blue}
               由初始状态触发,由状态转移方程不断驱动。
             }
-            \begin{itemize}
-              \item [(1)] 设置$t=1$,并根据初始状态概率$\bm{\pi}$选择初始状态$y_1$
-              \item [(2)] 根据状态$y_t$和观测概率$\bm{B}$选择观测变量值$x_t$
-              \item [(3)] 根据状态$y_t$和状态转移矩阵$\bm{A}$转移模型状态,即确定$y_{t+1}$
-              \item [(4)] 若$t<n$,设置$t=t+1$,并转到第(2)步,否则停止
-            \end{itemize}
+
+            \begin{tabular}{l}
+              \hline
+              (1): 设置$t=1$,并根据初始状态概率$\bm{\pi}$选择初始状态$y_1$\\
+              (2): 根据状态$y_t$和观测概率$\bm{B}$选择观测变量值$x_t$\\
+              (3): 根据状态$y_t$和状态转移矩阵$\bm{A}$转移模型状态,即确定$y_{t+1}$\\
+              (4): 若$t<n$,设置$t=t+1$,并转到第(2)步,否则停止\\
+              \hline
+            \end{tabular}
 
             \begin{figure}[!htbp]
               \centering
@@ -146,6 +148,7 @@
                           如果匹配的话,则观测序列出现的概率应该会比较大(极大似然法的思想)
 
                           如果使用我们猜测的模型参数计算出来的观测序列的概率大,我们就有理由相信这个序列有可能是由这个模型产生的。{\color{red},但是,这个判断的阈值具体取多少,不知道这里是否一个评价的标准。}
+
                           具体的例子:骰子产生的序列和骰子有关系,但是如果骰子被庄家都手脚了,那么,出现的序列有更大的可能性对庄家有利,也就是说如果出现大部分的序列都是对买家有利的,我们就有理由相信骰子被动过手脚。(这里假设有多个骰子,隐变量是选择了哪个骰子,每个骰子选中的概率一样,虽然这个隐变量实际上并没有什么作用,但却和隐马尔可夫模型建立了关系,可以用隐马尔可夫模型求解,也可以看成是状态空间只有一个状态的隐马尔科夫模型)\\
 
                     \item [3.] 用于EM算法过程的计算
@@ -301,7 +304,7 @@
 
             \textbf{Viterbi 算法}:
 
-            对于观测序列$x_{1:n}$,定义$V_{t,k}$表示到时刻t为止,且时刻t的状态为$s_k$的最大概,
+            对于观测序列$x_{1:n}$,定义$V_{t,k}$表示到时刻t为止,且时刻t的状态为$s_k$的最大概率,
 
             即$V_{t,k} = \max_{y_{1:t-1}} P(\bm{x_{1:t}}|\lambda,y_{1:t-1} , y_t = s_k)$
 
@@ -350,6 +353,10 @@
             根据EM算法,每次迭代优化目标为:
             $\lambda = arg \max_{\lambda} Q(\lambda , \hat{\lambda}) = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda)$
 
+            {\color{red}
+            在统计学习方法一书中,在进行EM算法的推导的时候,乘上了一个常数因子$P(\bm{x}|\hat{\lambda})$,不知道有什么深意。
+            }
+
             \sout{优化目标乘上一个常数$P(\bm{x}|\hat{\lambda})$,则优化目标等价于}
               \[ \cancel{\lambda = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{x}|\hat{\lambda})P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda) = arg \max_{\lambda} \sum_{\bm{y}} P(\bm{x,y}|\hat{\lambda})P(\bm{x,y}|\lambda)} \]
 
@@ -358,11 +365,11 @@
             \begin{align}
               Q(\lambda,\hat{\lambda}) &= \sum_{\bm{y}} P(\bm{y}|\bm{x},\hat{\lambda})P(\bm{x,y}|\lambda)\\
                 &= \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda}) \left( \ln P(y_1) + \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i}) + \sum_{i = 1}^n \ln P(x_i|y_i) \right )\\
-                &= \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda}) \ln P(y_1)
-                  + \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda})  \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i})\\
-                  &\quad + \sum_{y} P(\bm{y}|\bm{x},\hat{\lambda}) \sum_{i = 1}^n \ln P(x_i|y_i) \notag \\
+                &= \sum_{\bm{y}} P(\bm{y}|\bm{x},\hat{\lambda}) \ln P(y_1)
+                  + \sum_{\bm{y}} P(\bm{y}|\bm{x},\hat{\lambda})  \sum_{i = 1}^{n-1} \ln P(y_{i+1}|y_{i})\\
+                  &\quad + \sum_{\bm{y}} P(\bm{y}|\bm{x},\hat{\lambda}) \sum_{i = 1}^n \ln P(x_i|y_i) \notag \\
                 &= {\color{red}
-                \sum_{i = 1}^N  P(y_1 = s_i|\bm{x},\hat{\lambda}) \ln P(y_1 = s_i)}\\
+                \sum_{i = 1}^N  P(y_1 = s_i|\bm{x},\hat{\lambda}) \ln P(y_1 = s_i)}\label{eq-2017-5-1819:56:52}\\
                   &\quad{\color{red}
                   + \sum_{i = 1}^N \sum_{j = 1}^N \sum_{t = 1}^{n-1}
                        P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda}) \ln P(y_{t+1} = s_j|y_{t} = s_i)} \notag \\
@@ -373,6 +380,23 @@
                       P(y_t = s_i , y_{t+1} = s_j|\bm{x},\hat{\lambda}) \ln a_{ij} \notag\\
                   &\quad + \sum_{i = 1}^N \sum_{t = 1}^n P(y_t = s_i|\bm{x},\hat{\lambda}) \ln b_i(x_t) \notag
             \end{align}
+
+            {\color{blue}
+            式\eqref{eq-2017-5-1819:56:52}是对公式的一个具体展开。
+
+            \begin{equation}
+              \begin{split}
+              \sum_{\bm{y}} P(\bm{y}|\bm{x},\hat{\lambda}) \ln P(y_1) &= \sum_{y_1} \sum_{y_{2:n}}
+              P(y_1, y_{2:n}|\bm{x},\hat{\lambda}) \ln P(y_1) \\
+              &= \sum_{y_1} \sum_{y_{2:n}}
+              P(y_1|\bm{x},\hat{\lambda})P(y_{2:n}|y_1,\bm{x},\hat{\lambda}) \ln P(y_1)\\
+              &= \sum_{y_1}
+              \left ( \sum_{y_{2:n}} P(y_{2:n}|y_1,\bm{x},\hat{\lambda}) \right ) P(y_1|\bm{x},\hat{\lambda}) \ln P(y_1) \\
+              &= \sum_{i = 1}^N  P(y_1 = s_i|\bm{x},\hat{\lambda}) \ln P(y_1 = s_i)
+            \end{split}
+            \end{equation}
+            }
+
 
             \textbf{求$\bm{\pi}$}
 

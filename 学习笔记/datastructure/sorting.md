@@ -1,57 +1,4 @@
-<!--toc-->
-
-- [排序](#排序)
-	- [分类](#分类)
-		- [stable 排序](#stable-排序)
-		- [unstable 排序](#unstable-排序)
-		- [internal 排序](#internal-排序)
-		- [external 排序](#external-排序)
-	- [插入排序 insertion_sort](#插入排序-insertion_sort)
-		- [优化](#优化)
-		- [参考代码](#参考代码)
-		- [时间复杂度](#时间复杂度)
-		- [优点](#优点)
-	- [冒泡排序 bubble sort](#冒泡排序-bubble-sort)
-		- [区别：插入排序](#区别插入排序)
-		- [优化](#优化-1)
-		- [参考代码](#参考代码-1)
-		- [时间复杂度](#时间复杂度-1)
-	- [选择排序 selection sort](#选择排序-selection-sort)
-		- [参考代码](#参考代码-2)
-		- [时间复杂度](#时间复杂度-2)
-	- [希尔排序](#希尔排序)
-		- [时间复杂度](#时间复杂度-3)
-		- [参考代码](#参考代码-3)
-	- [Quick Sort 快排](#quick-sort-快排)
-		- [怎么根据参考点把数组分成两个部分？](#怎么根据参考点把数组分成两个部分)
-		- [参考代码](#参考代码-4)
-		- [优化](#优化-2)
-			- [Better Pivot](#better-pivot)
-			- [Better Algorithm for smalll sub-arrays](#better-algorithm-for-smalll-sub-arrays)
-				- [为什么选择插入排序？](#为什么选择插入排序)
-			- [Eliminate recursion](#eliminate-recursion)
-		- [优化后代码](#优化后代码)
-		- [非递归实现](#非递归实现)
-		- [时间复杂度](#时间复杂度-4)
-	- [Heap Sort 堆排序](#heap-sort-堆排序)
-		- [参考代码](#参考代码-5)
-	- [Merge Sort 归并排序](#merge-sort-归并排序)
-		- [和 quick Sort 比较](#和-quick-sort-比较)
-		- [参考代码](#参考代码-6)
-		- [优化](#优化-3)
-			- [去边界探测](#去边界探测)
-			- [better algorithm for small sub-arrays](#better-algorithm-for-small-sub-arrays)
-			- [Eliminate recursion](#eliminate-recursion-1)
-		- [优化后代码](#优化后代码-1)
-		- [非递归实现](#非递归实现-1)
-	- [bin排序 箱排序](#bin排序-箱排序)
-		- [重复元素冲突处理](#重复元素冲突处理)
-	- [radix排序 基数排序](#radix排序-基数排序)
-		- [优化的思路](#优化的思路)
-		- [分析](#分析)
-	- [基于关键字比较的排序算法的理论下界](#基于关键字比较的排序算法的理论下界)
-
-<!-- tocstop -->
+[toc]
 # 排序
 
 ## 分类
@@ -80,7 +27,7 @@
 2. 先预处理使得数组近似排序，再对全部进行插入排序 见 [希尔排序](#希尔排序)
 
 ### 参考代码
-```{cpp}
+```{cpp id:"chj4pnkl02"}
 void hyInsertionSort(int arr[],int n) {
 	int cnt = 0;
 	for (int i = 0; i < n; ++i) {
@@ -114,7 +61,7 @@ Average Case:$\theta(n^2)$
 所以，只要有一轮冒泡过程中没有出现交换的，那么就说明数组已经有序了，就没必要进行后续的冒泡
 
 ### 参考代码
-```{cpp}
+```{cpp id:"chj4pnkl04"}
 void hyBubbleSort(int arr[], int n) {
 	for (int i = 0; i < n - 1; ++i) {
 		bool flg = true;
@@ -139,7 +86,7 @@ Average Case:$\theta(n^2)$
 选择当前 未排序的序列中的 最小值 ，加入到 当前已排序的序列 后面（因为有序列的值，是每一轮中选出的最小值，所以下一轮的选出的值一定比上一轮的大，所以直接加入到后面）
 
 ### 参考代码
-```{cpp}
+```{cpp id:"chj4pnkl06"}
 void hySelectionSort(int arr[], int n) {
 	for (int i = 0; i < n - 1; ++i) {
 		int hyMin = i;
@@ -189,7 +136,7 @@ Average Case:$\theta(n^2)$
 比如 长度为24的数组，第一次的间隔取为 15(即$2^4 - 1$)，第二次为 7，第三次为3，最后为 1
 
 ### 参考代码
-```{cpp}
+```{cpp id:"chj4pnkl07"}
 void hyInertionSort2(int arr[], int n,int s,int incr) {
 	for (int i = s; i < n; i += incr) {
 		for (int j = i; j > s && arr[j] < arr[j - incr]; j -= incr) {
@@ -222,7 +169,7 @@ $O(n)$的方法：
 在相遇的地方，交换参考点和当前指向的值（因为要使得参考点处于正确的位置）
 
 ### 参考代码
-```{cpp}
+```{cpp id:"chj4pnkl09"}
 int getPivot(int i, int j) {
 	return (i + j) / 2;
 }
@@ -293,7 +240,7 @@ void hyQuickSort(int arr[], int i, int j) {
 实现上，使用递归实现代码的编写很方便，但是同时会产生系统调用函数的一个较大的常数时间，因此如果把递归改成循环形式，效率显然更高。
 
 ### 优化后代码
-```{cpp}
+```{cpp id:"chj4pnkl0b"}
 int getPivot(int arr[],int i, int j) {
 	int mid = (i + j) / 2;
 	if(arr[i] <= arr[mid] && arr[mid] <= arr[j]){
@@ -327,7 +274,7 @@ void hyQuickSort(int arr[], int i, int j) {
 }
 ```
 ### 非递归实现
-```{cpp}
+```{cpp id:"chj4pnkl0c"}
 inline void hyInsertionSort(int arr[], int n) {
 	int cnt = 0;
 	for (int i = 0; i < n; ++i) {
@@ -395,7 +342,7 @@ averageCase:$n\log_2n$
 把数组一次加入堆中，堆不断地调用 **removeMax** 函数，这样结束之后，数组的元素就是排好序的。（因为每次remove都会把最大值移动到数组当前的最后面）
 
 ### 参考代码
-```{cpp}
+```{cpp id:"chj4pnkl0e"}
 int *heapArr, heapSize;
 bool isLeaf(int pos) {
 	return  pos >= heapSize / 2 && pos < heapSize;
@@ -455,7 +402,7 @@ void hyHeapSort(int arr[], int n) {
 归并排序则每次都是平均分割，所以递归的深度始终都是 $\log_2n$
 
 ### 参考代码
-```{cpp}
+```{cpp id:"chj4pnkl0g"}
 void hyMergeSortHelp(int arr[], int tmp[], int l, int r) {
 	if (l >= r)	return;
 	int mid = (l + r) / 2;
@@ -494,7 +441,7 @@ void hyMergeSort(int arr[], int n) {
 见 [Eliminate recursion](#eliminate-recursion)
 
 ### 优化后代码
-```{cpp}
+```{cpp id:"chj4pnkl0h"}
 void hyMergeSortHelp(int arr[], int tmp[], int l, int r) {
 	if (r - l < 6){
 		insertion_sort(arr + l,r - l + 1);
@@ -528,7 +475,7 @@ void hyMergeSort(int arr[], int n) {
 
 ### 非递归实现
 实际上就是逆过程，每两个进行合并，然后每4个，一直合并出整个数组
-```{cpp}
+```{cpp id:"chj4pnkl0i"}
 inline void merge(int arr[], int tmp[], int l, int r,int mid) {
 	for (int i = l; i <= mid; ++i) {
 		tmp[i] = arr[i];
@@ -562,7 +509,7 @@ inline void hyMergeSort(int arr[], int n) {
 
 ## bin排序 箱排序
 箱排序，类似哈希表
-```{mermaid}
+```{mermaid id:"chj4pnkl0j"}
 graph LR
 data --> dispatch
 dispatch --> clooect

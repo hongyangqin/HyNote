@@ -1,0 +1,67 @@
+\documentclass[UTF8,a4paper]{ctexart}%设置a4纸和中文
+\ctexset{section/format=\Large\bfseries}%设置标题左对齐
+\usepackage{amsmath} % 使用align
+\usepackage[margin=1in]{geometry}%设置A4值的边界
+\usepackage{graphicx}%插入图片
+\usepackage{amssymb}%使用 leqslant
+\usepackage{multirow}%使用多栏宏包
+  \usepackage{ulem}
+  \usepackage{cancel}
+\author{qhy}%作者
+\date{\today}%日期
+\title{机器学习5}%标题
+\pagestyle{empty}%不显示页码
+\usepackage{color}%使用颜色
+\begin{document}
+  \maketitle
+  \tableofcontents
+  \newpage
+
+  \section{高斯过程 Gaussian Process}
+    在高斯过程的观点中,我们抛弃参数模型,直接定义函数上的先验概率。
+
+    径向基函数网络可以被看成高斯过程模型的形式
+
+    高斯过程可以看成是多维正态分布的无限维广义延伸。(因为核函数的存在)
+
+    引入了泛函的概念,高斯过程与泛函有关,具体体现为不同参数$\omega$,对应不同的函数,所有的$\omega$下对应的函数的集合就是函数空间。
+
+    前面的思维:x为输入,y为输出,$\oemga$为参数,通过调整$\omega$,求$p(y|x)$的最大值,进而进行预测,这里求的是参数
+
+    更准确的描述为,从参数空间中,确定y的分布
+
+    高斯过程:x为输入,y为输出,$\omega$为参数,通过调整$\omega$,求$x\to y$的最有可能的映射函数,进而进行预测(使用这个映射函数的某个值,或者某个采样作为预测值),这里求的是分布
+
+    更准确的描述应该是从函数空间中确定一个y的分布
+
+    但是函数空间也由参数决定,这个联系怎么理解,还是说这两个参数不是指同一个东西?
+
+    从数学公式简单地看,就是积分变量从x变成了$\omega$,等等,为什么会有这种理解
+
+    用一种合理的方式,为$y(x_1) , y(x_2) , \cdots, y_(x_n)$赋予一个联合的概率分布,来确定一个高斯过程。
+
+    这里,高斯过程的核函数的确定的,因此,应用高斯过程进行的学习,实际上是\textbf{lazy learning}
+
+    应用:
+    回归问题:
+    已知x,预测y
+
+    实际上,我们并不预先设置好核函数,而是把它作为超参数来进行调整
+
+    过程:对于变量$x_t$的映射,相当于变量$\bm{x}$每一个维度都对应一个映射
+
+    \section{高斯过程隐变量模型 Gaussian Process Latent Variable Model GPLVM}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
