@@ -235,4 +235,71 @@ http://zh.wikihow.com/%E8%A7%A3%E9%94%81%E5%8A%A0%E5%AF%86%E7%9A%84PDF%E6%96%87%
 
         \url{http://192.168.99.1/newifi/ifiwen_hss.html}
 
+        \subsection[使用\textbf{Google App Script}为任意网站提供RSS订阅功能]
+        {使用\textbf{Google App Script}为任意网站提供RSS订阅功能
+        \footnote{\url{https://binux.blog/2013/03/google-apps-script/}}}
+
+        \textbf{Google App Script\footnote{\url{https://script.google.com}}}:简称GAS，是一个JavaScript脚本驱动的云平台，通过GAS可以方便的连接Google和其他各种服务，执行各种自动化的任务。
+
+        平台提供了以下功能:
+        \begin{itemize}
+            \item Google服务访问（mail, docs, charts, maps, calendar甚至还有翻译）
+            \item 界面
+            \item 数据库
+            \item urlfetch！（可以post、可以修改header、可以修改body、甚至有一个帮助使用OAuth的类）
+            \item 定时任务、触发器
+            \item 可以发布为web apps，可以获得get、post参数等
+        \end{itemize}
+
+        应用示例:为华南某理工大学的教务处通知提供RSS订阅功能\footnote{123123123}
+
+        原理:使用脚本把网站内容转换成RSS
+
+        代码:
+        \begin{minted}{js}
+function doGet(request) {
+  var url = 'http://jwc.scuteo.com/jiaowuchu/cms/category/index.do';
+  var formData  = {
+    'id':'f25701314e90988c014e90ad57500004',
+    'pagesize':'20',
+    'offset':'0'
+ };
+
+  var options = {
+   'method' : 'post',
+   'payload' : formData
+ };
+
+  var response = UrlFetchApp.fetch(url,options);
+  var data = JSON.parse(response.getContentText()).results;
+
+  var feed = '<?xml version="1.0" encoding="UTF-8"?>'
+  +'<feed xmlns="http://www.w3.org/2005/Atom">'
+  +'<title>华南理工大学教务处-教务通知</title>'
+  +'<link href="http://jwc.scuteo.com/jiaowuchu/cms/index.do" rel="alternate"/>'
+  +'<updated>'+(new Date()).toISOString()+'</updated>'
+  +'<author><name>华南理工大学 2015级 计算机科学与技术 qhy285571052@gmail.com</name></author>';
+  data.forEach(function(e) {
+         feed += '<entry>'
+     +'<title>'+e.title+'</title>'
+     +'<link href="http://jwc.scuteo.com/jiaowuchu'+e.href+'\" rel="alternate"/>'
+     +'<updated>'+e.createTime+'</updated>'
+     +'<id>'+e.id+'</id>'
+     +'</entry>'
+  })
+
+  feed += '</feed>'
+  Logger.log(feed)
+  return ContentService.createTextOutput(feed)
+    .setMimeType(ContentService.MimeType.RSS);
+}
+        \end{minted}
+
+        使用方法:
+        \begin{itemize}
+            \item [1.] 注册google账号$\to$\url{script.google.com}
+            \item [2.] 创建新的项目,把上面的代码拷贝进去
+            \item [3.] 发布$\to$部署$\to$任何人(甚至匿名)$\to$部署$\to$授权
+            \item [4.] 得到的地址就是RSS订阅的地址
+        \end{itemize}
 \end{document}
