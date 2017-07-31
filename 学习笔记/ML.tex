@@ -108,7 +108,7 @@
             \includegraphics[scale = 0.3]{assets/ML_a74a0.png}
         \end{figure}
 
-        进一步处理,问题变成最小化:
+        进一步处理(去掉松弛变量),问题最小化:
         \begin{figure}[H]
             \centering
             \includegraphics[scale = 0.3]{assets/ML_371e4.png}
@@ -139,7 +139,7 @@
 
         从这里来看,应该是由$a$决定哪些是 \textbf{支持向量},而不是由支持向量,决定哪些$a = 0$}
 
-        \textbf{为什么说RBF是对应的是无穷为的点积?}
+        \textbf{为什么说RBF是对应的是无穷维的点积?}
 
         因为RBF使用泰勒展开之后,有无穷项,每一项代表若干个维度的分量分别相乘之和的结果。
 
@@ -187,9 +187,9 @@
             \includegraphics[scale = 0.3]{assets/ML_eca3e.png}
         \end{figure}
 
-        我们可以简单地定义损失函数就是$F(x,\hat{y}) - F(x,d\dot y)$,也就是当前预测的点到目标点的距离。
+        我们可以简单地定义损失函数就是$F(x,\hat{y}) - F(x,\dot y)$,也就是当前预测的点到目标点的距离。
 
-        其中$\dot y$是$F{x,y}$最大的$y$,我们只需要考虑最大的$y$即可,而不需要考虑其他。
+        其中$\dot y$是$F(x,y)$最大的$y$,我们只需要考虑最大的$y$即可,而不需要考虑其他。
 
         至此,我们就可以用梯度下降的方法进行训练:
         \begin{figure}[H]
@@ -233,22 +233,45 @@
         $\delta$:对于这个参数的理解,我们并不要求整个算法的输入$X$在特征空间中的表示一定要和$Y$的表示重合,只要它们的差值在一定的范围内都是可接受的,因此,这个参数也叫margin
         }
 
+        实际上,上述的模型中loss function并没有体现出来,新的loss function如下:
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_56817.png}
+        \end{figure}
 
+        \subsection{structure SVM}
+        {\color{blue}光从定义上来看,SVM的框架不变,只是SVM衡量距离的部分变成了$F(x,y)$}
 
+        现在,我们根据上面的loss function转换到我们熟悉的SVM框架上来:
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_50d88.png}
+        \end{figure}
 
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_e6bcb.png}
+        \end{figure}
 
+        注意:如果去掉了minimizing ,两个问题两个问题是不等价的,前者可以得到唯一的确定的解,而后者会得到一个范围。
 
+        好了,到这里我们就可以使用SVM中的套路来解决问题了,但是有一个问题,那就是当数据规模过大的时候,约束条件特别多,二次规划问题的代价就特别大。
 
+        这里给出了\textbf{Cutting Plane Algorithm}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_8a8b2.png}
+        \end{figure}
 
+        这个算法的思想是,并不是所有的约束条件都是有用的,实际上对解的约束只有少部分条件是直接作用的,其他条件都是在满足直接条件下恰好满足的。
 
+        因此这个算法就是不断地迭代,随着迭代不断把约束条件加入到"直接"约束空间(初始为无约束)中,知道当求出来的解能满足所有约束条件位置。
 
+        这里每次迭代都加入约束最严格的那个条件,那么怎么定义这个最严格?这里把距离直接取$F(x,y) - F(x,\hat y)$最大的$y$作为最严格的约束条件
 
+            \subsubsection{Multi-class SVM}
+            多分类的SVM也属于$Structure SVM$的一种,输出的一个维度表示是否是那一类。
 
-
-
-
-
-
-
+            而且多分类的问题可以简化:在求损失的时候,只需要求对应类标签和对应类参数下预测值的差距即可。也就是第i类的训练样本,只对第i类的参数有影响
 
 \end{document}
