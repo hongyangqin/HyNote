@@ -114,6 +114,132 @@
             \includegraphics[scale = 0.3]{assets/ML_371e4.png}
         \end{figure}
 
+        \subsection{Kernel SVM}
+        简单地从梯度下降的角度来看,那么最终得到的$w^*$一定是所有$x_i$的线性组合,i.e.
+        \begin{equation}
+            w^* = \sum_i a_i^* x_i
+        \end{equation}
+
+        而由于使用\textbf{hinge loss}的原因,大部分的$a_i^* = 0$,对于$a_i^* \neq 0$的$x_i$,则称为\textbf{Support Vector}
+
+        那么最终的解的形式变成了$f(x) = \sum_i a_i(x_i\cdot x)$
+
+         若引入核函数,则是$f(x) = \sum_i a_i\cdot K(x_i\cdot x)$
+
+        而这个解的形式,则可以看成是一个单隐层神经网络:
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_b1b86.png}
+        \end{figure}
+
+        其中,每一个\textbf{Support Vector}表示一个神经元。
+
+        {\color{blue} 这里为了引入核函数,把问题变成了这种形式,参数变成了$a$,但一样可以用,梯度下降去解决,
+
+        从这里来看,应该是由$a$决定哪些是 \textbf{支持向量},而不是由支持向量,决定哪些$a = 0$}
+
+        \textbf{为什么说RBF是对应的是无穷为的点积?}
+
+        因为RBF使用泰勒展开之后,有无穷项,每一项代表若干个维度的分量分别相乘之和的结果。
+
+        \textbf{怎么设计核函数?}
+        满足 mercer 条件的任一函数都可以是核函数。
+
+        {\color{red}}
+
+        \subsection{SVM的应用与变种}
+        \begin{itemize}
+            \item SVR
+            \item Ranking SVM
+            \item one-class SVM
+            \item Recursive Kernel
+        \end{itemize}
+
+    \section{Structure Learning}
+    之前我们接触的大部分都是输入是一个向量,输出是一个实数
+    但如果我们要输出一个序列则怎么处理?
+
+    这里有一个大致的框架:\\
+    设$X$是输入,$Y$是输出,$F(X,Y)$描述X,Y的相似度,或者是X输出Y的概率\\
+    对于训练过程,我们要做的就是最大化训练样本输入和输出的相似度,i.e.
+    \begin{equation}
+        \max F(X,Y)
+    \end{equation}
+
+    对于测试过程,我们的输出就是在$Y$的空间中,与测试输入$X$,$F(X,Y)$最大的那个$Y$
+
+    那么,就有3个问题需要解决:
+    \begin{itemize}
+        \item [1. ] $F(X,Y)$是什么样子?
+        \item [2. ] 怎么有效快速地输出y?
+        \item [3. ] 怎么训练?
+    \end{itemize}
+
+    {\color{blue} 总的来说,就是把X和Y两个不同的东西,表示在同一个空间内,这样才能建立起度量,进而才有优化的方向。}
+
+    {\color{blue} 这三个问题和 HMM中的三个问题是一致的,因为HMM就是Structure Learning中的一种}
+
+        \subsection{Structured Liner Model}
+        F(x,y)的形式:y可以看成是x在特征空间中的投影,我们要做的就是在特征空间中的点距离y尽可能地近,或者是相似度尽可能大。
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_eca3e.png}
+        \end{figure}
+
+        我们可以简单地定义损失函数就是$F(x,\hat{y}) - F(x,d\dot y)$,也就是当前预测的点到目标点的距离。
+
+        其中$\dot y$是$F{x,y}$最大的$y$,我们只需要考虑最大的$y$即可,而不需要考虑其他。
+
+        至此,我们就可以用梯度下降的方法进行训练:
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_7db22.png}
+        \end{figure}
+
+        \textbf{收敛性证明}:对于线性可分的数据,我们可以证明,最多需要$(\frac{R}{\delta})^2$次迭代就可以收敛。
+
+        其中,$R$表示特征空间中任意两个y之间的最大距离,$\delta$表示margin
+
+        也就是说,迭代的次数和样本的规模无关。
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_178a9.png}
+        \end{figure}
+        即,我们要证明,随着迭代的过程,w是不断向最优解靠近的,也就是夹角不断变小
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_85362.png}
+        \end{figure}
+
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_2532d.png}
+        \end{figure}
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.3]{assets/ML_78f61.png}
+        \end{figure}
+
+        {\color{blue}
+        这里我们并没有证明$\cos \rho$是增大到1的,我们证明的是它的一个下界是不断增大到1,那么根据夹逼定理得证。
+
+        值得注意的是,这里有一个参数$\delta$,这个需要事先人为设定,当约束比较严格的是,则迭代次数较多,当约束比较松的时候,则迭代次数少。
+
+        $\delta$:对于这个参数的理解,我们并不要求整个算法的输入$X$在特征空间中的表示一定要和$Y$的表示重合,只要它们的差值在一定的范围内都是可接受的,因此,这个参数也叫margin
+        }
+
+
+
+
+
+
+
+
 
 
 
