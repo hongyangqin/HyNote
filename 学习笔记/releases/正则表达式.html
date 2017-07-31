@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>正则表达式</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({"extensions":["tex2jax.js"],"jax":["input/TeX","output/HTML-CSS"],"messageStyle":"none","tex2jax":{"processEnvironments":false,"processEscapes":true,"inlineMath":[["$","$"],["\\(","\\)"]],"displayMath":[["$$","$$"],["\\[","\\]"]]},"TeX":{"extensions":["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]},"HTML-CSS":{"availableFonts":["TeX"]}});
+        </script>
+        <script type="text/javascript" async src="file:///C:\Users\qhy28\.atom\packages\markdown-preview-enhanced\node_modules\@shd101wyy\mume\dependencies\mathjax\MathJax.js"></script>
+        
+      
+
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;padding:2em;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}@media screen and (min-width:914px){html body:not([data-presentation-mode]){width:980px;margin:10px auto}}@media screen and (max-width:400px){html body:not([data-presentation-mode]){font-size:14px;margin:0 auto;padding:15px}}html body .pagebreak,html body .newpage{page-break-before:always}html body pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}html body pre.line-numbers>code{position:relative}html body pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}html body pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}html body pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}html body .mathjax-exps .MathJax_Display{text-align:center !important}html body:not([for="preview"]) .code-chunk .btn-group{display:none}html body:not([for="preview"]) .code-chunk .status{display:none}html body:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px} 
+       
+      </style>
+    </head>
+    <body class="mume   ">
+    <h1 class="mume-header" id="&#x884C;&#x9996;">行首</h1>
+
+<pre class="language-">^
+</pre>
+<h1 class="mume-header" id="&#x884C;&#x5C3E;">行尾</h1>
+
+<pre class="language-">$
+</pre>
+<h1 class="mume-header" id="&#x7A7A;&#x767D;&#x5B57;&#x7B26;">空白字符</h1>
+
+<pre class="language-">\s
+</pre>
+<h1 class="mume-header" id="&#x8FDE;&#x7EED;&#x7684;&#x7A7A;&#x767D;&#x5B57;&#x7B26;">连续的空白字符</h1>
+
+<pre class="language-">\s+
+</pre>
+<h1 class="mume-header" id="&#x7B26;&#x53F7;">符号</h1>
+
+<ol>
+<li>.:匹配除 换行符 '\n' 之外的任意字符<br>
+可以在方法中增加参数 re.S 来使得 . 能匹配 换行符</li>
+<li>*:匹配前一个字符 0 次 或者 无限次，</li>
+<li>?:陪陪钱要给字符 0 次 或者 1 次</li>
+<li>.*:尽可能地匹配长的字符</li>
+<li>.*?:尽可能匹配短的字符</li>
+<li>\d+:匹配数字</li>
+</ol>
+<h1 class="mume-header" id="&#x4F8B;&#x5B50;">例子</h1>
+
+<ol>
+<li>
+<p>简单匹配某个字符串</p>
+<pre class="language-">import re
+# &#x63D0;&#x53D6; I love you
+# &#x6CE8;&#x610F;:&apos;xxxIxxxlovexxxyou&apos;&#x8FD9;&#x53E5;&#x4E0D;&#x80FD;&#x5339;&#x914D;&#x5230;&apos;
+s = &apos;xxxIxxxxxxlovexxxxxxyouxxx&apos;
+a = re.findall(&quot;xxx(.*?)xxx&quot;,s)
+print(a)
+</pre>
+<p>上面的并不能匹配下面的字符串(上面一个匹配只能配到换行)</p>
+<pre class="language-">s = &apos;&apos;&apos;xxxIxxxxxxlove
+xxxxxxyouxxx&apos;&apos;&apos;
+</pre>
+<p>解决：使用 re.S 第三个参数</p>
+<pre class="language-">a = re.findall(&quot;xxx(.*?)xxx&quot;,s,re.S);
+# output:
+# [&apos;I&apos;, &apos;love\n&apos;, &apos;you&apos;]
+</pre>
+</li>
+<li>
+<p>提取所有数字</p>
+<pre class="language-">s = &apos;12asd123asd54a6s4d6a5s4d98&apos;
+a = re.findall(&quot;(\d+)&quot;,s)
+print(a)
+</pre>
+</li>
+<li>
+<p>替换匹配的字符串</p>
+<pre class="language-">i = 666
+old = &apos;qhyqhyqhqyyhhqyqhhasd page in 1&apos;
+new = re.sub(&apos;page in \d+&apos;,&apos; page in %d&apos;% i,old);
+# output:
+# qhyqhyqhqyyhhqyqhhasd  page in 666
+</pre>
+<ol>
+<li>这里 匹配的字符串是 'page in 1' 而不是 '1'</li>
+<li><em>'page in %d'% i</em> 用 i 替换 %d (%d 和 C++ 的%d 一样)</li>
+</ol>
+</li>
+<li>
+<p>简单用正则爬贴吧帖子作者</p>
+<pre class="language-"># &#x7B80;&#x5355;&#x722C;&#x866B;&#x722C;&#x8D34;&#x5427;&#x5E16;&#x5B50;&#x4F5C;&#x8005;
+# &#x6253;&#x5F00;&#x7F51;&#x9875;
+html = requests.get(&quot;http://tieba.baidu.com/f?kw=dnf%E5%95%86%E4%BA%BA&amp;ie=utf-8&quot;);
+# &#x6B63;&#x5219;&#x63D0;&#x53D6;&#x6BCF;&#x4E2A;&#x5E16;&#x5B50;&#x7684;&#x4F5C;&#x8005;
+authors = re.findall(&quot;title=\&quot;&#x4E3B;&#x9898;&#x4F5C;&#x8005;: (.*?)\&quot;&quot;, html.text,re.S)
+for each in authors:
+    print(each)
+</pre>
+</li>
+<li>
+<p>去重复</p>
+<pre class="language-">^(.*?)$\s+?^(?=.*^\1$)
+</pre>
+<p>notepad++ 界面如下:<br>
+<img src="assets/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F-08fa5.png" alt="1"></p>
+</li>
+</ol>
+<p><a href="https://blog.yimik.com/archives/992">参考</a></p>
+
+    </body>
+    
+    
+    <script>
+(function bindTaskListEvent() {
+  var taskListItemCheckboxes = document.body.getElementsByClassName('task-list-item-checkbox')
+  for (var i = 0; i < taskListItemCheckboxes.length; i++) {
+    var checkbox = taskListItemCheckboxes[i]
+    var li = checkbox.parentElement
+    if (li.tagName !== 'LI') li = li.parentElement
+    if (li.tagName === 'LI') {
+      li.classList.add('task-list-item')
+    }
+  }
+}())    
+</script>
+  </html>

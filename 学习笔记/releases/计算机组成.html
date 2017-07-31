@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>计算机组成</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({"extensions":["tex2jax.js"],"jax":["input/TeX","output/HTML-CSS"],"messageStyle":"none","tex2jax":{"processEnvironments":false,"processEscapes":true,"inlineMath":[["$","$"],["\\(","\\)"]],"displayMath":[["$$","$$"],["\\[","\\]"]]},"TeX":{"extensions":["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]},"HTML-CSS":{"availableFonts":["TeX"]}});
+        </script>
+        <script type="text/javascript" async src="file:///C:\Users\qhy28\.atom\packages\markdown-preview-enhanced\node_modules\@shd101wyy\mume\dependencies\mathjax\MathJax.js"></script>
+        
+      
+
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;padding:2em;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}@media screen and (min-width:914px){html body:not([data-presentation-mode]){width:980px;margin:10px auto}}@media screen and (max-width:400px){html body:not([data-presentation-mode]){font-size:14px;margin:0 auto;padding:15px}}html body .pagebreak,html body .newpage{page-break-before:always}html body pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}html body pre.line-numbers>code{position:relative}html body pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}html body pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}html body pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}html body .mathjax-exps .MathJax_Display{text-align:center !important}html body:not([for="preview"]) .code-chunk .btn-group{display:none}html body:not([for="preview"]) .code-chunk .status{display:none}html body:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px} 
+       
+      </style>
+    </head>
+    <body class="mume   ">
+    <ul>
+<li><a href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90">计算机系统组成</a>
+<ul>
+<li><a href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84">计算机体系结构</a>
+<ul>
+<li><a href="#%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84">冯诺依曼体系结构</a></li>
+</ul>
+</li>
+<li><a href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87">计算机性能指标</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8byte-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8bit">什么时候用Byte ，什么时候用bit？</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E4%B8%8E%E6%96%87%E5%AD%97%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95">数据与文字的表示方法</a>
+<ul>
+<li><a href="#%E5%8E%9F%E7%A0%81%E8%A1%A8%E7%A4%BA%E6%B3%95">原码表示法</a></li>
+<li><a href="#%E8%A1%A5%E7%A0%81%E8%A1%A8%E7%A4%BA%E6%B3%95">补码表示法</a></li>
+<li><a href="#%E5%8F%8D%E7%A0%81">反码</a></li>
+<li><a href="#%E7%A7%BB%E7%A0%81">移码</a></li>
+<li><a href="#%E5%AF%B9%E4%BA%8En1%E4%BD%8D%E7%9A%84%E6%9C%BA%E5%99%A8%E6%95%B0x%E6%89%80%E8%83%BD%E8%A1%A8%E7%A4%BA%E7%9A%84%E8%8C%83%E5%9B%B4">对于n+1位的机器数X，所能表示的范围</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B5%AE%E7%82%B9%E6%9C%BA%E5%99%A8%E6%95%B0">浮点机器数</a>
+<ul>
+<li><a href="#%E9%80%9A%E7%94%A8%E6%A0%87%E5%87%86">通用标准</a></li>
+<li><a href="#ieee754%E6%A0%87%E5%87%86">IEEE754标准</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A3%80%E9%AA%8C%E7%A0%81">检验码</a>
+<ul>
+<li><a href="#%E5%A5%87%E5%81%B6%E6%A0%A1%E9%AA%8C%E7%A0%81">奇偶校验码</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9A%E7%82%B9%E6%95%B0%E7%9A%84%E5%8A%A0%E5%87%8F%E6%B3%95%E8%BF%90%E7%AE%97%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0">定点数的加减法运算及其实现</a>
+<ul>
+<li><a href="#%E8%A1%A5%E7%A0%81%E7%9A%84%E5%8A%A0%E5%87%8F%E8%BF%90%E7%AE%97">补码的加减运算</a></li>
+<li><a href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%B8%B2%E8%A1%8C%E5%8A%A0%E5%87%8F%E6%B3%95%E8%BF%90%E7%AE%97%E5%99%A8">二进制串行加减法运算器</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%BA%E5%99%A8%E6%95%B0%E7%9A%84%E4%BD%8D%E7%A7%BB%E8%BF%90%E7%AE%97">机器数的位移运算</a></li>
+<li><a href="#%E5%AE%9A%E7%82%B9%E6%95%B0%E7%9A%84%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%8F%8A%E5%AE%9E%E7%8E%B0">定点数的乘法运算及实现</a>
+<ul>
+<li><a href="#%E5%8E%9F%E7%A0%81%E7%A7%BB%E4%BD%8D%E4%B9%98%E6%B3%95">原码移位乘法</a></li>
+<li><a href="#%E9%98%B5%E5%88%97%E4%B9%98%E6%B3%95%E5%99%A8">阵列乘法器</a>
+<ul>
+<li><a href="#%E6%B1%82%E8%A1%A5%E7%94%B5%E8%B7%AF">求补电路</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E9%99%A4%E6%B3%95%E8%BF%90%E7%AE%97">除法运算</a>
+<ul>
+<li><a href="#%E5%8E%9F%E7%A0%81%E6%81%A2%E5%A4%8D%E4%BD%99%E6%95%B0">原码恢复余数</a></li>
+<li><a href="#%E5%8E%9F%E7%A0%81%E4%B8%8D%E6%81%A2%E5%A4%8D%E4%BD%99%E6%95%B0">原码不恢复余数</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9A%E7%82%B9%E8%BF%90%E7%AE%97%E5%99%A8">定点运算器</a></li>
+<li><a href="#%E6%B5%AE%E7%82%B9%E8%BF%90%E7%AE%97%E5%8F%8A%E8%BF%90%E7%AE%97%E5%99%A8">浮点运算及运算器</a>
+<ul>
+<li><a href="#%E6%B5%AE%E7%82%B9%E5%8A%A0%E5%87%8F%E8%BF%90%E7%AE%97">浮点加/减运算</a></li>
+<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F">存储系统</a>
+<ul>
+<li><a href="#%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E5%88%86%E7%B1%BB">存储器的分类</a>
+<ul>
+<li><a href="#%E6%8C%89%E5%AD%98%E5%82%A8%E4%BB%8B%E8%B4%A8%E5%88%86%E7%B1%BB">按存储介质分类</a></li>
+<li><a href="#%E6%8C%89%E5%AD%98%E5%8F%96%E6%96%B9%E5%BC%8F%E5%88%86%E7%B1%BB">按存取方式分类</a></li>
+<li><a href="#%E6%8C%89%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E8%AF%BB%E5%86%99%E5%8A%9F%E8%83%BD%E5%88%86%E7%B1%BB">按存储器的读写功能分类</a></li>
+<li><a href="#%E6%8C%89%E4%BF%A1%E6%81%AF%E7%9A%84%E5%8F%AF%E4%BF%9D%E5%AD%98%E6%80%A7%E5%88%86%E7%B1%BB">按信息的可保存性分类</a></li>
+<li><a href="#%E6%8C%89%E5%9C%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%E5%88%86%E7%B1%BB">按在计算机系统中的作用分类</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8">主存储器</a>
+<ul>
+<li><a href="#%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E5%88%86%E7%B1%BB">主存储器的分类</a></li>
+<li><a href="#%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87">主存储器的性能指标</a>
+<ul>
+<li><a href="#%E5%AD%98%E5%82%A8%E5%AE%B9%E9%87%8F">存储容量</a></li>
+<li><a href="#%E5%AD%98%E5%82%A8%E9%80%9F%E5%BA%A6">存储速度</a></li>
+<li><a href="#%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E4%BB%B7%E6%A0%BC">存储器的价格</a></li>
+<li><a href="#%E5%8F%AF%E9%9D%A0%E6%80%A7">可靠性</a></li>
+<li><a href="#%E5%8A%9F%E8%80%97">功耗</a></li>
+<li><a href="#%E5%AD%98%E5%82%A8%E5%AE%B9%E9%87%8F-%E9%80%9F%E5%BA%A6-%E4%BB%B7%E6%A0%BC%E7%9A%84%E5%85%B3%E7%B3%BB">存储容量、速度、价格的关系</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9A%8F%E6%9C%BA%E8%AF%BB%E5%86%99%E5%AD%98%E5%82%A8%E5%99%A8-ram">随机读写存储器 RAM</a>
+<ul>
+<li><a href="#%E9%9D%99%E6%80%81%E5%AD%98%E5%82%A8%E5%99%A8-sram">静态存储器 SRAM</a>
+<ul>
+<li><a href="#%E5%8D%95%E5%90%91%E8%AF%91%E7%A0%81">单向译码</a></li>
+<li><a href="#%E5%8F%8C%E5%90%91%E8%AF%91%E7%A0%81">双向译码</a></li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E7%9A%84sram%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84">基本的SRAM逻辑结构</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8A%A8%E6%80%81%E5%AD%98%E5%82%A8%E5%99%A8-dram">动态存储器 DRAM</a>
+<ul>
+<li><a href="#dram%E7%9A%84%E5%88%B7%E6%96%B0%E6%96%B9%E5%BC%8F">DRAM的刷新方式</a>
+<ul>
+<li><a href="#%E9%9B%86%E4%B8%AD%E5%BC%8F%E5%88%B7%E6%96%B0">集中式刷新</a></li>
+<li><a href="#%E5%88%86%E6%95%A3%E5%BC%8F%E5%88%B7%E6%96%B0">分散式刷新</a></li>
+<li><a href="#%E5%BC%82%E6%AD%A5%E5%BC%8F%E5%88%B7%E6%96%B0">异步式刷新</a></li>
+</ul>
+</li>
+<li><a href="#dram%E4%B8%BB%E5%AD%98%E8%AF%BB%E5%86%99%E6%AD%A3%E7%A1%AE%E6%80%A7%E6%A0%A1%E9%AA%8C">DRAM主存读/写正确性校验</a></li>
+</ul>
+</li>
+<li><a href="#sram-%E5%92%8C-dram-%E7%9A%84%E5%AF%B9%E6%AF%94">SRAM 和 DRAM 的对比</a></li>
+<li><a href="#%E9%AB%98%E6%80%A7%E8%83%BD%E5%AD%98%E5%82%A8%E5%99%A8">高性能存储器</a>
+<ul>
+<li><a href="#fpm-ram">FPM RAM</a></li>
+<li><a href="#cdram">CDRAM</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%8F%AA%E8%AF%BB%E5%AD%98%E5%82%A8%E5%99%A8">只读存储器</a>
+<ul>
+<li><a href="#mrom-%E6%8E%A9%E8%86%9C%E5%BC%8F%E5%8F%AA%E8%AF%BB%E5%AD%98%E5%82%A8%E5%99%A8">MROM 掩膜式只读存储器</a></li>
+<li><a href="#prom-%E5%8F%AF%E7%BC%96%E7%A8%8B%E5%8F%AA%E8%AF%BB%E5%AD%98%E5%82%A8%E5%99%A8">PROM 可编程只读存储器</a></li>
+<li><a href="#eprom">EPROM</a></li>
+<li><a href="#flash-%E5%AD%98%E5%82%A8%E5%85%83">FLASH 存储元</a></li>
+<li><a href="#%E9%9B%86%E4%B8%AD%E9%9D%9E%E6%98%93%E5%A4%B1%E6%80%A7%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E6%AF%94%E8%BE%83">集中非易失性存储器的比较</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%AD%98%E5%82%A8%E5%99%A8%E5%AE%B9%E9%87%8F%E6%89%A9%E5%B1%95%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E6%B3%95">存储器容量扩展的三种方法</a>
+<ul>
+<li><a href="#%E4%BD%8D%E6%89%A9%E5%B1%95">位扩展</a></li>
+<li><a href="#%E5%AD%97%E6%89%A9%E5%B1%95">字扩展</a></li>
+<li><a href="#%E5%AD%97%E4%BD%8D%E6%89%A9%E5%B1%95">字位扩展</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E5%92%8Ccpu%E7%9A%84%E8%BF%9E%E6%8E%A5">主存储器和CPU的连接</a></li>
+<li><a href="#%E9%AB%98%E9%80%9F%E5%AD%98%E5%82%A8%E5%99%A8">高速存储器</a>
+<ul>
+<li><a href="#%E5%8F%8C%E7%AB%AF%E5%8F%A3%E5%AD%98%E5%82%A8%E5%99%A8">双端口存储器</a></li>
+<li><a href="#%E5%A4%9A%E4%BD%93%E4%BA%A4%E5%8F%89%E5%AD%98%E5%82%A8%E5%99%A8">多体交叉存储器</a>
+<ul>
+<li><a href="#%E9%A1%BA%E5%BA%8F%E7%BC%96%E5%9D%80">顺序编址</a></li>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E5%9D%80">交叉编址</a></li>
+<li><a href="#%E5%A4%9A%E4%BD%93%E4%BA%A4%E5%8F%89%E5%AD%98%E5%82%A8%E5%99%A8-1">多体交叉存储器</a></li>
+<li><a href="#%E5%A4%9A%E6%A8%A1%E5%9D%97%E5%AD%98%E5%82%A8%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%97%B6%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB">多模块存储器工作时间的关系</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E9%AB%98%E9%80%9F%E7%BC%93%E5%86%B2%E5%AD%98%E5%82%A8%E5%99%A8-cache">高速缓冲存储器 Cache</a>
+<ul>
+<li><a href="#cache-%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86">Cache 的基本原理</a>
+<ul>
+<li><a href="#cache%E7%9A%84%E7%89%B9%E7%82%B9">Cache的特点</a></li>
+<li><a href="#cache%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86">Cache的工作原理</a></li>
+<li><a href="#cache%E7%9A%84%E5%91%BD%E4%B8%AD%E7%8E%87">Cache的命中率</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%BB%E5%AD%98%E5%92%8Ccache%E7%9A%84%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F">主存和Cache的地址映射方式</a>
+<ul>
+<li><a href="#%E5%85%A8%E7%9B%B8%E8%81%94%E6%98%A0%E5%B0%84">全相联映射</a></li>
+<li><a href="#%E7%9B%B4%E6%8E%A5%E6%98%A0%E5%B0%84">直接映射</a></li>
+<li><a href="#%E7%BB%84%E7%9B%B8%E8%81%94%E6%98%A0%E5%B0%84">组相联映射</a></li>
+</ul>
+</li>
+<li><a href="#cache%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95">Cache替换算法</a>
+<ul>
+<li><a href="#%E9%9A%8F%E6%9C%BA%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95">随机替换算法</a></li>
+<li><a href="#%E5%85%88%E8%BF%9B%E5%85%88%E5%87%BA%E7%AE%97%E6%B3%95fifo">先进先出算法(FIFO)</a></li>
+<li><a href="#%E6%9C%80%E8%BF%91%E6%9C%80%E5%B0%91%E4%BD%BF%E7%94%A8%E7%AE%97%E6%B3%95lru">最近最少使用算法(LRU)</a></li>
+</ul>
+</li>
+<li><a href="#cache%E5%86%99%E6%93%8D%E4%BD%9C%E7%AD%96%E7%95%A5">Cache写操作策略</a>
+<ul>
+<li><a href="#%E5%86%99%E5%9B%9E%E6%B3%95">写回法</a></li>
+<li><a href="#%E5%85%A8%E5%86%99%E6%B3%95">全写法</a></li>
+<li><a href="#%E5%86%99%E4%B8%80%E6%AC%A1%E6%B3%95">写一次法</a></li>
+</ul>
+</li>
+<li><a href="#cache%E7%9A%84%E5%A4%9A%E5%B1%82%E6%AC%A1%E8%AE%BE%E8%AE%A1">Cache的多层次设计</a>
+<ul>
+<li><a href="#%E7%BB%9F%E4%B8%80%E5%92%8C%E5%88%86%E7%A6%BB%E7%9A%84cache">统一和分离的Cache</a></li>
+<li><a href="#%E5%8D%95%E7%BA%A7cache%E5%92%8C%E4%B8%A4%E7%BA%A7cache">单级Cache和两级Cache</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F">指令系统</a>
+<ul>
+<li><a href="#%E6%8C%87%E4%BB%A4%E7%9A%84%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F">指令的寻址方式</a>
+<ul>
+<li><a href="#%E7%9B%B4%E6%8E%A5%E5%AF%BB%E5%9D%80">直接寻址</a></li>
+<li><a href="#%E9%97%B4%E6%8E%A5%E5%AF%BB%E5%9D%80">间接寻址</a></li>
+<li><a href="#%E5%AF%84%E5%AD%98%E5%99%A8%E5%AF%BB%E5%9D%80">寄存器寻址</a></li>
+<li><a href="#%E5%AF%84%E5%AD%98%E5%99%A8%E9%97%B4%E6%8E%A5%E5%AF%BB%E5%9D%80">寄存器间接寻址</a></li>
+<li><a href="#%E5%81%8F%E7%A7%BB%E5%AF%BB%E5%9D%80">偏移寻址</a></li>
+<li><a href="#%E6%AE%B5%E5%AF%BB%E5%9D%80">段寻址</a></li>
+<li><a href="#%E5%A0%86%E6%A0%88%E5%AF%BB%E5%9D%80">堆栈寻址</a></li>
+</ul>
+</li>
+<li><a href="#8bit%E5%AD%97%E9%95%BF%E7%9A%84%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1">8bit字长的指令系统设计</a>
+<ul>
+<li><a href="#%E4%B8%80%E8%88%AC%E6%8C%87%E4%BB%A4%E6%A0%BC%E5%BC%8F">一般指令格式</a></li>
+<li><a href="#%E6%A0%BC%E5%BC%8F2">格式2</a></li>
+<li><a href="#%E6%A0%BC%E5%BC%8F3%E4%B8%89%E5%AD%97%E6%A0%BC%E5%BC%8F">格式3:三字格式</a></li>
+<li><a href="#%E6%89%A9%E5%B1%95%E6%8C%87%E4%BB%A4%E6%A0%BC%E5%BC%8F">扩展指令格式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+<h1 class="mume-header" id="&#x8BA1;&#x7B97;&#x673A;&#x7CFB;&#x7EDF;&#x7EC4;&#x6210;">计算机系统组成</h1>
+
+<p>数据流是双向的，指令流是单向的</p>
+<h2 class="mume-header" id="&#x8BA1;&#x7B97;&#x673A;&#x4F53;&#x7CFB;&#x7ED3;&#x6784;">计算机体系结构</h2>
+
+<h3 class="mume-header" id="&#x51AF;&#x8BFA;&#x4F9D;&#x66FC;&#x4F53;&#x7CFB;&#x7ED3;&#x6784;">冯诺依曼体系结构</h3>
+
+<p>计算机体系结构-计算机组成-计算机实现 三者的关系是 表现-构成-实现</p>
+<h2 class="mume-header" id="&#x8BA1;&#x7B97;&#x673A;&#x6027;&#x80FD;&#x6307;&#x6807;">计算机性能指标</h2>
+
+<ol start="0">
+<li>
+<p>时钟周期/主频<br>
+<span class="mathjax-exps">$T = &#x5C;frac{1}{f}$</span></p>
+</li>
+<li>
+<p>CPU执行时间<br>
+表示CPU执行一般程序所需要的时间<br>
+CPU执行时间 = CPU始终周期 × CPU时钟周期数</p>
+</li>
+<li>
+<p>CPI<br>
+表示每条指令执行所需要的平均周期数</p>
+</li>
+<li>
+<p>MIPS<br>
+表示1s内执行多少百万条定点指令</p>
+</li>
+<li>
+<p>FLOPS<br>
+表示每秒执行浮点操作的次数。</p>
+</li>
+</ol>
+<h1 class="mume-header" id="&#x4EC0;&#x4E48;&#x65F6;&#x5019;&#x7528;byte-&#x4EC0;&#x4E48;&#x65F6;&#x5019;&#x7528;bit">什么时候用Byte ，什么时候用bit？</h1>
+
+<p>Byte：通过系统总线访问(System Bus)，即一次访问就能访问一个Byte<br>
+bit:串行存储器等，即每次访问都是xxbit，（比如U盘，网线）</p>
+<h1 class="mume-header" id="&#x6570;&#x636E;&#x4E0E;&#x6587;&#x5B57;&#x7684;&#x8868;&#x793A;&#x65B9;&#x6CD5;">数据与文字的表示方法</h1>
+
+<p>机器数：计算机内部编码表示的数。<br>
+真值：是指机器数所表示的真正的数</p>
+<p>机器数的编码方法：原码，反码，移码，补码<br>
+PS：原码不是真值。</p>
+<p>小数的表示方法：定点小数，浮点小数<br>
+定点小数，小数点的位置是固定的（定点小数 &lt; 1?）<br>
+浮点小数：小数点的位置由阶数决定。</p>
+<h2 class="mume-header" id="&#x539F;&#x7801;&#x8868;&#x793A;&#x6CD5;">原码表示法</h2>
+
+<p>最高位为符号位。<br>
+符号位：0-正数，1-负数<br>
+数值为：和真值的绝对值相同</p>
+<h2 class="mume-header" id="&#x8865;&#x7801;&#x8868;&#x793A;&#x6CD5;">补码表示法</h2>
+
+<p>任意一个数的补码，等于它加上它的模数（再取模）<br>
+<span class="mathjax-exps">$[X]_{补} = X + M (MOD M)$</span> <!--_--></p>
+<ol>
+<li>
+<p>用n位二进制数表示整数补码(其中包括一个符号位)<br>
+<span class="mathjax-exps">$[X]_{补}=&#x5C;begin{cases} X &amp;, X &#x5C;geq 0 &#x5C;&#x5C; X + 2^n &amp;, 2^n - 1 &#x5C;leq X &lt; 0 &#x5C;end{cases}$</span><!--_--></p>
+</li>
+<li>
+<ol>
+<li>用n位二进制数表示小数补码(其中包括一个符号位)<br>
+<span class="mathjax-exps">$[X]_{补}=&#x5C;begin{cases}X &amp;,0 &#x5C;leq X &lt; 1 &#x5C;&#x5C;X + 2 &amp;,  - 1 &#x5C;leq X &lt; 0&#x5C;end{cases}$</span><!--_--></li>
+</ol>
+</li>
+</ol>
+<p>表示方法：<br>
+最高位为符号位<br>
+符号位：0-正数，1-负数<br>
+数值位：正数时，和绝对值相同，负数时，绝对值取反后，末位+1</p>
+<p>转换方法：</p>
+<ol>
+<li>补码 = 反码 + 1</li>
+<li>取最低为1的位，这一位以前的高位全部取反，这一位及其以后的低位保持不变。</li>
+</ol>
+<h2 class="mume-header" id="&#x53CD;&#x7801;">反码</h2>
+
+<p>表示方法：<br>
+最高位为符号位<br>
+符号位：0-正数，1-负数<br>
+数值位：正数时，和绝对值相同，负数时，绝对值取反</p>
+<h2 class="mume-header" id="&#x79FB;&#x7801;">移码</h2>
+
+<p>和补码类似，只不过符号位表示相反<br>
+符号位：0-负数，1-正数<br>
+相比补码的优势：这个机器数的大小关系就能表示真值的大小关系</p>
+<h2 class="mume-header" id="&#x5BF9;&#x4E8E;n1&#x4F4D;&#x7684;&#x673A;&#x5668;&#x6570;x&#x6240;&#x80FD;&#x8868;&#x793A;&#x7684;&#x8303;&#x56F4;">对于n+1位的机器数X，所能表示的范围</h2>
+
+<ol>
+<li>
+<p>原码，反码<br>
+<span class="mathjax-exps">$[-(2^n - 1), 2^n - 1]$</span><br>
+<span class="mathjax-exps">$[-(1-2^{-n}),1-2^{-n}]$</span></p>
+</li>
+<li>
+<p>补码,移码<br>
+<span class="mathjax-exps">$[-2^n, 2^n - 1]$</span><br>
+<span class="mathjax-exps">$[-1,1-2^{-n}]$</span></p>
+</li>
+</ol>
+<p>小数的范围实际上就是整数的范围除以<span class="mathjax-exps">$2^n$</span></p>
+<h1 class="mume-header" id="&#x6D6E;&#x70B9;&#x673A;&#x5668;&#x6570;">浮点机器数</h1>
+
+<h2 class="mume-header" id="&#x901A;&#x7528;&#x6807;&#x51C6;">通用标准</h2>
+
+<p>浮点数格式:<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-fe2fb.png" alt="1"><br>
+真值：<span class="mathjax-exps">$N = M×R^E$</span><br>
+底数R：默认底数 R = 2<br>
+<span class="mathjax-exps">$M = 0.M_1M_2M_3$</span><br>
+一般地，</p>
+<ol>
+<li>阶码用移码表示</li>
+<li>尾数用原码表示</li>
+<li>尾数的符号位（数符）放在最高位</li>
+</ol>
+<p>规格化：<br>
+一般取 <span class="mathjax-exps">$&#x5C;frac{1}{2} &#x5C;leq |M| &#x5C;leq 1$</span><br>
+则<br>
+真值一般表示成 <span class="mathjax-exps">$0.1xxxxx×2^E$</span> 的形式</p>
+<h2 class="mume-header" id="ieee754&#x6807;&#x51C6;">IEEE754标准</h2>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-986a3.png" alt="2"><br>
+规格化尾数为 <span class="mathjax-exps">$M = 1.M_1M_2...$</span>，即nbit的字段，可以存放表示成(n+1)bit的有效数字</p>
+<p>其中,E的移码表示不再是移动 <span class="mathjax-exps">$2^{n - 1}$</span> 而是 <span class="mathjax-exps">$2^{n-1} - 1$</span>，n为阶码的位数</p>
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-bb6cf.png" alt="3"><br>
+特殊的浮点数：<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-263eb.png" alt="4"></p>
+<h1 class="mume-header" id="&#x68C0;&#x9A8C;&#x7801;">检验码</h1>
+
+<p>校验码的定义：是一种具有发现某些错误或自动改正错误能力的一种数据编码方法。</p>
+<p>校验码的目的：用于检查或纠正在存取，读写和传输数据的过程中可能出现的错误。</p>
+<h2 class="mume-header" id="&#x5947;&#x5076;&#x6821;&#x9A8C;&#x7801;">奇偶校验码</h2>
+
+<p>有效信息位+1bit校验位=奇偶校验码<br>
+奇校验码：校验码中1的个数是奇数个（信息位偶数个加上校验位一个）<br>
+偶校验码：校验码中1个个数是偶数个</p>
+<p>编码:<span class="mathjax-exps">$P_奇 = B_0 &#x5C;oplus B_1 &#x5C;oplus ... &#x5C;oplus B_n$</span><br>
+译码：当译码结果E为的时候，无论奇偶，都表示数据正确、<br>
+<span class="mathjax-exps">$E = P_{奇&#x2F;偶} &#x5C;oplus B_0 &#x5C;oplus b_1 &#x5C;oplus .. &#x5C;oplus b_n$</span></p>
+<h1 class="mume-header" id="&#x5B9A;&#x70B9;&#x6570;&#x7684;&#x52A0;&#x51CF;&#x6CD5;&#x8FD0;&#x7B97;&#x53CA;&#x5176;&#x5B9E;&#x73B0;">定点数的加减法运算及其实现</h1>
+
+<h2 class="mume-header" id="&#x8865;&#x7801;&#x7684;&#x52A0;&#x51CF;&#x8FD0;&#x7B97;">补码的加减运算</h2>
+
+<p>公式：<br>
+<span class="mathjax-exps">$[X + Y]_补 = [X]_补 + [Y]_补$</span><br>
+<span class="mathjax-exps">$[X - Y]_补 = [X]_补 + [-Y]_补$</span><!--_--></p>
+<ol>
+<li>真值的减法 等价于加上一个负数</li>
+<li>补码可以直接相加减，得到的结果是真值运算结果的补码</li>
+<li>补码符号位的进位直接丢弃</li>
+</ol>
+<p>溢出判断：<br>
+只有以下两种情况可能出现溢出现象：</p>
+<ol>
+<li>同号相加<br>
+2。 异号相减<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-0acb3.png" alt="5"></li>
+</ol>
+<p>实际上，异号详见也可以看成是同号相加。</p>
+<p>判断方法有两种</p>
+<ol>
+<li>
+<p>单符号位判断法：<br>
+运算结果从机器数的角度来看，如果符号位不正确，那么说明发生了溢出</p>
+</li>
+<li>
+<p>双符号位判断法<br>
+符号位扩展到两位，00表示正数，11表示负数，如果运算之后，符号位变成01，说明发生了正溢，10说明发生了负溢。<br>
+这个也可以理解成，符号位和数值位分别运算，如果符号位和数值位产生的进位不同，那么就发生了溢出。<br>
+但并不是说00和11就一定不会溢出了。</p>
+</li>
+</ol>
+<h2 class="mume-header" id="&#x4E8C;&#x8FDB;&#x5236;&#x4E32;&#x884C;&#x52A0;&#x51CF;&#x6CD5;&#x8FD0;&#x7B97;&#x5668;">二进制串行加减法运算器</h2>
+
+<p>全加器逻辑表达式：由逻辑真值表可以轻易得到。<br>
+<span class="mathjax-exps">$S_i = A_i &#x5C;oplus B_i &#x5C;oplus C_i$</span><br>
+<span class="mathjax-exps">$C_{i+1} = A_iB_i + B_iC_i + C_iA_i = A_iB_i + (A_i&#x5C;oplus B_i)C_i$</span><br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-1b3e7.png" alt="6"></p>
+<p>二进制串行加减法：<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-98b0b.png" alt="7"><br>
+当M = 0为加法。<br>
+当M = 1为减法。<br>
+减法的过程实际上就是加上一个负数，这里实际上就是加上原来的数的补码，异或门是取反操作，第一个全加器进位有输入，表示末尾加1.</p>
+<p>运算时间（延迟）：<br>
+T:单极逻辑门的延迟时间<br>
+那么进位<span class="mathjax-exps">$C_i$</span>产生的时间为：2T<br>
+异或门由3个逻辑门组成，<br>
+那么<span class="mathjax-exps">$F_i$</span>产生的时间为:<span class="mathjax-exps">$3&#x5C;times 3T$</span><br>
+因此总时间<span class="mathjax-exps">$t = n&#x5C;times 2T + 9T$</span></p>
+<p>为什么<span class="mathjax-exps">$F_i$</span>的时间不用乘以n，我们可以这样考虑<br>
+先执行所有进位之后，才进行数值位的运算。或者说 ，只有所有进位运算结束之后，<span class="mathjax-exps">$F_i$</span>的计算才能输出正确的结果。</p>
+<h1 class="mume-header" id="&#x673A;&#x5668;&#x6570;&#x7684;&#x4F4D;&#x79FB;&#x8FD0;&#x7B97;">机器数的位移运算</h1>
+
+<p>逻辑移位：符号位也参与移位<br>
+算数移位：符号位保持不变，其他移位。<br>
+循环移位：所有的数据位在自身范围内左移或右移。</p>
+<p>补码的算数移位：</p>
+<ol>
+<li>
+<p>左移<br>
+当移出的位和符号位不一致的时候，发生溢出。</p>
+</li>
+<li>
+<p>右移<br>
+低位直接移出，高位正数补0，负数补1，也就是高位补符号位。</p>
+</li>
+</ol>
+<h1 class="mume-header" id="&#x5B9A;&#x70B9;&#x6570;&#x7684;&#x4E58;&#x6CD5;&#x8FD0;&#x7B97;&#x53CA;&#x5B9E;&#x73B0;">定点数的乘法运算及实现</h1>
+
+<p>使用原码进行运算<br>
+符号位和数值位分别运算。<br>
+符号位<span class="mathjax-exps">$P_s = X_y &#x5C;oplus Y_s$</span><br>
+数值位:<span class="mathjax-exps">$|P| = |X| &#x5C;times |Y|$</span></p>
+<p>乘法的机器算法：从乘数的最低位开始，每次根据乘数位得到其位积，乘数位为0，位积为0，乘数位为1，则位积为被乘数；用原部分积右移1位加上本次位积，得新部分积；初始部分积为0。<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-0c1cd.png" alt="8"></p>
+<h2 class="mume-header" id="&#x539F;&#x7801;&#x79FB;&#x4F4D;&#x4E58;&#x6CD5;">原码移位乘法</h2>
+
+<p>原码移位乘法：电路结构简单，但是速度慢</p>
+<h2 class="mume-header" id="&#x9635;&#x5217;&#x4E58;&#x6CD5;&#x5668;">阵列乘法器</h2>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-7f0fd.png" alt="9"></p>
+<ol>
+<li>计算器中数值以补码的形式存储，那么在运算之前，需要对数值位进行转换<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-e6859.png" alt="10"></li>
+<li>符号位单独运算</li>
+<li>最后结果再转换成补码</li>
+</ol>
+<p>实际上，具体的计算过程和我们手写的是一样的。</p>
+<h3 class="mume-header" id="&#x6C42;&#x8865;&#x7535;&#x8DEF;">求补电路</h3>
+
+<p>求补码的电路（准确的说，是取反码再加一，可以实现补码和原码的互相转换）<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-a2a1f.png" alt="11"><br>
+当E=0的时候，不求补<br>
+当E=1的时候，求补（其实就是符号位输入）</p>
+<h1 class="mume-header" id="&#x9664;&#x6CD5;&#x8FD0;&#x7B97;">除法运算</h1>
+
+<h2 class="mume-header" id="&#x539F;&#x7801;&#x6062;&#x590D;&#x4F59;&#x6570;">原码恢复余数</h2>
+
+<p>二进制除法中，商只能是0和1，原码恢复余数，就是每次都上1，然后如果余数为负数，那么就改商为0，余数恢复成原来那个。<br>
+求余数的过程，实际上就是减去余数，进一步来看，就是加上 负余数的补码<br>
+恢复余数，实际上就是加回除数。<br>
+例子：<br>
+X=+0.1011<br>
+Y= -0.1101<br>
+用原码恢复余数算法计算X÷Y</p>
+<p>解:<br>
+[X]原=0.1011<br>
+[Y]原=1.1101<br>
+|X|=0.1011<br>
+|Y|=0.1101<br>
+[-|Y|]补=11.0011<br>
+QS = XS ⊕YS = 1   RS = 0<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-c8cc9.png" alt="12"><br>
+得：<br>
+[Q]原=1.1101<br>
+[R]原=0.00000111</p>
+<h2 class="mume-header" id="&#x539F;&#x7801;&#x4E0D;&#x6062;&#x590D;&#x4F59;&#x6570;">原码不恢复余数</h2>
+
+<p>加减交替法的规则如下：</p>
+<ol>
+<li>余数为正时，商上1，求下一位商的办法，是余数左移一位，再减去除数；</li>
+<li>当余数为负时，商上0，求下一位商的办法，是余数左移一位，再加上除数。</li>
+<li>若最后一次上商为0，而又需得到正确余数，则在这最后一次仍需恢复余数。</li>
+</ol>
+<p>也就是说，如果商0，那么下一步余数就加上被除数</p>
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-a40fb.png" alt="14"><br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-28974.png" alt="15"></p>
+<p>阵列除法器<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-83880.png" alt="13"></p>
+<h1 class="mume-header" id="&#x5B9A;&#x70B9;&#x8FD0;&#x7B97;&#x5668;">定点运算器</h1>
+
+<p><span class="mathjax-exps">$C_1 = Y_0 + X_0C_0$</span><br>
+<span class="mathjax-exps">$C_2 = Y_1 + X_1C_1 = Y_1 + X_1X_0 + X_1X_0C_0$</span><br>
+第一个等式后面为串行实现电路的原理，<br>
+第二个等式后面为并行实现电路的原理。</p>
+<p>并行实际上为串行的展开式，它不需要等待上一级的结果，而是直接由输入进行计算获得。<br>
+也就是说并行电路是以更多的运算器（阵列）为代价来提高运算速度的。</p>
+<p><span class="mathjax-exps">$C_{n+4} = G + PC_n$</span><br>
+G:进位发生输出<br>
+P:进位传送输出<br>
+<span class="mathjax-exps">$G = Y_3 + Y_2Y_3 + Y_1Y_2Y_3 + Y_0Y_1Y_2Y_3C_n$</span><br>
+<span class="mathjax-exps">$P = X_0X_1X_2X_3$</span></p>
+<p><span class="mathjax-exps">$X_i$</span> ， <span class="mathjax-exps">$Y_i$</span> 和控制参数和输入量的关系如下图：<br>
+图图。。。。。。。。。。。</p>
+<p>则<br>
+<span class="mathjax-exps">$X_i = &#x5C;overline{S_2}&#x5C;overline{S_3} + &#x5C;overline{S_2}S(&#x5C;overline{A_i} + &#x5C;overline{B_i}) + S_2S_3&#x5C;overline{A_i}$</span><br>
+<span class="mathjax-exps">$Y_i = &#x5C;overline{S_0}&#x5C;overline{S_1}&#x5C;overline{A_i} + &#x5C;overline{S_0}&#x5C;overline{S_1}B_i + s_0&#x5C;overline{S_1}&#x5C;overline{A_i}&#x5C;overline{B_i}$</span></p>
+<p>正逻辑和负逻辑的概念:</p>
+<p>若多个74181先行进位器同时使用，那么整个电路本质上还是串行电路。<br>
+这个时候需要对输出进一步进行并行运算。也就是74182</p>
+<p>32bit并行加法器需要多少个181和182？<br>
+181的话，每4bit需要一个，共需要8个<br>
+182也是4输入，则需要（2 + 1） = 3个</p>
+<pre class="language-{mermaid id:&quot;j2buqzdn&quot;}">graph TD
+B_1(181) --&gt; A1(182)
+B_2(181) --&gt; A1
+B_3(181) --&gt; A1
+B_4(181) --&gt; A1
+
+B_5(181) --&gt; A2(182)
+B_6(181) --&gt; A2
+B_7(181) --&gt; A2
+B_8(181) --&gt; A2
+
+A1 --&gt; A3(182)
+A2 --&gt; A3(182)
+</pre>
+<p>定点运算器的组成：<br>
+某个图./...........</p>
+<p>寄存器传输快，但是功耗大，因此在CPU中寄存器的数量不多（还要考虑到发热的问题呢）</p>
+<p>总线：能为多个功能部件传输信息的一组传输线。<br>
+总线同时只能有一个部件占用，否则多个部件占用，如果一个部件输出1，一个部件输出0，那么两端就会形成电势差，而中间的电阻为0，显然会出事。</p>
+<p>通过三态门来实现对总线的占用。</p>
+<h1 class="mume-header" id="&#x6D6E;&#x70B9;&#x8FD0;&#x7B97;&#x53CA;&#x8FD0;&#x7B97;&#x5668;">浮点运算及运算器</h1>
+
+<h2 class="mume-header" id="&#x6D6E;&#x70B9;&#x52A0;&#x51CF;&#x8FD0;&#x7B97;">浮点加/减运算</h2>
+
+<p>基本思想是把两个数的阶码调节成一样的，然后尾数直接进行相加减。阶码由小的向大的看齐。</p>
+<ol>
+<li>
+<p>0操作数检查<br>
+如果有操作数为0，那么就无需进行后续的步骤，尽可能地简化步骤</p>
+</li>
+<li>
+<p>阶码调节成一样(小阶向大阶看齐)<br>
+1. 阶码求差，得到<span class="mathjax-exps">$&#x5C;Delta E$</span><br>
+2. <span class="mathjax-exps">$&#x5C;Delta E &gt; 0$</span>，则<span class="mathjax-exps">$M_Y$</span>不断右移<br>
+3. <span class="mathjax-exps">$&#x5C;Delta E &lt; 0$</span>，则<span class="mathjax-exps">$M_X$</span>不断右移<br>
+4. 不断右移直到<span class="mathjax-exps">$&#x5C;Delta E = 0$</span></p>
+</li>
+<li>
+<p>尾数相加减</p>
+</li>
+<li>
+<p>加减后的结果还需要进行规格化（这里以双符号位补码为例）<br>
+1. 两符号位相异，右一次<br>
+2. 如果符号位和尾数最高位符号相同（也就是小数点前后的数字不同），则不断左规，知道相异<br>
+3. 每规一次，阶码也要作出对应的变化。</p>
+</li>
+<li>
+<p>舍入<br>
+（有以下几种选择，包括但不限于，并且发生在右规的时候）<br>
+1. 0舍1入<br>
+2. 直接舍弃<br>
+3. 最后一位直接置1<br>
+这个可以减少误差，但会增加运算次数，耗时。</p>
+</li>
+<li>
+<p>阶码判断溢</p>
+</li>
+</ol>
+<h2 class="mume-header" id="&#x5C0F;&#x7ED3;">小结</h2>
+
+<p>浮点数加减法：<br>
+乘法：尾数相乘，阶码相加<br>
+除法：尾数相除，阶码相减</p>
+<p>如果使用移码表示，双符号法判断溢出的时候，恒0用参加加减运算，也就是第一个符号位为0表示没溢出。</p>
+<p>流水线，加速比，表示生产相同数目的时间的比值</p>
+<h1 class="mume-header" id="&#x5B58;&#x50A8;&#x7CFB;&#x7EDF;">存储系统</h1>
+
+<h2 class="mume-header" id="&#x5B58;&#x50A8;&#x5668;&#x7684;&#x5206;&#x7C7B;">存储器的分类</h2>
+
+<h3 class="mume-header" id="&#x6309;&#x5B58;&#x50A8;&#x4ECB;&#x8D28;&#x5206;&#x7C7B;">按存储介质分类</h3>
+
+<ol>
+<li>半导体器件<br>
+用作主存,如:RAM,ROM</li>
+<li>磁性材料<br>
+用作辅存,如:磁盘</li>
+<li>光介质<br>
+用作辅存,如:光盘</li>
+</ol>
+<h3 class="mume-header" id="&#x6309;&#x5B58;&#x53D6;&#x65B9;&#x5F0F;&#x5206;&#x7C7B;">按存取方式分类</h3>
+
+<ol>
+<li>随机存储器<br>
+存储器中任何存储单元的内容都能被随机存取,且存取时间和存取单元的物理位置无关。(主存)</li>
+<li>顺序存储器<br>
+存取时间和存储单元的物理位置有关(磁盘、磁带)</li>
+</ol>
+<h3 class="mume-header" id="&#x6309;&#x5B58;&#x50A8;&#x5668;&#x7684;&#x8BFB;&#x5199;&#x529F;&#x80FD;&#x5206;&#x7C7B;">按存储器的读写功能分类</h3>
+
+<ol>
+<li>只读存储器 ROM Read-Only-Memory</li>
+<li>读写存储器 RAM Random-Access-Memory<br>
+一般隐含指随机存取</li>
+</ol>
+<h3 class="mume-header" id="&#x6309;&#x4FE1;&#x606F;&#x7684;&#x53EF;&#x4FDD;&#x5B58;&#x6027;&#x5206;&#x7C7B;">按信息的可保存性分类</h3>
+
+<ol>
+<li>
+<p>永久记忆的存储器<br>
+又成非易失性存储器,断电后还能保存信息(辅存,ROM)</p>
+</li>
+<li>
+<p>非永久性记忆的存储器<br>
+又称易失性存储器,在断电后信息丢失(主存中的RAM)</p>
+</li>
+</ol>
+<h3 class="mume-header" id="&#x6309;&#x5728;&#x8BA1;&#x7B97;&#x673A;&#x7CFB;&#x7EDF;&#x4E2D;&#x7684;&#x4F5C;&#x7528;&#x5206;&#x7C7B;">按在计算机系统中的作用分类</h3>
+
+<ol>
+<li>
+<p>主存储器<br>
+又称内存,为主机的一部分,用于存放系统当前在执行的数据和程序,属于临时存储器</p>
+</li>
+<li>
+<p>辅助存储器<br>
+又称外存,为外部设备,用于存放暂不用的数据和程序,属于永久存储器</p>
+</li>
+</ol>
+<h2 class="mume-header" id="&#x4E3B;&#x5B58;&#x50A8;&#x5668;">主存储器</h2>
+
+<p>特点:</p>
+<ol>
+<li>主存储器可以被CPU直接存取(访问)。</li>
+<li>一般由半导体材质构成</li>
+<li>随机存取<br>
+读写任意存储单元所需的时间是相同的,与单元地址无关</li>
+<li>与辅存相比,速度快,价格高,容量小</li>
+</ol>
+<p>主存储器按照其功能可分为:RAM和ROM</p>
+<ol>
+<li>随机读写存储器 RAM</li>
+<li>只读存储器 ROM</li>
+<li>高性能主存储器</li>
+</ol>
+<h3 class="mume-header" id="&#x4E3B;&#x5B58;&#x50A8;&#x5668;&#x7684;&#x5206;&#x7C7B;">主存储器的分类</h3>
+
+<p>主存的地位:在现代计算机中,主存储器处于全机的中心地位。</p>
+<p>主存的要求为:随机存取,快速</p>
+<p>主存的分类:</p>
+<ol>
+<li>随机读写存储器RAM</li>
+<li>只读存储器 ROM<br>
+1. 掩膜式只读存储器 MROM<br>
+2. 可编程只读存储器 PROM<br>
+3. 可擦除可编程的只读存储器 EPROM<br>
+4. 电可查出的可编程的只读存储器 E<sup>2</sup>PROM</li>
+<li>闪存 Flash memory<br>
+字节编程类似于 E<sup>2</sup>PROM,但擦除必须以块、页、整片方式擦除,写入速度比E<sup>2</sup>PROM高10<sup>3</sup>数量级以上</li>
+</ol>
+<p>计算机中的存储器分类:<br>
+<span class="mathjax-exps">$&#x5C;begin{cases}主存储器&#x5C;begin{cases}RAM&#x5C;begin{cases}SRAM &amp;,Cache&#x5C;&#x5C;DRAM&#x5C;end{cases}&#x5C;&#x5C;&#x5C;&#x5C;ROM&#x5C;begin{cases}MROM &#x5C;&#x5C;PROM &#x5C;&#x5C;EPROM&#x5C;&#x5C;E^2PROM&#x5C;end{cases}&#x5C;&#x5C;&#x5C;&#x5C;FLASH&#x5C;end{cases}&#x5C;&#x5C;&#x5C;&#x5C;&#x5C;&#x5C;辅助存储器&#x5C;begin{cases}磁盘 &#x5C;begin{cases}软盘&#x5C;&#x5C;硬盘&#x5C;end{cases}&#x5C;&#x5C;磁带 &#x5C;&#x5C;光盘&#x5C;begin{cases}CD-ROM&#x5C;&#x5C;WORM&#x5C;&#x5C;EOD&#x5C;end{cases} &#x5C;&#x5C;&#x5C;end{cases}&#x5C;end{cases}$</span></p>
+<h3 class="mume-header" id="&#x4E3B;&#x5B58;&#x50A8;&#x5668;&#x7684;&#x6027;&#x80FD;&#x6307;&#x6807;">主存储器的性能指标</h3>
+
+<h4 class="mume-header" id="&#x5B58;&#x50A8;&#x5BB9;&#x91CF;">存储容量</h4>
+
+<p>指存储器可容纳的二进制信息量,描述存储容量的单位是字节或位</p>
+<h4 class="mume-header" id="&#x5B58;&#x50A8;&#x901F;&#x5EA6;">存储速度</h4>
+
+<p>由一下三个方法来衡量</p>
+<ol>
+<li>
+<p>存取时间 memory Access Time<br>
+指启动一次存储器操作到完成该操作所需的全部时间。存取时间越短,其性能越好。<br>
+通常存取时间用纳秒为单位</p>
+</li>
+<li>
+<p>存储周期 Memory Cycle Time<br>
+指存储器进行连续两次独立的存储操作所需的最小时间间隔。<br>
+通常存取周期T<sub>C</sub>大于存取时间T<sub>A</sub>, <span class="mathjax-exps">$T_C &#x5C;geq T_A$</span></p>
+</li>
+<li>
+<p>存储器带宽<br>
+是单位时间内存储器所能存取的最大信息量,存储器带宽的计算单位通常是 位/秒 (bps) 或 字节/秒,它是衡量数据传输速率的重要技术指标。</p>
+</li>
+</ol>
+<h4 class="mume-header" id="&#x5B58;&#x50A8;&#x5668;&#x7684;&#x4EF7;&#x683C;">存储器的价格</h4>
+
+<p>用每位的价格来衡量,它不仅包含了存储元件的价格,还包括为该存储器操作服务的外围设备的价格。</p>
+<h4 class="mume-header" id="&#x53EF;&#x9760;&#x6027;">可靠性</h4>
+
+<p>指存储器正常工具(正确存储区)的性能。</p>
+<h4 class="mume-header" id="&#x529F;&#x8017;">功耗</h4>
+
+<p>存储器工作的耗电量。</p>
+<h4 class="mume-header" id="&#x5B58;&#x50A8;&#x5BB9;&#x91CF;-&#x901F;&#x5EA6;-&#x4EF7;&#x683C;&#x7684;&#x5173;&#x7CFB;">存储容量、速度、价格的关系</h4>
+
+<ol>
+<li>速度快的存储器往往价格较高,容量也较小</li>
+<li>容量、速度和价格三个指标是互相制约的。</li>
+</ol>
+<h3 class="mume-header" id="&#x968F;&#x673A;&#x8BFB;&#x5199;&#x5B58;&#x50A8;&#x5668;-ram">随机读写存储器 RAM</h3>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-7f98d.png" alt="16"></p>
+<h4 class="mume-header" id="&#x9759;&#x6001;&#x5B58;&#x50A8;&#x5668;-sram">静态存储器 SRAM</h4>
+
+<h5 class="mume-header" id="&#x5355;&#x5411;&#x8BD1;&#x7801;">单向译码</h5>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-b4852.png" alt="17"><br>
+地址译码的方式:</p>
+<ol>
+<li>
+<p>一维译码方式<br>
+nbit地址线,经过一维译码之后,有2<sup>n</sup>根选择线<br>
+每根选择线对应一个存储单元,一个存储单元为一个字,有若干个bit</p>
+</li>
+<li>
+<p>单向译码方式</p>
+</li>
+</ol>
+<p>优点:结构简单<br>
+缺点:当芯片容量增大时,译码器的复杂性按指数规律增加。</p>
+<p>因此,一维地址译码适合容量小的场合。</p>
+<h5 class="mume-header" id="&#x53CC;&#x5411;&#x8BD1;&#x7801;">双向译码</h5>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-8b4b6.png" alt="18"><br>
+双向译码方式:<br>
+n bit地址分为行、列地址分别译码</p>
+<p>可以证明:<br>
+若地址码为n bit,当<span class="mathjax-exps">$&#x5C;frac{n}{2}$</span>位正整数时,<span class="mathjax-exps">$n_x = n_y = &#x5C;frac{n}{2}$</span>时,译码器及输出驱动线数最简单。</p>
+<p>优点:地址译码器的结构简单,节省驱动器和译码线。<br>
+缺点:同一存储单元的各二进制单元分布在不同的芯片上,即每个存储芯片只能提供该单元的一个二进制位。</p>
+<h5 class="mume-header" id="&#x57FA;&#x672C;&#x7684;sram&#x903B;&#x8F91;&#x7ED3;&#x6784;">基本的SRAM逻辑结构</h5>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-d47e1.png" alt="19"></p>
+<p>CS:片选信号<br>
+OE:读出使能信号<br>
+WE:写入使能信号<br>
+OE和WE同时只能有一个有效</p>
+<p>SRAM存储器的特点:</p>
+<ol>
+<li>使用双稳态触发器表示0和1代码</li>
+<li>电源不掉电的情况下,信息稳定保持(静态)</li>
+<li>存取速度快,集成度低(容量小),价格高</li>
+<li>常用作高速缓冲存储器的Cache</li>
+</ol>
+<h4 class="mume-header" id="&#x52A8;&#x6001;&#x5B58;&#x50A8;&#x5668;-dram">动态存储器 DRAM</h4>
+
+<p>DRAM使用电容作为存储位源,电容上有电荷表示1,没有电荷表示0<br>
+再生:读出后信息可能被破坏,需要重写<br>
+刷新:经过一段时间后,信息可能丢失,需要重写</p>
+<p>DRAM存储器的基本结构(4M×4bit的DRAM):<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-00b99.png" alt="20"></p>
+<p>DRAM存储器的特点:</p>
+<ol>
+<li>使用半导体器件中分布电容有无电荷来表示0和1代码</li>
+<li>电源不掉电的情况下,信息也会丢失,因此需要不断刷新</li>
+<li>存取速度慢(电容充放电需要时间),集成度高(容量大),价格低</li>
+<li>常用作内存条</li>
+</ol>
+<h5 class="mume-header" id="dram&#x7684;&#x5237;&#x65B0;&#x65B9;&#x5F0F;">DRAM的刷新方式</h5>
+
+<p>刷新周期:从上一次刷新结束到下一次对整个DRAM全部刷新为止,这一段时<br>
+间间隔成为刷新周期。</p>
+<p>刷新操作:<br>
+即是 按行来执行内部的读操作(读的时候相当于刷新了)。<br>
+由刷新计数器产生行地址,选择当前要刷新的行,读即刷新。<br>
+刷新一行所需时间即是一个存储周期(读一行的时间就是存储周期)。</p>
+<p>刷新行数:<br>
+单个芯片的单个矩阵的行数。</p>
+<ol>
+<li>对于内部包含多个存储矩阵的芯片,各个矩阵的同一行是被同时刷新的。</li>
+<li>对于多个芯片连接构成的DRAM,DRAM控制器将选中所有芯片的同一行来进行逐行刷新。</li>
+</ol>
+<p>单元刷新时间间隔:<br>
+DRAM允许的最大信心保持时间,一般为2ms</p>
+<p>刷新方式:</p>
+<ol>
+<li>集中式刷新</li>
+<li>分散式刷新</li>
+<li>异步式刷新</li>
+</ol>
+<h6 class="mume-header" id="&#x96C6;&#x4E2D;&#x5F0F;&#x5237;&#x65B0;">集中式刷新</h6>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-dd966.png" alt="21"><br>
+在单元刷新时间间隔(2ms)内,集中对所有行刷新一遍,其余时间则用于访问操作。</p>
+<p>在内部刷新的时间内,不允许访存,这段时间呗成为死时间。</p>
+<p>集中式刷新的死时间过长,往往不能接受。</p>
+<h6 class="mume-header" id="&#x5206;&#x6563;&#x5F0F;&#x5237;&#x65B0;">分散式刷新</h6>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-02007.png" alt="22"><br>
+在任何一个存储周期内,分为访存和刷新两个子周期。<br>
+在访存时间,供CPU和其他主设备访问。<br>
+在刷新时间内,对DRAM的某一行刷新。<br>
+(前部分时间用来访存,后一部分时间指令执行,这一段时间用来刷新,因此也有一定的合理性)</p>
+<p>存储周期为存储器存储周期的两倍(意思是两个子周期相同?)</p>
+<p>使用这个方法,要求刷新所有行的时间必须要小于单元刷新间隔时间</p>
+<p>这种方法,往往在单元时间间隔内就刷新了很多遍,这实际上是一种浪费。</p>
+<h6 class="mume-header" id="&#x5F02;&#x6B65;&#x5F0F;&#x5237;&#x65B0;">异步式刷新</h6>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-e5ac3.png" alt="23"><br>
+异步式刷新采用折中的方法,把2ms(单元刷新时间间隔)分散地把各行刷新一遍。<br>
+这样就避免了分散式刷新中不必要的多次刷新,提高了整机速度,同是又解决了集中式刷新&quot;死区&quot;时间过长的问题。</p>
+<h5 class="mume-header" id="dram&#x4E3B;&#x5B58;&#x8BFB;&#x5199;&#x6B63;&#x786E;&#x6027;&#x6821;&#x9A8C;">DRAM主存读/写正确性校验</h5>
+
+<p>DRAM通常用作主存储器,其读写操作的正确性与可靠性至关重要。<br>
+为此除了正常的数据位宽度,还增加了附加位,用于读/写操作正确性的校验。<br>
+增加的附加位也要同数据位一起写入DRAM中保存。</p>
+<h4 class="mume-header" id="sram-&#x548C;-dram-&#x7684;&#x5BF9;&#x6BD4;">SRAM 和 DRAM 的对比</h4>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-5746a.png" alt="24"></p>
+<h4 class="mume-header" id="&#x9AD8;&#x6027;&#x80FD;&#x5B58;&#x50A8;&#x5668;">高性能存储器</h4>
+
+<p>FPM RAM:快速页模式动态存储器<br>
+CDRAM:带Cache的DRAM<br>
+SDRAM(Synchronous Dynamic RAM):也称同步DRAM<br>
+DDR SDRAM:双倍率SDRAM,简称DDR</p>
+<h5 class="mume-header" id="fpm-ram">FPM RAM</h5>
+
+<p>FPM RAM:快速页模式动态存储器<br>
+根据程序的局部性原理来实现,<br>
+页是指一个唯一的行地址和该行中所有的列地址确定的存储单元总和。</p>
+<p>快速页模式:允许在选定的行中对该行的每一列进行连续的读/写操作</p>
+<h5 class="mume-header" id="cdram">CDRAM</h5>
+
+<p>CDRAM:带告诉缓冲存储器(Cache)的动态存储器,在通常的DRAM芯片内又集成了一个小容量的SRAM,从而使DRAM芯片的性能得到显著改进</p>
+<h3 class="mume-header" id="&#x53EA;&#x8BFB;&#x5B58;&#x50A8;&#x5668;">只读存储器</h3>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-f89fe.png" alt="25"></p>
+<p>ROM的种类:</p>
+<ol>
+<li>MROM</li>
+<li>PROM</li>
+<li>EPROM</li>
+<li>E<sup>2</sup>PROM</li>
+<li>Flash Memory</li>
+</ol>
+<h4 class="mume-header" id="mrom-&#x63A9;&#x819C;&#x5F0F;&#x53EA;&#x8BFB;&#x5B58;&#x50A8;&#x5668;">MROM 掩膜式只读存储器</h4>
+
+<p>MROM 掩膜式只读存储器(Mashed ROM)<br>
+存储信息是由生产厂家在掩膜工艺过程中&quot;写入&quot;,用户不能修改</p>
+<p>优点:可靠性高,集成度高,适宜大批量生产,价格便宜</p>
+<h4 class="mume-header" id="prom-&#x53EF;&#x7F16;&#x7A0B;&#x53EA;&#x8BFB;&#x5B58;&#x50A8;&#x5668;">PROM 可编程只读存储器</h4>
+
+<p>PROM(Programmable ROM):一次性编程的只读存储器<br>
+编程写入:芯片出厂时所有位均为0,用户可用编程器将要写入位的熔丝熔断,即可写入1</p>
+<h4 class="mume-header" id="eprom">EPROM</h4>
+
+<p>EPROM:光可擦除可编程只读存储器<br>
+存储原理:浮栅有/无积存电子,则管子有/无导电勾到,所在位为0/1</p>
+<h4 class="mume-header" id="flash-&#x5B58;&#x50A8;&#x5143;">FLASH 存储元</h4>
+
+<p>FLASH存储器也翻译成闪速存储器，它是高密度非失易失性的读/写存储器。高密度意味着它具有巨大比特数目的存储容量。非易失性意味着存放的数据在没有电源的情况下可以长期保存。总之，它既有RAM的优点，又有ROM的优点，称得上是存储技术划时代的进展。</p>
+<p>读操作时，在某一时间只有一条行选择线被激活。</p>
+<p>假定某个存储元原存1，那么晶体管导通，与它所在位线接通，有电流通过位线，所经过的负载上产生一个电压降。这个电压降送到比较器的一个输入端，与另一端输入的参照电压做比较，比较器输出一个标志为逻辑1的电平。</p>
+<p>如果某个存储元原先存0，那么晶体管不导通，位线上没有电流，比较器输出端则产生一个标志为逻辑0的电平。</p>
+<h4 class="mume-header" id="&#x96C6;&#x4E2D;&#x975E;&#x6613;&#x5931;&#x6027;&#x5B58;&#x50A8;&#x5668;&#x7684;&#x6BD4;&#x8F83;">集中非易失性存储器的比较</h4>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-fda42.png" alt="26"></p>
+<h2 class="mume-header" id="&#x5B58;&#x50A8;&#x5668;&#x5BB9;&#x91CF;&#x6269;&#x5C55;&#x7684;&#x4E09;&#x79CD;&#x65B9;&#x6CD5;">存储器容量扩展的三种方法</h2>
+
+<h3 class="mume-header" id="&#x4F4D;&#x6269;&#x5C55;">位扩展</h3>
+
+<p>位扩展:从字长方向扩展,从下图来看,就是叠多几层<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-9a688.png" alt="27"></p>
+<p>要点:</p>
+<ol>
+<li>芯片的地址线A、读写控制信号WE# , 片选信号CS# 分别连接到新的芯片上</li>
+<li>芯片的数据线D分别对应所搭建的存储器的高若干位</li>
+</ol>
+<h3 class="mume-header" id="&#x5B57;&#x6269;&#x5C55;">字扩展</h3>
+
+<p>从字数方向扩展,总的来看,就是扩展了整个存储器的容量<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-affbe.png" alt="28"></p>
+<p>要点:</p>
+<ol>
+<li>合成的新的存储器的高若干位经过译码器,用作各芯片的片选信号CS#</li>
+<li>芯片的数据线D,读写控制信号WE#,分别连到芯片的对应位置</li>
+<li>存储器地址线A的低若干位连接各芯片的地址线</li>
+</ol>
+<h3 class="mume-header" id="&#x5B57;&#x4F4D;&#x6269;&#x5C55;">字位扩展</h3>
+
+<p>从字长和字数方向扩展或者低若干位(一次读取的字的bit数变大,因此数据线的数目要增加)</p>
+<p>也就是上面两种方法的结合。</p>
+<p>需要扩展你的存储器容量为M×Nbit,已有的芯片容量为L×Kbit,(L&lt;M,K&lt;N),则需要的芯片的数目为:<span class="mathjax-exps">$&#x5C;frac{M  &#x5C;times N}{L &#x5C;times K}$</span><br>
+也就是容量的比值<br>
+其中,用<span class="mathjax-exps">$&#x5C;frac{M}{L}$</span>组芯片进行字扩展<br>
+每组内有<span class="mathjax-exps">$&#x5C;frac{N}{K}$</span>个芯片进行位扩展</p>
+<h2 class="mume-header" id="&#x4E3B;&#x5B58;&#x50A8;&#x5668;&#x548C;cpu&#x7684;&#x8FDE;&#x63A5;">主存储器和CPU的连接</h2>
+
+<p>主存和CPU的连接：通过三总线连接</p>
+<ul>
+<li>
+<p>根据CPU芯片提供的地址线的数目,确定CPU访存的地址范围,并写出相应的二进制地址码</p>
+</li>
+<li>
+<p>根据地址范围的内容,确定各类型存储器芯片数目和扩展方法</p>
+</li>
+<li>
+<p>分配CPU地址线。CPU地址线的低位(数量=存储芯片的地址线属相)直接连接存储芯片的地址线;CPU高为地址线皆参与形成储存芯片的片选信号</p>
+</li>
+<li>
+<p>连接数据线、R/W#等其他信号线,MREQ#信号一般可用作地址译码器功能的使能信号</p>
+</li>
+<li>
+<p>主存的扩展及CPU连接在做法上并不唯一,应该具体问题具体分析</p>
+</li>
+</ul>
+<h2 class="mume-header" id="&#x9AD8;&#x901F;&#x5B58;&#x50A8;&#x5668;">高速存储器</h2>
+
+<p>解决问题:弥补CPU与主存速度上的差异。<br>
+从存储器的角度,解决该问题的有效途径:</p>
+<ol>
+<li>主存采用更告诉的技术来压缩存储器的独处时间或加长存储器的字长</li>
+<li>采用并行操作的多端口存储器</li>
+<li>在CPU和主存之间加入一个高速缓冲器(cache), 以缩短读出时间</li>
+<li>在每个存储器周期中存取几个字(多体交叉存储器)</li>
+</ol>
+<h3 class="mume-header" id="&#x53CC;&#x7AEF;&#x53E3;&#x5B58;&#x50A8;&#x5668;">双端口存储器</h3>
+
+<p>同一个存储器具有两套相互独立的读写控制电路,地址寄存器AR<sub>L</sub>、AR<sub>R</sub>和数据寄存器DR<sub>L</sub>、DR<sub>R</sub></p>
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-ebe3d.png" alt="29"></p>
+<p>特点:同一个存储器具有两组相互独立的读写控制线路,允许两个独立的CPU或控制器同事异步地访问存储单元,是一种高速工作的存储器。其最大的特点是存储器共享。</p>
+<p>结构特点:具有左右两个端口,每个端口都有自己的片选控制信号和输出使能控制信号。</p>
+<p>访问冲突:当左端口和右端口的地址不相同时,在两个端口上同时进行读写操作,不会发生重读。若左、右端口同时访问 相同的存储单元,则会发生读写冲突。</p>
+<p>读写冲突解决办法:<br>
+判断逻辑决定哪个端口优先进行读写操作,而暂时关闭另一个被延迟的端口,即置其忙信号,BUSY#=0<br>
+具体地说,就是每个存储单元都会有一个忙信号,当一个存储单元被访问的时候,就会设置这个忙信号(置0?),另一个端口访问同一个存储单元的时候,就需要等待,直到忙信号取消(置1?)。(也就是通过置忙信号,来实现先到先得的效果,从而避免冲突)</p>
+<ol>
+<li>
+<p>CE判断<br>
+如果地址匹配且在CE之前有效,片上的控制逻辑CEL和CER之间进行判断来选择端口</p>
+</li>
+<li>
+<p>地址有效判断<br>
+如果CE在地匹配之前变低,片上的逻辑控制单元在左、右地址进行判断来选择端口</p>
+</li>
+</ol>
+<p>上面两个判断主要针对两种场景:</p>
+<ol>
+<li>CE先有效,然后地址才有效,那么按地址优先判断</li>
+<li>地址先出现,CE使能判断</li>
+<li>也就是看哪边的所有准备工作先完成,先完成的先访问</li>
+</ol>
+<p>双端口存储器的应用:</p>
+<ol>
+<li>实现CPU和DMA(或IOP)同时访问内存</li>
+<li>在多级系统中,实现彼此的信息交换</li>
+<li>为运算器的两个输入端并行提供数据</li>
+<li>双端口结构的cache,可同时与CPU和主存交换信息</li>
+</ol>
+<h3 class="mume-header" id="&#x591A;&#x4F53;&#x4EA4;&#x53C9;&#x5B58;&#x50A8;&#x5668;">多体交叉存储器</h3>
+
+<h4 class="mume-header" id="&#x987A;&#x5E8F;&#x7F16;&#x5740;">顺序编址</h4>
+
+<p><img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-3ad59.png" alt="30"><br>
+也就是相邻的地址在同一个模块内。<br>
+这样访问两个连续的地址的时候,只能等待第一个地址访问完才能继续访问下一个地址。</p>
+<h4 class="mume-header" id="&#x4EA4;&#x53C9;&#x7F16;&#x5740;">交叉编址</h4>
+
+<center>
+![31]
+<\center>
+交叉编址,即任何两个相邻地址的物理单元不属于同一存储器,一般在相邻的存储体中,同一个存储体内的地址都是不连续的。(根据局部性原理,这样一块连续的指令信息就能更快地获取到)
+<p>特点:</p>
+<ol>
+<li>连续的存储单元依次分布在相邻的模块内</li>
+<li>用硬件的冗余换取速度</li>
+</ol>
+<h4 class="mume-header" id="&#x591A;&#x4F53;&#x4EA4;&#x53C9;&#x5B58;&#x50A8;&#x5668;-1">多体交叉存储器</h4>
+
+<p>特点:<br>
+通过改进主存的组织方式,在不改变存储器存取周期的情况下,提高存储器的带宽。</p>
+<p>带宽:单位时间内传输的最大字节数/位数</p>
+<p>结构特点:<br>
+多体交叉存储器由M个的存储体(或称存储模块)组成,每个存储体由相同的容量和存取速度,又各自独立的地址寄存器,地址译码器,读写电路和驱动电路。</p>
+<p>编址方式:<br>
+交叉编址</p>
+<p>访问:CPU同时送出的M个地址,只要他们属于M个存储器,访问就不会冲突;由存储器控制部件控制它们分时使用数据总线进行信息传递</p>
+<p>适合采用流水线方式并行存取,虽然每个存储体的存储周期没变,但是当CPU连续访问一个字块时,可以大大提高存储器的带宽。</p>
+<h4 class="mume-header" id="&#x591A;&#x6A21;&#x5757;&#x5B58;&#x50A8;&#x5668;&#x5DE5;&#x4F5C;&#x65F6;&#x95F4;&#x7684;&#x5173;&#x7CFB;">多模块存储器工作时间的关系</h4>
+
+<p>假设:<br>
+模块存取一个字的存储周期为T<br>
+总线传送周期为<span class="mathjax-exps">$&#x5C;tau$</span><br>
+存储器交叉模块数为<span class="mathjax-exps">$m$</span><br>
+那么,为了实现流水线方式的存取,应当满足<br>
+<div class="mathjax-exps">$$T = m&#x5C;tau$$</div><br>
+即成块传送按<span class="mathjax-exps">$&#x5C;tau$</span>间隔流水方式进行,也就是每经过<span class="mathjax-exps">$&#x5C;tau$</span>时间延迟后启动下一个模块。<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-aa3c4.png" alt="32"></p>
+<p>读取m个字所需时间(m个字分别在m个不同的存储模块中):<br>
+交叉方式:<br>
+<div class="mathjax-exps">$$$t_1 = T + (m - 1)&#x5C;tau$$</div><br>
+<span class="mathjax-exps">$T$</span>:存储器存储周期<br>
+<span class="mathjax-exps">$&#x5C;tau$</span>:总线传送周期<br>
+<span class="mathjax-exps">$m$</span>:一般取为模块数目</p>
+<p>顺序方式:<br>
+<div class="mathjax-exps">$$t_2 = m&#x5C;cdot T$$</div><br>
+也就是一个一个读完,并且在上一读取完成之前,下一个的地址已经准备好了,因此和总线传送周期<span class="mathjax-exps">$&#x5C;tau$</span>没有关系。</p>
+<h2 class="mume-header" id="&#x9AD8;&#x901F;&#x7F13;&#x51B2;&#x5B58;&#x50A8;&#x5668;-cache">高速缓冲存储器 Cache</h2>
+
+<h3 class="mume-header" id="cache-&#x7684;&#x57FA;&#x672C;&#x539F;&#x7406;">Cache 的基本原理</h3>
+
+<h4 class="mume-header" id="cache&#x7684;&#x7279;&#x70B9;">Cache的特点</h4>
+
+<p>Cache的位置:CPU的组成部分<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-df9ad.png" alt="33"></p>
+<p>Cache是指位于CPU和主存之间的一个高速小容量的存储器,一般由SRAM组成。</p>
+<p>Cache功能:用于弥补CPU和主存之间的速度差异,提高CPU访问主存的平均速度。</p>
+<p>设置Cache的理论基础:程序访问的局部性原。<br>
+CPU执行程序锁使用的存储单元是相对集中或小批簇聚于相邻单元。</p>
+<p>Cache的内容是主存部分内容的副本,Cache的功能均由硬件实现,对程序员是透明的。</p>
+<p>Cache的速度比主存快5~10倍。</p>
+<h4 class="mume-header" id="cache&#x7684;&#x5DE5;&#x4F5C;&#x539F;&#x7406;">Cache的工作原理</h4>
+
+<p>Cache、主存、CPU三者的关系:<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90-994a2.png" alt="34"></p>
+<p>Cache的工作原理:</p>
+<ul>
+<li>把主存和Cache划分成相同大小的若干块数据。</li>
+<li>Cache的一个数据块,称为&quot;行&quot;</li>
+<li>主存的一个数据块,称为&quot;块&quot;</li>
+</ul>
+<p>CPU和Cache之间的数据交换是以字位单位,而Cache与主存之间的数据交换是以块为单位。</p>
+<p>一个快由若干个字组成。<br>
+当CPU读取主存中的一个字时,便发出此字爹内存地址到Cache和主存。<br>
+此时cache控制逻辑依据地址判断此字当前是否在chache中:<br>
+若是,此字立即传送给CPU,若非,则用主存周期把此字从主存中读出送到CPU,与此同时,把含有这个字的整个数据块从主存读出送到cache中。由始终管理cache使用情况的硬件逻辑电路来实现替换算法。</p>
+<p>cache的原理图:<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90_8633c.png" alt="35"></p>
+<p>cache的读写操作:<br>
+CPU在读写存储器时,Cache逻辑控制单元首先要依据地址来判断这个字是否存在Cache中,若在Cache中,则称为&quot;命中&quot;,若不在,则称为&quot;不命中&quot;。</p>
+<p>针对命中/不命中、读/写操作,Cache的处理是不同的。<br>
+读命中:立即从Cache读出送给CPU<br>
+读不命中:通常有两种解决办法</p>
+<ol>
+<li>将主存中该字所在的数据块复制到Cache中,然后再把这个字传给CPU</li>
+<li>把此字中主存中读出送到CPU,同时,把包含这个字的数据块从主存中读出送到CPU<br>
+写不命中:直接将该字写入主存中,且不再调入Cache中<br>
+写命中:通常也有两种做法</li>
+<li>写贯穿法:同时对Cache和主存进行写操作</li>
+<li>写回法:只写Cache,仅当此Cache被替换时,才将该块写入主存。</li>
+</ol>
+<h4 class="mume-header" id="cache&#x7684;&#x547D;&#x4E2D;&#x7387;">Cache的命中率</h4>
+
+<p>命中率:指CPU访问主存数据时,命中Cache的次数占全部访问次数的比例;<br>
+失败率:指不命中Cache的次数占全部访问次数的比率。</p>
+<p>命中率<span class="mathjax-exps">$h$</span>取决于程序的行为、容量、组织方式和块大小。<br>
+在一个程序执行期间,<br>
+设:<br>
+<span class="mathjax-exps">$N_c$</span>表示Cache完成存取的总次数<br>
+<span class="mathjax-exps">$N_m$</span>表示主存完成存取的总次数<br>
+则命中率<span class="mathjax-exps">$h = &#x5C;frac{N_c}{N_c + N_m}$</span></p>
+<p>若<span class="mathjax-exps">$t_c$</span>表示Cache的访问时间,<br>
+<span class="mathjax-exps">$t_m$</span>表示主存的访问时间,<br>
+则Cache/主存的平均访问<span class="mathjax-exps">$t_a$</span>为:<span class="mathjax-exps">$t_a = ht_c + (1 - h)t_m$</span>(实际上就是期望的表达式)</p>
+<p>设<span class="mathjax-exps">$r = &#x5C;frac{t_m}{r_c}$</span>表示主存慢于Cache的倍率,<span class="mathjax-exps">$e$</span>表示访问效率,<span class="mathjax-exps">$t_a$</span>表示平均访问周,则有<br>
+<span class="mathjax-exps">$e = &#x5C;frac{t_c}{t_a} = &#x5C;frac{r_c}{ht_c + (1 - h)t_m} = &#x5C;frac{1}{h + (1 - h)r} = &#x5C;frac{1}{r + (1 - r)h}$</span></p>
+<p>式子中<span class="mathjax-exps">$&#x5C;frac{t_m}{r_c}$</span>取<span class="mathjax-exps">$5~10$</span>为宜</p>
+<p>为提高访问效率,命中率h越接近1越好,r值以5~10为宜,不宜太大。</p>
+<h3 class="mume-header" id="&#x4E3B;&#x5B58;&#x548C;cache&#x7684;&#x5730;&#x5740;&#x6620;&#x5C04;&#x65B9;&#x5F0F;">主存和Cache的地址映射方式</h3>
+
+<p>地址映射:按某种函数(规则)把主存定位到Cache中。<br>
+地址变换:信息按映射关系装入Cache后,CPU访问时,由主存地址变换成Cache地址的过程。<br>
+Cache的透明性:硬件地址变换,Cache近似不存在(???)</p>
+<p>本节讨论的问题:如何根据主存地址,判断Cache有无命中并变换成Cache的地址,以便执行读写。</p>
+<p>有三种映射方式:</p>
+<ol>
+<li>全相联映射</li>
+<li>直接映射</li>
+<li>组相联映射</li>
+</ol>
+<p>已知:<br>
+Cache的数据块称为行<br>
+主存的数据块称为块<br>
+行和块时等长的<br>
+主存容量为<span class="mathjax-exps">$2^m$</span>块<br>
+Cache的容量为<span class="mathjax-exps">$2^c$</span>行<br>
+每个字块中含有<span class="mathjax-exps">$2^b$</span>字</p>
+<h4 class="mume-header" id="&#x5168;&#x76F8;&#x8054;&#x6620;&#x5C04;">全相联映射</h4>
+
+<p>全相联:主存中一个块的地址与块内容一起存与Cache的行中,其中块地址存于Cache行的标记部分</p>
+<p>特点:是多对多的映射关系,对于主存中的任何一块均可以映射到Cache中的任何一行。</p>
+<p>优点:机制灵活,命中率高,Cacha的行利用率高</p>
+<p>缺点:速度较慢,成本较高,比较器电路难以设计和实现。</p>
+<p>因此,全相联映射适合小容量的Cache</p>
+<p>全相联映射的存储格式:<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90_82155.png" alt="36"></p>
+<p>全相联有映射的检索过程:<br>
+将访存存在的块号和行标记进行快速比较,若块号命中,则按字地址从Cache中读取一个字,若不命中,则从主存中读取。</p>
+<p>全部标记用相联存储器来实现,数据存取则同高速RAM实现。</p>
+<h4 class="mume-header" id="&#x76F4;&#x63A5;&#x6620;&#x5C04;">直接映射</h4>
+
+<p>特点:是一种多对一的映射关系,一个主存块只能拷贝到Cache的特定行位置上去。(类似hash)</p>
+<p>主存的第i块一定映射到Cache的第j行(映射公式):<br>
+<div class="mathjax-exps">$$j = i%2^c$$</div></p>
+<p>优点:映射方式简单,易实现。</p>
+<p>缺点:机制不灵活,Cache命中率低,存在Cache有空行和不能存数据块的问题,即造成频繁替换,效率下降。</p>
+<p>因此,适合大容量Cache的场合(更多的行数可以减少冲突的机会)。</p>
+<p>直接映射Cache的存储格式:<br>
+<img src="assets/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90_74c5e.png" alt="37"><br>
+主存的块地址:S位<br>
+Cache的行地址:r位</p>
+<p>直接映射的检索过程:<br>
+用访存地址中的行号找到该Cache行,再用s-r位与此行的标记进行比较,若相符则命中,则用行内地址读取所需的字,若不符,则从主存中读取。</p>
+<h4 class="mume-header" id="&#x7EC4;&#x76F8;&#x8054;&#x6620;&#x5C04;">组相联映射</h4>
+
+<p>特点:将Cache的行分成<span class="mathjax-exps">$2^{c-r}$</span>组,每组<span class="mathjax-exps">$2^r$</span>行,主存的字块存放到Cache中的那个组是固定的,至于映射到该组的哪一行是灵活的,即有如下的函数关系:<br>
+<div class="mathjax-exps">$$j = (i&#x5C;,mod2^(c-r)&#x5C;times 2^r + k)$$</div></p>
+<p>也就是上面两种的结合。<br>
+优点:大大增加了映射的灵活性,主存中一块可映射到Cache的<span class="mathjax-exps">$2^r$</span>块,提高了命中率。每次比较只是进行<span class="mathjax-exps">$2^r$</span>路的比较,r较小时,硬件开销不是很大。</p>
+<p>组相联映射通常采用2路,4路,8路比较,即取<span class="mathjax-exps">$r=1,r=2,r=3$</span></p>
+<p>组相联映射的检索过程:<br>
+以访问地址的d位找到Cache相应的组,再用S-d位与该组v行中的所有标记同时比较,若某一行标记相符则命中,再以行内的w位地址读取相应的字,若不命中,则从主存中读取。</p>
+<h3 class="mume-header" id="cache&#x66FF;&#x6362;&#x7B97;&#x6CD5;">Cache替换算法</h3>
+
+<h4 class="mume-header" id="&#x968F;&#x673A;&#x66FF;&#x6362;&#x7B97;&#x6CD5;">随机替换算法</h4>
+
+<h4 class="mume-header" id="&#x5148;&#x8FDB;&#x5148;&#x51FA;&#x7B97;&#x6CD5;fifo">先进先出算法(FIFO)</h4>
+
+<p>先进先出算法:先装入Cache的主存快,替换时先被淘汰,使用FIFO队列实现。</p>
+<h4 class="mume-header" id="&#x6700;&#x8FD1;&#x6700;&#x5C11;&#x4F7F;&#x7528;&#x7B97;&#x6CD5;lru">最近最少使用算法(LRU)</h4>
+
+<p>该算法统计哪一个Cache行是近段时间使用次数最少的Cache行,替换时需将它替换出去。</p>
+<p>LRU替换算法可以用过为每个Cache行设置一个计数器来实现LRU替换算法,Cache没命中一次,命中行的计数器清零,其他行的计数器加一.需要替换的话,就将计数器值大的行替换出去。</p>
+<p>(为什么不命中哪行,哪行的计数器就加1,这样只需要更新一个计数器,开销不是更小吗?)</p>
+<h3 class="mume-header" id="cache&#x5199;&#x64CD;&#x4F5C;&#x7B56;&#x7565;">Cache写操作策略</h3>
+
+<h4 class="mume-header" id="&#x5199;&#x56DE;&#x6CD5;">写回法</h4>
+
+<p>当CPU写Cache命中的时候,只修改Cache的内容,而不立即修改主存,只当此行被替换出去的时候才写回主存。</p>
+<p>做法:每行配置修改位M,有存储单元被修改,则M=1,替换的时候先判断M位</p>
+<p>评价:显著减少写主存的次数,但存在不一致隐患。</p>
+<h4 class="mume-header" id="&#x5168;&#x5199;&#x6CD5;">全写法</h4>
+
+<p>当写命中Cache的时候,Cache与主存同时修改,若不命中,则向主存写入。</p>
+<p>评价:写Cache与内存同步进行,省去设置修改位即判断逻辑,但对CPU写主存操作无高速缓冲作用,降低了Cache的功效。</p>
+<h4 class="mume-header" id="&#x5199;&#x4E00;&#x6B21;&#x6CD5;">写一次法</h4>
+
+<p>当第一次写Cache命中才要同时写入主存,以后处理方法与写回法相同。</p>
+<p>评价:能维护系统全部Cache的一致性。(为什么???)</p>
+<h3 class="mume-header" id="cache&#x7684;&#x591A;&#x5C42;&#x6B21;&#x8BBE;&#x8BA1;">Cache的多层次设计</h3>
+
+<p>设计Cache主要考虑的5个问题:</p>
+<ol>
+<li>容量</li>
+<li>Cache中行的大小</li>
+<li>Cache的组织(地址映射方式)</li>
+<li>指令和数据共用一个Cache还是分享不同的Cache</li>
+<li>Cache的层次</li>
+</ol>
+<h4 class="mume-header" id="&#x7EDF;&#x4E00;&#x548C;&#x5206;&#x79BB;&#x7684;cache">统一和分离的Cache</h4>
+
+<p>统一Cache:只有一个Cache,指令和数据混放。</p>
+<p>分离Cache:分为指令Cache和数据Cache,它消除了流水线中指令处理器和执行单元间的竞争,因此,特别适用于Pentium II 和Power PC这样的超标量流水线中:是Cache结构发展的趋势。</p>
+<h4 class="mume-header" id="&#x5355;&#x7EA7;cache&#x548C;&#x4E24;&#x7EA7;cache">单级Cache和两级Cache</h4>
+
+<p>一级Cache和二级Cache<br>
+采用两次Cache结构可以提高性能。<br>
+cache速度逐层递减,二级Cache比一级Cache慢,但还是比主存快<br>
+一级cache离CPU最近,最快,但是容量小,远离的容量大,但是速度慢</p>
+<h1 class="mume-header" id="&#x6307;&#x4EE4;&#x7CFB;&#x7EDF;">指令系统</h1>
+
+<p>指令系统分类:</p>
+<ol>
+<li>CISC 复杂指令系统</li>
+<li>RISC 精简指令系统</li>
+</ol>
+<p>两个系统的特点???????????????????<br>
+精简指令系统指令码定长。</p>
+<p>性能要求:</p>
+<ol>
+<li>
+<p>完备性</p>
+</li>
+<li>
+<p>有效性</p>
+</li>
+<li>
+<p>规整性<br>
+- 对称性<br>
+- 匀条性<br>
+- 一致性</p>
+</li>
+<li>
+<p>兼容性<br>
+主要是向上兼容(不是向下兼容),能在低档机上运行的程序,要求能在高档机上运行</p>
+</li>
+</ol>
+<p>执行基本格式:</p>
+<table>
+<thead>
+<tr>
+<th>OP</th>
+<th>A</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作码</td>
+<td>地址码</td>
+</tr>
+</tbody>
+</table>
+<p>指令分类:</p>
+<ul>
+<li>功能分类<br>
+- 数据传送指令<br>
+- 算数逻辑运算指令<br>
+- 程序控制指令<br>
+- 装配拆卸指令<br>
+- I/O指令<br>
+- 其他</li>
+</ul>
+<p>操作码扩展技术:<br>
+以前k位为操作的代码,那么可以能<span class="mathjax-exps">$2^k - 1$</span>个操作指令<br>
+k个1用来表示扩展,其后t位为新的操作码,能表示<span class="mathjax-exps">$2^t$</span>个指令<br>
+以此类推</p>
+<h2 class="mume-header" id="&#x6307;&#x4EE4;&#x7684;&#x5BFB;&#x5740;&#x65B9;&#x5F0F;">指令的寻址方式</h2>
+
+<h3 class="mume-header" id="&#x76F4;&#x63A5;&#x5BFB;&#x5740;">直接寻址</h3>
+
+<p>直接访问数据,即操作数是数据的地址</p>
+<h3 class="mume-header" id="&#x95F4;&#x63A5;&#x5BFB;&#x5740;">间接寻址</h3>
+
+<p>间接访问数据,即操作数是数据的地址的地址</p>
+<h3 class="mume-header" id="&#x5BC4;&#x5B58;&#x5668;&#x5BFB;&#x5740;">寄存器寻址</h3>
+
+<p>操作数是寄存器,寄存器存放的是数据</p>
+<h3 class="mume-header" id="&#x5BC4;&#x5B58;&#x5668;&#x95F4;&#x63A5;&#x5BFB;&#x5740;">寄存器间接寻址</h3>
+
+<p>操作数是寄存器,集群次存放数据的地址</p>
+<p>间接寻址的特点:能够扩展寻址的范围,<br>
+比如操作数只能用4bit表示,如果这4bit用来表示寄存器,而寄存器的表示可以是32bit,那么寻址的范围就不是4bit而是32bit</p>
+<h3 class="mume-header" id="&#x504F;&#x79FB;&#x5BFB;&#x5740;">偏移寻址</h3>
+
+<p>类似间接寻址,只不过还有一个操作数是偏移量</p>
+<ol>
+<li>
+<p>变址寻址<br>
+<code>DATA = (EA) 	EA = (RI) + A</code><br>
+RI:变址寻址器<br>
+A:偏移量<br>
+(RI):基准地址</p>
+</li>
+<li>
+<p>基址寻址<br>
+<code>DATA = (EA) 	EA = (Rb) + A</code><br>
+Rb:基址寻址器</p>
+</li>
+<li>
+<p>相对寻址<br>
+相对于当前执行代码的行数的进行偏移<br>
+<code>DATA = (EA) 	EA = (PC) + A</code><br>
+PC:程序计数器<br>
+A:相对偏移量,DISP</p>
+</li>
+</ol>
+<p>1和2的区别:</p>
+<ol>
+<li>1在于实现程序的规律变化</li>
+<li>2可以扩大寻址范围</li>
+</ol>
+<p>1,2,3的区别:<br>
+使用的寄存器不同</p>
+<h3 class="mume-header" id="&#x6BB5;&#x5BFB;&#x5740;">段寻址</h3>
+
+<p>主要针对x86的CPUI<br>
+将段寄存器的基地址左移4bit与16bit偏移量相加,形成20bit内存物理地址的寻址方式</p>
+<h3 class="mume-header" id="&#x5806;&#x6808;&#x5BFB;&#x5740;">堆栈寻址</h3>
+
+<p>操作数位于堆栈中,由堆栈指针寄存器SP隐含指出</p>
+<p>地址扩展方式:</p>
+<ol>
+<li>低到高</li>
+<li>高地址向低地址扩展</li>
+</ol>
+<pre class="language-">PUSH Ri
+(SP)-1 -&gt; SP
+(Ri) -&gt; (SP)
+</pre>
+<pre class="language-">POP Ri
+(SP) -&gt; (Ri)
+(SP)+1 -&gt; SP
+</pre>
+<h2 class="mume-header" id="8bit&#x5B57;&#x957F;&#x7684;&#x6307;&#x4EE4;&#x7CFB;&#x7EDF;&#x8BBE;&#x8BA1;">8bit字长的指令系统设计</h2>
+
+<p>主要包括:</p>
+<ol>
+<li>模型机指令格式</li>
+<li>模型机寻址方式</li>
+<li>模型机指令系统设计</li>
+</ol>
+<p>指令格式:</p>
+<h3 class="mume-header" id="&#x4E00;&#x822C;&#x6307;&#x4EE4;&#x683C;&#x5F0F;">一般指令格式</h3>
+
+<table>
+<thead>
+<tr>
+<th>OP</th>
+<th>SR</th>
+<th>DR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DATA/ADDR/DISP/X</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>OP:操作码<br>
+SR:源寄存器<br>
+DE:目标寄存器<br>
+X:偏移地址</p>
+<h3 class="mume-header" id="&#x683C;&#x5F0F;2">格式2</h3>
+
+<table>
+<thead>
+<tr>
+<th>OP</th>
+<th>MOD</th>
+<th>SR</th>
+<th>DR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DATA/ADDR/DISP/X</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>MOD:寻址方式</p>
+<h3 class="mume-header" id="&#x683C;&#x5F0F;3&#x4E09;&#x5B57;&#x683C;&#x5F0F;">格式3:三字格式</h3>
+
+<table>
+<thead>
+<tr>
+<th>OP</th>
+<th>SR</th>
+<th>DR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADDR/DISP/X</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>DATA/ADDR/DISP/X</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>OP</th>
+<th>MOD</th>
+<th>SR</th>
+<th>DR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADDR/DISP/X</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>DATA/ADDR/DISP/X</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 class="mume-header" id="&#x6269;&#x5C55;&#x6307;&#x4EE4;&#x683C;&#x5F0F;">扩展指令格式</h3>
+
+<p>??????????</p>
+</\center></center>
+    </body>
+    
+    
+    <script>
+(function bindTaskListEvent() {
+  var taskListItemCheckboxes = document.body.getElementsByClassName('task-list-item-checkbox')
+  for (var i = 0; i < taskListItemCheckboxes.length; i++) {
+    var checkbox = taskListItemCheckboxes[i]
+    var li = checkbox.parentElement
+    if (li.tagName !== 'LI') li = li.parentElement
+    if (li.tagName === 'LI') {
+      li.classList.add('task-list-item')
+    }
+  }
+}())    
+</script>
+  </html>

@@ -5,8 +5,8 @@
 \usepackage{graphicx}%插入图片
 \usepackage{amssymb}%使用 leqslant
 \usepackage{multirow}%使用多栏宏包
-  \usepackage{ulem}
-  \usepackage{cancel}
+\usepackage{ulem}
+\usepackage{cancel,bm}
 \author{qhy}%作者
 \date{\today}%日期
 \title{机器学习5}%标题
@@ -26,7 +26,7 @@
 
     引入了泛函的概念,高斯过程与泛函有关,具体体现为不同参数$\omega$,对应不同的函数,所有的$\omega$下对应的函数的集合就是函数空间。
 
-    前面的思维:x为输入,y为输出,$\oemga$为参数,通过调整$\omega$,求$p(y|x)$的最大值,进而进行预测,这里求的是参数
+    前面的思维:x为输入,y为输出,$\omega$为参数,通过调整$\omega$,求$p(y|x)$的最大值,进而进行预测,这里求的是参数
 
     更准确的描述为,从参数空间中,确定y的分布
 
