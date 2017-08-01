@@ -210,7 +210,7 @@ ls|grep iprange-|xargs -n1 -i mv {} {}.conf
     使用 \textbf{Google Apps Script},把mid后面的参数替换掉即可。
 
     \begin{texcode}
-https://script.google.com/macros/s/AKfycbyUWJda1KGh6v-_p35CW5qGeT6IWSPUiK8oFzteuBnm6fNh88c/exec?mid=221648
+https://script.google.com/macros/s/AKfycbxlF_0HvkB8vn7K8HtzUps4wjK0UamE1qJFaIgNhIjAZ-jAjLk/exec?mid=221648
 
 https://space.bilibili.com/221648#!/
     \end{texcode}
@@ -275,16 +275,20 @@ function doGet(request) {
 
   var feed = '<?xml version="1.0" encoding="UTF-8"?>'
   +'<feed xmlns="http://www.w3.org/2005/Atom">'
-  +'<title>华南理工大学教务处-教务通知</title>'
+  +'<title type="text">华南理工大学教务处-教务通知</title>'
   +'<link href="http://jwc.scuteo.com/jiaowuchu/cms/index.do" rel="alternate"/>'
+  +'<id>http://jwc.scuteo.com/jiaowuchu/cms/index.do</id>'
   +'<updated>'+(new Date()).toISOString()+'</updated>'
   +'<author><name>华南理工大学 2015级 计算机科学与技术 qhy285571052@gmail.com</name></author>';
+
+//  Logger.log(data)
+
   data.forEach(function(e) {
          feed += '<entry>'
-     +'<title>'+e.title+'</title>'
+     +'<title type="text">'+e.title+'</title>'
      +'<link href="http://jwc.scuteo.com/jiaowuchu'+e.href+'\" rel="alternate"/>'
-     +'<updated>'+e.createTime+'</updated>'
-     +'<id>'+e.id+'</id>'
+     +'<updated>'+ e.createTime.slice(0,10) + 'T'  + e.createTime.slice(11,19) + 'Z' +'</updated>'
+     +'<id>http://jwc.scuteo.com/jiaowuchu'+e.href+'</id>'
      +'</entry>'
   })
 
@@ -294,6 +298,8 @@ function doGet(request) {
     .setMimeType(ContentService.MimeType.RSS);
 }
         \end{minted}
+
+        注:写完之后在\url{http://www.feedvalidator.org/}检验
 
         使用方法:
         \begin{itemize}
