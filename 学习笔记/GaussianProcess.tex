@@ -1,6 +1,6 @@
 \documentclass[UTF8,a4paper]{ctexart}
 \usepackage[margin=1in]{geometry}
-\usepackage{graphicx,float,array,color,bm,amsmath}
+\usepackage{graphicx,float,array,color,bm,amsmath,amssymb }
 \author{qhy}
 \date{\today}
 \title{Gaussian Process}
@@ -83,8 +83,6 @@
                 \bm{\Sigma} = (\bm{\Lambda + A^TLA})^{-1}
             \end{equation}
 
-            {\color{red}高斯过程可以看成是多个随机变量的联合分布}
-
         \subsection{随机过程与高斯过程}
         \textbf{随机过程}:许多随机变量的集合
 
@@ -105,5 +103,90 @@
         \end{equation}
 
         {\color{blue} 没错,就是这些随机变量的集合。在求这个随机过程的分布的时候,实际上就是求这些随机变量的联合分布。然后,随机过程到底结束。}
+
+        \subsection{高斯过程回归  Gaussian Process Regression}
+            \subsubsection{无噪声GPR}
+            \textbf{问题描述:}给定样本$\mathcal{D} = \{ (x_1, y_1) , \cdots , (x_n , y_n) \}$,和待预测数据$x_*$,相似性矩阵$\bm K$,求$p(y_*| \mathcal{D})$
+
+            高斯过程回归:假设目标函数是一条平滑的曲线,在相近的之间,其输出也相近。也就是相近的随机变量(它们采样的值也相近),而这个距离则是通过$x$来确定的,这就保证的相邻的$x$之间的曲线的平滑度(曲线不会突然飙到一个很大或者很小的值)。
+
+            下面看高斯过程回归的具体过程:
+
+            把每个样本的$y_i$当作随机变量,并且假设这些随机变量满足高斯分布(即,这些随机变量组成高斯过程)。
+
+            i.e. $y_i \sim \mathcal{N}(\mu_i,\Sigma_{ii})$
+
+            则这个高斯过程满足以下条件:{\color{blue}由前面的数学公式可以得到}
+            \begin{equation}
+                \bm{y}  \triangleq \left [
+                    \begin{array}{c}
+                     y_1 \\
+                     y_2\\
+                    \vdots \\
+                     y_n
+                    \end{array}
+                \right ] \sim \mathcal{N}(\bm{\mu} , \bm{K})
+            \end{equation}
+
+            注:$\triangleq$表示定义的意思
+
+            其中,
+            \begin{equation}
+                \bm \mu = \left [
+                    \begin{array}{c}
+                    \bm \mu_1 \\
+                    \bm \mu_2\\
+                    \vdots \\
+                    \bm \mu_n
+                    \end{array}
+                \right ]
+            \end{equation}
+
+            其中$\bm{K}$为相似性矩阵,用来描述随机变量之间的距离。
+            \begin{equation}
+                K_{nm} = k(\bm{x_n} , \bm x_m) = \frac{1}{\alpha}\phi(x_n)^T\phi(x_m)
+            \end{equation}
+
+            根据前面随机变量的定义,有
+            \begin{equation}
+                K_{ii} = \Sigma_{ii}
+            \end{equation}
+
+            给定$x_*$,假设
+            \begin{equation}
+                \left [ \begin{array}{c}
+                    \bm{y} \\ y_*
+                \end{array} \right ] \sim \mathcal{N}
+                \left (
+                    \left [\begin{array}{c}
+                    \bm{mu} \\ \mu_*
+                    \end{array} \right ] ,
+                    \left [\begin{array}{cc}
+                    \bm{K} & \bm{K_*} \\
+                    \bm{K_*^T} & k_{**}
+                    \end{array} \right ]
+                \right )
+            \end{equation}
+
+            其中,
+            \begin{equation}
+                \bm{K_*^T} = [ k(\bm x_1,\bm x_*) , \cdots , k(\bm x_n , \bm x_*) ]
+            \end{equation}
+
+            根据第一部分的数学知识,我们有以下结果:
+            \begin{equation}
+                p(y_* | \bm y)  = \mathcal{N}( \bm \tilde \mu ,  \bm  \tilde \Sigma)
+            \end{equation}
+
+            其中,
+            \begin{equation}
+                \bm \tilde \mu = \mu_* + \bm K_*^T\bm K^{-1}(\bm y - \bm \mu)
+            \end{equation}
+
+            \begin{equation}
+                 \bm \tilde \Sigma = k_{**} - \bm K_*^T\bm K^{-1}\bm K_*
+            \end{equation}
+
+            {\color{blue}一般地,我们对均值没有任何的先验知识,根据对称性,我们取$\mu = \mu_* = \bm 0$}
 
 \end{document}
