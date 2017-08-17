@@ -1,0 +1,90 @@
+\documentclass[UTF8,a4paper]{ctexart}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,float,array,color,bm,amsmath}
+\author{qhy}
+\date{\today}
+\title{Gaussian Process}
+\begin{document}
+    \maketitle
+    \tableofcontents
+    \newpage
+    \section{Gaussian Process}
+        \subsection{数学基础}
+        在GP中需要用到的数学知识,这里给出结论,证明见PRML第二章。
+            \subsubsection{高斯分布}
+            给定一个联合高斯分布$\mathcal{N}(\bm{x}|\bm{\mu,\Sigma})$,其中$\bm{\Lambda} \equiv \bm{ \Sigma^{-1}}$,且
+            \begin{equation}
+                \bm{x} = \left ( \begin{array}{l}
+                \bm{x_a} \\
+                \bm{x_b}
+                \end{array}
+                \right ),
+                \bm{\mu} = \left ( \begin{array}{l}
+                \bm{\mu_a} \\
+                \bm{\mu_b}
+                \end{array}
+                \right )
+            \end{equation}
+            \begin{equation}
+                \bm{\Sigma} = \left (
+                \begin{array}{cc}
+                \bm{\Sigma_{aa}} & \bm{\Sigma_{ab}}\\
+                \bm{\Sigma_{ba}}& \bm{\Sigma_{bb}}
+                \end{array} \right ),
+                \bm{\Lambda} = \left (
+                \begin{array}{cc}
+                \bm{\Lambda_{aa}} & \bm{\Lambda_{ab}}\\
+                \bm{\Lambda_{ba}}& \bm{\Lambda_{bb}}
+                \end{array}\right )
+            \end{equation}
+
+            有以下两个结论:
+
+            \textbf{条件概率分布:}
+            \begin{equation}
+                p(\bm{x_a}|\bm{x_b}) = \mathcal{N}(\bm{x_a}|\bm{\mu_{a|b}},\bm{\Lambda_{aa}^{-1}})
+            \end{equation}
+            \begin{equation}
+                \bm{\mu_{a|b}} = \bm{\mu_a} - \bm{\Lambda_{aa}^{-1}\Lambda_{ab}(x_b - \mu_b)}
+            \end{equation}
+            或
+            \begin{equation}
+                \bm{\mu_{a_b}} = \bm{\mu_a + \Sigma_{ab}\Sigma_{bb}^{-1}(x_b - \mu_a)}
+            \end{equation}
+            \begin{equation}
+                \bm{\Sigma_{a|b}= \Sigma_{aa} - \Sigma_{ab}\Sigma_{bb}^{-1}\Sigma_{ba}}
+            \end{equation}
+
+            \textbf{边缘概率分布:}
+            \begin{equation}
+                p(\bm{x_a}) = \mathcal{N}(\bm{x_a|\mu_a,\Sigma_{aa}})
+            \end{equation}
+
+            {\color{blue}这里证明了边缘概率和联合分布之间的关系,当我们在求边缘概率的时候,就可以通过求联合分布得到(这里在计算的时候省略的积分的过程,但实际的证明就是通过积分证明得到的。)}
+
+            \subsubsection{高斯变量的贝叶斯定理}
+
+            给定$\bm{x}$的一个边缘高斯分布,以及在给定$\bm{x}$的条件下的$\bm{y}$的条件高斯分布,形式为:
+            \begin{equation}
+                p(\bm{x}) = \mathcal{N}(\bm{x}|\bm{\mu},\bm{\Lambda^{-1}})
+            \end{equation}
+            \begin{equation}
+                p(\bm{y}|\bm{x}) = \mathcal{N}(\bm{y}|\bm{Ax + b,L^{-1}})
+            \end{equation}
+            $\bm{y}$的边缘分布以及给定$\bm{y}$条件下的$\bm{x}$的条件分布为:
+            \begin{equation}
+                p(\bm{y}) = \mathcal{N}(\bm{y}|\bm{Ax + b,L^{-1} + A\Lambda^{-1}A^{T}})
+            \end{equation}
+            \begin{equation}
+                p(\bm{x|y}) = \mathcal{N}(\bm{x}|\Sigma\{\bm{A^TL(y-b)+\Lambda\mu}\},\bm{\Sigma})
+            \end{equation}
+            其中,
+            \begin{equation}
+                \bm{\Sigma} = (\bm{\Lambda + A^TLA})^{-1}
+            \end{equation}
+
+            {\color{red}高斯过程可以看成是多个随机变量的联合分布}
+
+
+
+\end{document}
