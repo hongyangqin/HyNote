@@ -246,4 +246,57 @@
 
             {\color{blue}也有求$t_*$的分布而不是$y_*$的分布,过程类似,只不过对应的方差$k_{**}$变成了$c = k_{**} + \beta^{-1}$}
 
+        \subsection{高斯过程的图解}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.45]{assets/GaussianProcess_2a664.png}
+            \caption{Panel (a) shows four samples drawn from the prior distribution. Panel
+(b) shows the situation after two datapoints have been observed. The mean prediction
+is shown as the solid line and four samples from the posterior are shown as dashed
+lines. In both plots the shaded region denotes twice the standard deviation at each
+input value x.}
+        \end{figure}
+        上图是高斯过程的一个图解:
+        在先验概率的条件下,采样空间有无数个多的函数可以选择,
+
+        在后验概率的条件下,则采样的范围就会缩小
+
+        而在高斯过程中,我们进一步把采样的范围缩小到高斯分布的范围内。
+
+        {\color{blue}这里的函数的采样,具体地看,就是对函数的参数$\bm w$的采样,而参数也满足高斯分布,因此,参数是从高斯分布采样得到的。(具体见贝叶斯回归与高斯过程的关系)}
+
+        \subsection{超参数的学习}
+        在高斯过程中,我们抛弃参数模型,直接定义函数上的先验概率分布({\color{blue}具体表现为函数值$y_i$的概率分布}),
+        而这个分布则取为高斯分布,确定一个高斯分布,只需要找到它的均值和方差即可。
+            \subsubsection{均值}
+            前面已经提到,在大部分应用中,我们对于函数值$y_i$的均值没有任何的先验知识,因此根据对称性,我们取均值为$0$
+
+            \subsubsection{协方差矩阵$\bm K$}
+            $\bm K$矩阵叫相似性矩阵,用来描述随机变量之间的相似性,
+
+            i.e. 对于相似的$\bm x_n$和$\bm x_m$,对应 的函数值$y(x_n)$和$x_m$的相关性要大于不相似的点。这里相似性的概念取决于实际应用。
+
+            对于高斯过程回归,一个广泛使用的和函数的形式为指数项的二次型加上常数项和线性项,i.e.
+            \begin{equation}
+                k(\bm x_n,\bm x_m) = \theta_0 exp\{-\frac{\theta_1}{2}\| \bm x_n - \bm x_m \|\} + \theta_2 + \theta_3\bm x_n^T \bm x_m
+            \end{equation}
+
+            \subsubsection{学习超参数}
+            学习超参数的方法基于计算似然函数$p(\bm t|\bm \theta)$,其中$\bm \theta$表示高斯过程模型的超参数。最简单的方法是通过
+            最大化似然函数的方法进行$\bm \theta$的点估计。
+
+            使用\textbf{多元高斯分布}的标准形式,高斯过程模型的对数似然函数形式为:
+            \begin{equation}
+                \ln p(\bm t|\bm \theta) = -\frac{1}{2}\ln|\bm C| - \frac{1}{2}\bm t_T\bm C^{-1}\bm t - \frac{n}{2}\ln 2\pi
+            \end{equation}
+
+        \subsection{自动相关性确定 automatic relecance determination ARD}
+        上一节用似然函数求参数的方法,这里我们通过为每一个输入变量整合一个单独的参数,在通过最大似然函数方法进行参数的最优化,就能够自动地将不同输入的相对重要性从数据中推断出来。
+
+        e.g.考虑二维输入空间$\bm x = (x_1,x_2)$,有以下形式的核函数:
+        \begin{equation}
+            k(\bm x , \bm x') = \theta_0 exp{\frac{1}{2}\sum_{i = 1}^2\eta_i(x_i - x_i')^2})
+        \end{equation}
+        {\color{blue}这里的相关性,某个属性的相关性,而不是某个输入样本的相关性}
+
 \end{document}
