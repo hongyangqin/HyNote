@@ -1,6 +1,8 @@
 \documentclass[UTF8,a4paper]{ctexart}
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx,float,array,color,bm,amsmath,amssymb,hyperref}
+\pdfstringdefDisableCommands{\let\bm\@firstofone}
+\hypersetup{hidelinks}
 \author{qhy}
 \date{\today}
 \title{Gaussian Process}
@@ -370,15 +372,15 @@ input value x.}
         \end{equation}
 
         因此,贝叶斯线性回归模型是高斯过程的一个具体例子。
-        %
-        % \subsection{参考资料}
-        % \begin{itemize}
-        %     \item PRML 2.3,3.35.7,6.4,8.1
-        %     \item \href{http://www.gaussianprocess.org/gpml/}{Gaussian Processes for Machine Learning}
-        %     \item \href{http://blog.csdn.net/jasonding1354/article/details/49818575}{【机器学习技术】高斯过程初探}
-        %     \item \href{https://www.zhihu.com/question/46631426}{如何通俗易懂地介绍 Gaussian Process？-知乎}
-        %     \item \href{http://blog.csdn.net/daunxx/article/details/51725086}{贝叶斯线性回归（Bayesian Linear Regression）}
-        %     \item{https://www.youtube.com/watch?v=4vGiHC35j9s}{Machine learning - Introduction to Gaussian processes-UBC}
-        % \end{itemize}
+
+        \subsection{参考资料}
+        \begin{itemize}
+            \item PRML 2.3,3.35.7,6.4,8.1
+            \item \href{http://www.gaussianprocess.org/gpml/}{Gaussian Processes for Machine Learning}
+            \item \href{http://blog.csdn.net/jasonding1354/article/details/49818575}{【机器学习技术】高斯过程初探}
+            \item \href{https://www.zhihu.com/question/46631426}{如何通俗易懂地介绍 Gaussian Process？-知乎}
+            \item \href{http://blog.csdn.net/daunxx/article/details/51725086}{贝叶斯线性回归（Bayesian Linear Regression）}
+            \item \href{http://www.youtube.com/watch?v=4vGiHC35j9s}{Machine learning - Introduction to Gaussian processes-UBC}
+        \end{itemize}
 
 \end{document}
