@@ -299,4 +299,12 @@ input value x.}
         \end{equation}
         {\color{blue}这里的相关性,某个属性的相关性,而不是某个输入样本的相关性}
 
+        \subsection{怎样从高斯分布中采样}
+
+        \begin{figure}[H]\centering
+            \includegraphics[scale = 0.2]{assets/GaussianProcess_16efa.png}
+            \caption{(1):表示高斯分布,(2)表示从负无穷到$x$曲线下的面积,(3)表示均匀分布}
+        \end{figure}
+        采样过程:从(3)的均匀分布中采样得到点$a$,点$a$对应面积曲线中的点$b$,点$b$对应到高斯分布的点$c$,点$c$就是高斯分布采样的一个结果。
+
 \end{document}
