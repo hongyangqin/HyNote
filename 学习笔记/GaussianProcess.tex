@@ -189,4 +189,61 @@
 
             {\color{blue}一般地,我们对均值没有任何的先验知识,根据对称性,我们取$\mu = \mu_* = \bm 0$}
 
+            \subsubsection{带噪声高斯过程回归}
+            考虑目标观测值的噪声,其形式为:
+            \begin{equation}
+                t_i = y_i + \epsilon_i
+            \end{equation}
+            其中,$\epsilon_i$是一个噪声随机变量,它的值对每个观测n是独立的。满足以下形式:
+            \begin{equation}
+                \epsilon_i \sim \mathcal{N}(0 , \beta^{-1})
+            \end{equation}
+
+            {\color{blue}因为$\epsilon_i$和$y_i$是独立的,因此,对于$\epsilon_i$来说可以把$y_i$看作常量}
+            我们有以下形式的高斯分布的噪声过程:
+            \begin{equation}
+                p(t_i|y_i) = \mathcal{N}(t_i | y_i , \beta^{-1})
+            \end{equation}
+            其中,$\beta^{-1}$是一个超参数,表示噪声的精度。
+
+            考虑多个样本,以$\bm y = (y_1 , \cdots , y_n)$为条件,以$\bm t = (t_1, \cdots , t_n)$为目标值的联合概率分布。
+            这个分布是一个各向同性的高斯分布,形式为:
+            \begin{equation}
+                p(\bm t|\bm y) = \mathcal N(\bm t | \bm y , \beta^{-1}\bm I_n)
+            \end{equation}
+
+            根据高斯过程的定义:{\color{blue}上一节的内容}
+            $p(\bm y) = \mathcal N(\bm y | \bm 0,\bm K)$
+
+            为了找到以输入值$\bm x_1 , \cdots,\bm x_n$(即相似性矩阵$\bm K$)为条件的边缘概率分布$p(\bm t)$,我们需要对$y$积分:
+            \begin{equation}
+                p(\bm t) \triangleq \int p(\bm t|\bm y)p(\bm y)d\bm y = \mathcal{N}(\bm t|\bm 0,\bm C)
+            \end{equation}
+            {\color{blue}这里计算的时候,并没有进行积分,只是求对应的联合分布,在联合分布的表达中,找到对应的值(这个对应关系的证明是直接积分得到的)}
+
+            其中协方差矩阵$\bm C$为:
+            $C = K + \beta^{-1}\bm I_n$
+
+            给定$x_*$,则对应输出$y_*$与样本$\bm t$的联合概率分布为:
+            \begin{equation}
+                \left [ \begin{array}{c}
+                    \bm{t} \\ y_*
+                \end{array} \right ] \sim \mathcal{N}
+                \left (
+                    \left [\begin{array}{c}
+                    \bm{0} \\ 0
+                    \end{array} \right ] ,
+                    \left [\begin{array}{cc}
+                    \bm{C} & \bm{K_*} \\
+                    \bm{K_*^T} & k_{**}
+                    \end{array} \right ]
+                \right )
+            \end{equation}
+            则$p(y_*|\bm t)$为高斯分布,形式为:{\color{blue}形式和无噪声的情况是一样的,只不过$\bm K$变成了$\bm C$}
+            \begin{equation}
+                p(y_*|\bm t) \sim \mathcal N (\bm K_*^T\bm C^{-1}(\bm y - \bm \mu,k_{**} - \bm K_*^T\bm C^{-1}\bm K_*)
+            \end{equation}
+
+            {\color{blue}也有求$t_*$的分布而不是$y_*$的分布,过程类似,只不过对应的方差$k_{**}$变成了$c = k_{**} + \beta^{-1}$}
+
 \end{document}
