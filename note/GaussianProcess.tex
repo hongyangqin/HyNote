@@ -1,6 +1,6 @@
 \documentclass[UTF8,a4paper]{ctexart}
 \usepackage[margin=1in]{geometry}
-\usepackage{graphicx,float,array,color,bm,amsmath,amssymb }
+\usepackage{graphicx,float,array,color,bm,amsmath,amssymb,hyperref}
 \author{qhy}
 \date{\today}
 \title{Gaussian Process}
@@ -159,7 +159,7 @@
                 \end{array} \right ] \sim \mathcal{N}
                 \left (
                     \left [\begin{array}{c}
-                    \bm{mu} \\ \mu_*
+                    \bm{\mu} \\ \mu_*
                     \end{array} \right ] ,
                     \left [\begin{array}{cc}
                     \bm{K} & \bm{K_*} \\
@@ -241,7 +241,7 @@
             \end{equation}
             则$p(y_*|\bm t)$为高斯分布,形式为:{\color{blue}形式和无噪声的情况是一样的,只不过$\bm K$变成了$\bm C$}
             \begin{equation}
-                p(y_*|\bm t) \sim \mathcal N (\bm K_*^T\bm C^{-1}(\bm y - \bm \mu,k_{**} - \bm K_*^T\bm C^{-1}\bm K_*)
+                p(y_*|\bm t) \sim \mathcal N (\bm K_*^T\bm C^{-1}(\bm y - \bm \mu),k_{**} - \bm K_*^T\bm C^{-1}\bm K_*)
             \end{equation}
 
             {\color{blue}也有求$t_*$的分布而不是$y_*$的分布,过程类似,只不过对应的方差$k_{**}$变成了$c = k_{**} + \beta^{-1}$}
@@ -336,5 +336,49 @@ input value x.}
         即,最后预测的值和高斯过程中,$y_*$分布的均值是相等的。
 
         {\color{blue}这里体现了高斯过程的一个有点,高斯过程不仅能得到岭回归下的预测结果(均值),还能得到对于每个$y_*$预测的上下边界。}
+
+        \subsection{与贝叶斯线性回归模型的关系}
+        \textbf{贝叶斯线性回归模型:}{\color{blue}具体见PRML3.3章}
+        引入$\bm w$的先验概率分布,形式为:
+        \begin{equation}
+            p(\bm w) = \mathcal{N}(\bm w | \bm m_0 , \bm S_0)
+        \end{equation}
+
+        在输入$\bm t$下的后验概率分布形式为:
+        \begin{equation}
+            p(\bm w | \bm t) = \mathcal{N}(\bm w | \bm m_N , \bm S_N)
+        \end{equation}
+        其中,
+        \begin{equation}
+            \bm m_N = \bm S_N(\bm S_0^{-1}\bm m_0 + \beta \bm \Phi^T\bm t)
+        \end{equation}
+        \begin{equation}
+            \bm S_N^{-1} = \bm S_0^{-1} + \beta \bm \Phi_T \bm \Phi
+        \end{equation}
+
+        预测分布:{\color{blue}也是求在输入和超参的条件下,预测值的分布}
+        \begin{equation}
+            p(t|\bm t , \alpha ,\beta)  = \int p(t|\bm w,\beta)p(\bm w|\bm t,\alpha , \beta) d\bm  w
+        \end{equation}
+        预测分布的形式为:
+        \begin{equation}
+            p(t|\bm t , \alpha ,\beta) = \mathcal{N}(t | \bm m_N^T\bm \phi(\bm x),\sigma_N^2(\bm x))
+        \end{equation}
+        其中,
+        \begin{equation}
+            \sigma_N^2*(\bm x) = \frac{1}{\beta} + \bm \phi(\bm X)^T\bm S_N \bm \phi(\bm x)
+        \end{equation}
+
+        因此,贝叶斯线性回归模型是高斯过程的一个具体例子。
+        %
+        % \subsection{参考资料}
+        % \begin{itemize}
+        %     \item PRML 2.3,3.35.7,6.4,8.1
+        %     \item \href{http://www.gaussianprocess.org/gpml/}{Gaussian Processes for Machine Learning}
+        %     \item \href{http://blog.csdn.net/jasonding1354/article/details/49818575}{【机器学习技术】高斯过程初探}
+        %     \item \href{https://www.zhihu.com/question/46631426}{如何通俗易懂地介绍 Gaussian Process？-知乎}
+        %     \item \href{http://blog.csdn.net/daunxx/article/details/51725086}{贝叶斯线性回归（Bayesian Linear Regression）}
+        %     \item{https://www.youtube.com/watch?v=4vGiHC35j9s}{Machine learning - Introduction to Gaussian processes-UBC}
+        % \end{itemize}
 
 \end{document}
