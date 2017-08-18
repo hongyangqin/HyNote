@@ -314,4 +314,27 @@ input value x.}
 
         然而,值得注意的是,在这种期限情况下,神经网络的输出将会变得相互独立。神经网络的优势之一是输出之间共享隐含单元,因此它们可以互相"借统计优势",即,每个隐含节点关联的权值将被所有的输出变量影响,而不只是被它们中的某一个影响。这个性质在极限的高斯过程中丢失了。
 
+        \subsection{与岭回归的关系}
+        岭回归的优化目标是:
+        \begin{equation}
+            \min_{\bm \theta} \|\bm y - \bm X\bm \theta\| + \delta^2\|\bm \theta\|^2
+        \end{equation}
+        有解析解:
+        \begin{equation}
+            \bm \theta = \bm X^T \bm \alpha
+        \end{equation}
+        其中,
+        \begin{equation}
+            \bm \alpha = (\bm X\bm X^T + \delta^2 \bm I_n)^{-1}\bm y
+        \end{equation}
+
+        那么给定$\bm x_*$,其预测值$y_*$为:
+        \begin{equation}
+            y_* = \bm x_*\bm \theta = \bm x_* \bm X^T\bm \alpha = \bm x_*\bm X^T(\bm X\bm X^T + \delta^2 \bm I_n)^{-1}\bm y
+                    = \bm K_*^T\bm C^{-1}\bm y
+        \end{equation}
+        即,最后预测的值和高斯过程中,$y_*$分布的均值是相等的。
+
+        {\color{blue}这里体现了高斯过程的一个有点,高斯过程不仅能得到岭回归下的预测结果(均值),还能得到对于每个$y_*$预测的上下边界。}
+
 \end{document}
