@@ -10,5 +10,16 @@
     \maketitle
     \tableofcontents
     \newpage
-    \section{Multiple Kernel}
+    \section{Multiple Kernel Learning}
+        \subsection{核方法原理}
+        给定样本$\mathcal{D} = \{(\bm{x_1} , y_1),\cdots,(\bm{x_n} , y_n)\}$,求从输入$\bm x$ 到$y$的映射。
+
+        可以先进行一次非线性映射$\Phi:\bm x\to\phi(\bm x)$,把$\bm x$映射到高维空间
+
+        然后再在数据新的表示方法$\mathcal{D'} = \{(\bm{\phi(x_1)} , y_1),\cdots,(\bm{\phi(x_n)} , y_n)\}$上考虑原来的机器学习问题。
+
+        和函数把非映射和特征空间中的两个向量的内积两步集合起来,使得非线性映射隐式地进行。
+        具体地说,使用核函数来进行高维空间的内积计算,通过对低维空间上的运算来计算高维空间的内积,
+        而不是直接使用高维空间的表示进行内积,避免了维数灾难\footnote{在高维情形下出现的数据样本稀疏,距离计算困难等问题,是所有机器学习方法共同面临的严重障碍,被称为"维数灾难"(curse of dimensionality)}。
+
 \end{document}
