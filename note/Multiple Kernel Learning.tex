@@ -22,4 +22,15 @@
         具体地说,使用核函数来进行高维空间的内积计算,通过对低维空间上的运算来计算高维空间的内积,
         而不是直接使用高维空间的表示进行内积,避免了维数灾难\footnote{在高维情形下出现的数据样本稀疏,距离计算困难等问题,是所有机器学习方法共同面临的严重障碍,被称为"维数灾难"(curse of dimensionality)}。
 
+        \subsection{Mercer条件}
+        \textbf{Mercer条件:}设$X$是$R^n$的一个紧子集,$k:X\times X \to R$是一个连续的对称函数,
+        如果它在希尔伯特空间上的积分算子满足积分正定条件:
+        \begin{equation}
+            \forall f \in L_2(X) , \int_{X\times X} k(\bm x , \bm z)f(\bm x)f(\bm z)d\bm x d\bm z
+        \end{equation}
+        那么一定存在一个特征空间$F$和一个映射$\Phi:X\to F$,使得
+        \begin{equation}
+            k(\bm x, \bm z) = \Phi(\bm x)\times \Phi(\bm z)
+        \end{equation}
+
 \end{document}
