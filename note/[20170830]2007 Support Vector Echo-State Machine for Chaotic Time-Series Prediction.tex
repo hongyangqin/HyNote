@@ -1,0 +1,50 @@
+\documentclass[UTF8,a4paper]{ctexart}
+\ctexset{section/format=\Large\bfseries}
+\author{qhy}
+\title{Support Vector Echo-State Machine for Chaotic Time-Series Prediction}
+\date{\today}
+\begin{document}
+  \maketitle
+  \tableofcontents
+  \newpage
+  \section{Support Vector Echo-State Machine for Chaotic Time-Series Prediction}
+  反省:在读了这篇文章之后,发现自己之前的做法很蠢,首先是对ESN的认识不足,之前对ESN的学习,
+  只是建立了一个感性的认知,甚至这个认知是很不全面的,只是了解到ESN组成是随机固定的储备池和
+  需要参与训练的输出层,然后却没有学习到ESN到底是怎么工作的,它的输入和输出是什么却没有学习。
+  其次,是看文章时候不能把握全局,可能是英文原因,有些地方经常停下来翻译,这就导致了脑海中建立的
+  记忆都是局部的,而导致对整篇文章的结构和要点把握不清楚。这两点是以后需要注意的地方。
+
+  \subsection{ESN的训练}
+  ESN可以分为3个重要的部分以及4个重要的数据。
+
+  3个部分分别是输入层,储备池,输出层
+
+  4个重要的数据分别是每个时刻的输入数据,每个时刻的输出数据,每个时刻的储备池状态以及输出层的权重。
+
+  那么ESN的输入和输出是什么?对于时序预测问题来说,它的数据就是随时间变换的一个值。
+
+  \subsection{ESN的预测}
+
+  \subsection{参数w的确定}
+
+  \subsection{提高泛化能力的技巧}
+
+  \subsection{对递归核的重新理解}
+  之前看递归核那篇文章的时候,已知不能理解递归核是怎么作用会回归问题的,现在稍稍理解的ESN的训练过程之后,终于理解。
+  其实就是使用核技巧进行了储备池的点积的计算,而这个储备池是怎么确定的,就跟进行点积的两个核有关。(好像有点问题,先放着)
+
+  递归核的作用是计算储备池状态的点积,对于时序预测问题,储备池状态就是某两个时刻的储备池状态的点积。
+  而对于很长的时间序列来说,如果每次计算核的话,都要计算到最初始的时刻,显然代价很大,这就是为什么
+  最大深度$\tau$定义出来的原因。
+
+
+
+  \subsection{收获}
+  有以下几点收获:
+  \begin{itemize}
+    \item [1.] ESN和SVM的结合
+    \item [2.] ESN如何进行预测
+    \item [2.] ESN认知的补充
+  \end{itemize}
+
+\end{document}

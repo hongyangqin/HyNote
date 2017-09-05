@@ -1,0 +1,108 @@
+\documentclass[UTF8,a4paper]{ctexart}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr,hyperref}
+\pagestyle{fancy}
+\hypersetup{hidelinks}
+
+\lhead{\bfseries \leftmark}
+\chead{}
+\rhead{SCUT}
+\lfoot{\url{https://github.com/285571052}}
+\cfoot{qhy}
+\rfoot{\thepage}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\author{ qhy }
+\date{\today}
+\title{编译原理}
+
+\begin{document}
+  \maketitle
+  \tableofcontents
+  \newpage
+
+  \section{介绍}
+
+  \textbf{预期收货}:
+  \begin{itemize}
+    \item 通过学习编译原理,写出更高效的代码
+    \item 针对目标,自编写编译器
+
+    对某个模型机的编译器进行设计
+  \end{itemize}
+
+  \textbf{编译器和解释器的区别?}
+  编译器是转换器,解释器是执行系统。
+
+  程序编译的过程主要分为两大阶段:
+  \begin{itemize}
+    \item [1.] 查错
+    \begin{itemize}
+      \item 词法分析
+      \item 语法分析
+      \item 语义分析
+    \end{itemize}
+
+    \item [2.] 综合(翻译)
+    \begin{itemize}
+      \item [1.] 产生中间代码进一步优化
+      \item [2.] 目标代码生成
+    \end{itemize}
+  \end{itemize}
+
+  高级程序处理过程:初始源程序$\to$预处理$\to$源程序$\to$编译$\to$目标汇编$\to$机器代码
+
+  注:生成机器代码的时候,并不是直接生成,而是先生成对应的汇编代码,再生成机器代码。
+
+  编译过程:每个阶段的输出作为下一个阶段的输入(即数据从一种形式转换成另一种形式)。
+
+  编译过程的每个阶段都包括两个相同的处理:表格管理和出错处理。
+
+  表格管理是保存编译过程每个阶段的数据和结果,出错处理则是对编译过程遇到的语法,词法等错误进行处理。
+
+    \subsection{词法分析}
+    主要分为两大步骤,扫描和分解
+
+    扫描为从左到右扫描
+
+    分解为以介符对语句进行分割(注:双引号内的介符不可划分)
+
+    最后结果使用一个二元组保存,格式为(种类,值)
+
+    \subsection{语义分析}
+    语义分析:不断构造语法树
+
+    如:类型不对,数组越界等
+
+    过程:单词符号串$\to$语法分析$\to$语法短语
+
+    识别规则:描述程序结果的规则,通常由递归规则表示。
+
+    输出:合法的语法树
+
+    \subsection{语义分析}
+    语义分析:包括静态语义和动态语义
+
+    常见的错误包括类型不匹配,数组越界等
+
+    输出:生成中间代码
+
+    结果使用四元式表示,格式为:(运算符,运算对象1,运算对象2,结果)
+
+    \subsection{代码优化}
+    代码优化:对代码进行优化化简
+
+    \subsection{目标代码生成}
+    目标代码生成:与目标机器紧紧相关,先生成对应的汇编代码,再生成机器代码
+
+    \subsection{表格管理与出错处理}
+    表格管理与出错处理:每个阶段都执行这一操作
+
+    \subsection{编译程序划分}
+    编译程序划分:分析与综合(翻译)两个阶段
+
+    按是否与目标机器相关:前端(无关)和后端(相关)
+
+\end{document}
