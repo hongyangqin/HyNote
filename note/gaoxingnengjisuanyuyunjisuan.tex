@@ -1,0 +1,115 @@
+\documentclass[UTF8,a4paper]{ctexart}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr,hyperref}
+\pagestyle{fancy}
+\hypersetup{hidelinks}
+
+\lhead{\bfseries \leftmark}
+\chead{}
+\rhead{SCUT}
+\lfoot{\url{https://github.com/285571052}}
+\cfoot{qhy}
+\rfoot{\thepage}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\setlength{\parindent}{0pt}
+\newcommand{\spaceline}{\vspace{\baselineskip}}
+
+\author{ qhy }
+\date{\today}
+\title{高性能计算与云计算}
+
+\begin{document}
+  \maketitle
+  \tableofcontents
+  \newpage
+
+  \section{介绍}
+
+  \textbf{高性能与云计算关注的问题:}\\
+  如何使计算机更快更方便地解决更大规模的问题。
+
+  \spaceline
+  \textbf{做得更快的方法:}
+  \begin{enumerate}
+    \item [1.] work harder
+
+    换一台更好的计算机
+
+    \item [2.] work smarter
+
+    修改为更加优化的方法
+
+    \item [3.] getting help
+
+    并行处理
+  \end{enumerate}
+
+  单核CPU的提升遇到瓶颈,提高计算机性能需要另寻出路:多核时代,由AMD首先推出。
+
+  \spaceline
+  \textbf{多核运算的速度一定比单核的CPU快吗?}\\
+  不一定,考虑到散热等问题,多核CPU的主频往往比单核的低,若程序只能发挥出一个内核效用的话,
+  自然不如单核CPU快。\\
+  想要发挥多核功能,设计的软件首先要做并行运算。\\
+  多核的出现,使得高性能计算进入普及时代。
+
+  \spaceline
+  \textbf{大规模数据处理当前面临的问题:}
+  \begin{enumerate}
+    \item [1.] 大规模PC集群可靠性差
+
+    一台PC的MTBF(Mean Time Between Failure) = 3年
+
+    则1000台PC的MTBF = 1天
+
+    商用网络 = 低带宽
+
+    这个要求运行系统具备良好的可扩展性、良好的容错能力
+
+    \item [2.] 并行/分布式程序开发、调试困难
+
+    \begin{enumerate}
+      \item 数据划分
+      \item 任务调度
+      \item 任务之间的通信
+      \item 错误的处理、容错
+    \end{enumerate}
+
+    这要求编程模型具备一定表达能力、很好的简单易用性
+  \end{enumerate}
+
+  大数据时代的高性能计算:云计算:通过互联网将资源按需服务的形式提供给用户。
+
+  \spaceline
+  \textbf{课程内容}
+  \begin{enumerate}
+    \item 高性能计算系统与其结构模型
+    \item 并行算法设计
+    \item 并行程序的设计原理和方法
+    \item 云计算
+    \item 高性能计算与云计算的应用及发展趋势
+  \end{enumerate}
+
+  \spaceline
+  \textbf{1高性能计算与云计算的3大基础:}
+  \begin{enumerate}
+    \item 计算
+
+    数据处理能力
+
+    \item 存储
+
+    \item 通信
+  \end{enumerate}
+
+  \spaceline
+  \textbf{高性能计算与分布式计算的区别?没仔细记,以下瞎写}\\
+  高性能计算是把计算任务分配到各个节点上计算
+  分布式计算则是把各种资源分布在各个节点上计算
+
+  \spaceline
+  \textbf{高性能计算的模型框架???没记录,名字也不确定对不对}
+\end{document}
