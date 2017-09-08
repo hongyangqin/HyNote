@@ -1,0 +1,119 @@
+\documentclass[UTF8,a4paper]{ctexart}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr,hyperref,graphicx,float,subcaption,color}
+\pagestyle{fancy}
+\hypersetup{hidelinks}
+
+\lhead{\bfseries \leftmark}
+\chead{}
+\rhead{SCUT}
+\lfoot{\url{https://github.com/285571052}}
+\cfoot{qhy}
+\rfoot{\thepage}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\setlength{\parindent}{0pt}
+\newcommand{\spaceline}{\vspace{\baselineskip}}
+
+\author{ qhy }
+\date{\today}
+\title{Dynamic Time Warping(DTW)}
+
+\begin{document}
+  \maketitle
+  \tableofcontents
+  \newpage
+
+  \section{Dynamic Time Warping(DTW)}
+  \textbf{如何度量两个等长时间序列之间的距离?}\\
+  基本的想法就是使用欧式距离,但是欧式距离有以下缺点:
+  欧式距离的局限在于其每个时间点对应的位置是唯一的,
+  也就是说,相同的两个时间序列,如果一个时间序列往后挪了小段时刻,
+  那么计算出来的欧式距离可能偏差很大。
+  \begin{figure}[H]
+    \centering
+    \begin{subfigure}[H]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{assets/DynamicTimeWarping(DTW)_bb83b.png}
+        \caption{欧式距离}
+    \end{subfigure}
+    \begin{subfigure}[H]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{assets/DynamicTimeWarping(DTW)_5eacd.png}
+        \caption{其他}
+    \end{subfigure}
+    \caption{两个时间序列距离的计算}
+  \end{figure}
+
+  对于左图,是普通的欧式距离,但如果采用右图的映射计算方式\footnote{即一个点映射多个点,相应的,另一边的一个点也要映射多个点回去才能平衡}
+  ,计算得到值会比欧式距离小得多,也合理得多。
+
+  \spaceline
+
+  \textbf{如何度量两个不等长的时间序列之间的距离?}\\
+  想法是把不等长变得等长,简单地说,就是把短的序列变成和长序列等长的序列。
+
+  \spaceline
+
+  对于上述两个问题,可以使用\textbf{DTW}来解决。\\
+  首先是不等长的情况,从对应关系的角度来看,只需要短序列的一个点能对应长序列的多个点即可解决问题。\\
+  从对应关系的角度来看,序列的点之间的对应关系可能有多重,这里我们取距离最小的一个情况。
+
+  \spaceline
+
+  实际上,这是一个最短路径的动态规划问题。
+
+  那么对于两个序列$Q,C$,$DTW$的定义如下:
+  \begin{equation}
+    DTW(Q,C) = \min \sum_{k = 1}^{K} w_k
+  \end{equation}
+
+  其中,$K$表示路径的长路,$w_k$表示第k步对应的映射关系的平方和。
+
+  要求:$w_1 = d(1,1) , w_K = d(n,m)$
+
+  具体推导公式为:
+  \begin{equation}
+    g(i,j) = \min  \left \{
+    \begin{array}{l}
+      g(i - 1,j) + d(i,j)\\
+      g(i - 1, j - 1) + d(i , j)\\
+      g(i.j - 1) + d(i , j)
+    \end{array}
+    \right .
+  \end{equation}
+
+  \section{另一种DTW}
+  那么对于两个序列$Q,C$,$DTW$的定义如下:
+  \begin{equation}
+    DTW(Q,C) = \min \frac{1}{K} \sqrt{ \sum_{k = 1}^{K} w_k}
+  \end{equation}
+
+  这么定义是为了在上面的$DTW$中,DTW更倾向于走对角线的路径,因为路径步骤更短,
+  因此,这里进行了归一化处理。
+
+  这个表达式不能直接用动态规划求解,这里采用一个近似算法:
+  \begin{equation}
+    DTW(Q,C) = \min \frac{1}{K} \sqrt{ \sum_{k = 1}^{K} w_k}\approx \min \frac{1}{n+m-1} \sqrt{ g(n,m)}
+  \end{equation}
+
+  则有以下动态规划过程:
+  \begin{equation}
+    g(i,j) = \min  \left \{
+    \begin{array}{l}
+      g(i - 1,j) + d(i,j)\\
+      g(i - 1, j - 1) + {\color{red} 2}d(i , j)\\
+      g(i.j - 1) + d(i , j)
+    \end{array}
+    \right .
+  \end{equation}
+
+  这里对走对角线的操作给与双倍的惩罚($\times 2$),就使得$K = m+n-1$
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.5]{assets/DynamicTimeWarping(DTW)_6f31e.png}
+    \caption{DTW的动态规划过程:初始是从(0,0)开始走,因此(1,1)是$2\times 2 = 4$}
+  \end{figure}
+  
+\end{document}
