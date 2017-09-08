@@ -138,4 +138,46 @@
 
   注意:$PDTW$虽然减少的计算的开销,但是精度却大大降低了。
 
+  \newpage
+  \section{Iterative Deepening DTW(IDDTW 迭代加深DTW)}
+  $PDTW$虽然减少了计算的开销,但是却大大减少了精度。
+
+  这里的$IDDTW$虽然还是以$DTW$为名,但更准确地说,应该是在$k-NN$问题中,
+  求k近邻的时候,使用迭代加深的思想,提前淘汰不满足要求(距离很大)的时间序列,
+  从而避免计算真实$DTW$以减少计算开销。
+
+  $IDDTW$在保持原来计算精度的情况下,使用迭代加深的思想利用$PDTW$
+  对一定不满足条件的序列进行提前淘汰,而不用计算到完全的$DTW$,
+  从而在保证精度的同时,降低计算的开销。
+
+  注:计算的开销和数据的排列有关,最严重的情况,时间开销会比正常的$DTW$还要多$\frac{1}{3}$
+
+  \spaceline
+  \textbf{如何判断一个序列应该被提前淘汰?}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width = \textwidth]{assets/DynamicTimeWarping(DTW)_58939.png}
+  \end{figure}
+
+  在深度为$L$下,我们并不能判断真实的$DTW$是否比当前最好的$DTW$更小,
+  这里通过采样的方式,计算在深度$L$的情况下,
+  误差的分布(这个分布,用来估计真实的$DTW$与当前深度下的$PDTW$的差距)。
+
+  \spaceline
+  那么怎么使用这个分布?
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width = \textwidth]{assets/DynamicTimeWarping(DTW)_026a7.png}
+  \end{figure}
+
+  在深度为1的情况下,我们有如图所示的一个分布,$A$表示当前深度下的$DTW$,
+  而$B$表示当前最小的 $DTW$ ,这样,黑色的面积就表示当前时间序列,真实的$DTW$
+  小于$B$的可能性。
+
+  当这个可能性小于某个阈值的时候,我们就淘汰掉这个时间序列。(如果一个时间序列始终不被淘汰,那么它就会不断加深,
+  直到计算出真实的$DTW$)
+
+  上述算法的分布,应该在$k-NN$算法之前预处理出来,而不是$k-NN$过程中计算。
+
 \end{document}
