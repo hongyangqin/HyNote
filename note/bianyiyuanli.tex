@@ -1,6 +1,10 @@
 \documentclass[UTF8,a4paper]{ctexart}
 \usepackage[margin=1in]{geometry}
-\usepackage{fancyhdr,hyperref}
+\usepackage{fancyhdr,hyperref,xcolor,amsmath}
+
+\newcommand\hl{\bgroup\markoverwith
+  {\textcolor[rgb]{0.9, 0.99, 0.9}{\rule[-.5ex]{2pt}{2.5ex}}}\ULon}
+
 \pagestyle{fancy}
 \hypersetup{hidelinks}
 
@@ -107,5 +111,131 @@
     编译程序划分:分析与综合(翻译)两个阶段
 
     按是否与目标机器相关:前端(无关)和后端(相关)
+
+  \section{文法和语言}
+
+  掌握自下而上和自上而下的分析方法。
+
+  \spaceline
+  \textbf{程序设计的定义:}语言是一个记号系统。
+
+  \textbf{分析程序设计语言的两个阶段:}$\left \{\begin{array}{l} \text{每个程序的构成规律}\\\text{每个程序的含义}\end{array} \right .$
+
+    \subsection{语法}
+    \textbf{语法:}是一组规定,用它可以形成和产生一个合适的程序。
+
+    描述工具:文法
+
+    语法只可以判断结构是否合法。
+
+    \subsection{语义}
+    \textbf{语义:}$\left \{ \begin{array}{l}\text{静态语义}\\\text{动态语义} \end{array} \right.$
+
+    \spaceline
+
+    \textbf{静态语义:}一系列限定的规则,确定哪些合乎语法的程序是合适的。
+
+    \textbf{动态语义:}运行或动态链接时进行的判断。
+
+    描述工具:指称语义,操作语义
+
+    作用:检查类型匹配,变量作用域等。
+
+    \subsection{文法}
+    \textbf{如何描述语句?}\\
+    \begin{itemize}
+      \item [1.] 生成方式(文法)\\
+      语言中每个句子可以用严格定义的规则进行构造
+      \item [2.] 识别方式(自动机)\\
+      用一个过程,经有限次计算后会停止回答"是" ,若属于句子,要么回答"否",要么永远持续下去
+    \end{itemize}
+
+    \spaceline
+    \textbf{语言:}可以是有穷的也可以是无穷的,我们要做的是,找出语言的有穷表示。
+
+    \textbf{文法的作用:}\\
+    \begin{itemize}
+      \item [1.] 使用有穷的规则描述无穷的语言
+      \item [2.] 严格定义句子的结构,是判断句子结构是否合法的依据
+    \end{itemize}
+
+    \textbf{方法:}\\
+    \hl{::=}表示定义一条规则\\
+    \hl{$\Rightarrow$}表示应用这条规则,完成句子的变换(即由...推导出...的意思)
+
+      \subsubsection{符号和符号串}
+      \textbf{字符表(符号集):}由字母、数字和若干专用字符组成的非空有限集合。
+
+      \textbf{符号串:}字母表中的符号组成的任何有穷序列。
+
+      比如:\hl{a},\hl{aaca}是\hl{A:\{a,b,c\}}的符号串。
+
+      符号串的长度:符号串含有符号的个数
+
+      符号串的运用:
+      \begin{itemize}
+        \item 连接\\
+        定义:\hl{x = "ST"} , \hl{y = "aby"}\\
+        则\hl{xy = "STaby"}
+
+        \item 方幂\\
+        \hl{$a^n = \begin{array}{c}\underbrace{aa\cdots aa}\\ n个a \end{array}$}
+
+        \item 集合的乘积\\
+        定义:\hl{A = \{a,b\}} , \hl{B = \{0 ,1\}}\\
+        则\hl{AB = \{a0 , a1 , b0 , b1\}}\\
+        注:A,B是符号串的集合,并且AB的结果中A的符号串在前面\\
+
+        \item 集合的方幂\\
+        $A^2 = AA$
+      \end{itemize}
+
+      \subsubsection{闭包}
+      \textbf{闭包:}$\Sigma$的闭包为$\Sigma$上所有元素组合的集合$\Sigma^*$。即
+      \begin{equation}
+        \Sigma^* = \Sigma^0 \bigcup \Sigma^1 \bigcup \Sigma^2 \cdots
+      \end{equation}
+
+      \textbf{正闭包}:闭包去掉空集元素。即
+      \begin{equation}
+        \Sigma^+ = \Sigma^* - \{\phi\}
+      \end{equation}
+
+      \subsubsection{文法},
+      \textbf{产生式(规则):}一组有序对$(\alpha , \beta)$ 表示,$\alpha \to \beta$ 或$\alpha ::= \beta$
+
+      \textbf{文法的定义:}四元组$(V_N,V_T , P , S)$
+
+      其中,$V_N$表示非终结符 , $V_T$表示终结符 , $P$表示产生式集合,$S$表示文档其实符号。
+
+      注:
+      \begin{itemize}
+        \item $S$为文档的其实符号,从具体情况上看,它就是句子本身,只是还没有经过解析。
+        \item $V_N \bigcup V_T = 字母表$
+      \end{itemize}
+
+      例子:
+
+      文法$G = (V_N,V_T , P , S)$\\
+      $V_N = \{S\}, P = \{S \to 0S1 , S\to 01\}, V_T = \{0,1\}$\\
+      开始符号为 $S$
+
+      \spaceline
+      文法$G = (V_N,V_T , P , S)$\\
+      $V_N = \{\text{标识符,字母,数字}\}$\\
+      $ V_T = \{a,b,\cdots,z,0,1,\cdots , 9\}$\\
+      $P = \left \{
+      \begin{array}{l}
+      <\text{标识符}> \to <\text{字母}>,\\
+      <\text{标识符}> \to <\text{标识符}><\text{字母}>,\\
+      <\text{标识符}> \to <\text{标识符}><\text{数字}>, \\
+      <\text{字母}> \to a,\\
+      \cdots ,\\
+       z,<\text{字母}>\\
+       <\text{数字}> \to 0,\\
+       \cdots ,\\
+        9,<\text{数字}>
+      \end{array}\right \}$\\
+      $S = <\text{\text{标识符}}>$
 
 \end{document}
