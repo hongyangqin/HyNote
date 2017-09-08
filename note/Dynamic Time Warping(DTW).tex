@@ -115,5 +115,27 @@
     \includegraphics[scale = 0.5]{assets/DynamicTimeWarping(DTW)_6f31e.png}
     \caption{DTW的动态规划过程:初始是从(0,0)开始走,因此(1,1)是$2\times 2 = 4$}
   \end{figure}
-  
+  \newpage
+  \section{Piecewise Dynamic Time Warping(PDTW)}
+
+  \textbf{Piecewise Aggregate Approximation(PAA):}\\
+  每段间隔的数据取均值作为这一段的代表以进行数据的压缩,从而降低计算的开销。
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.3]{assets/DynamicTimeWarping(DTW)_1d23a.png}
+    \caption{Time series dimensionlity reduction by PAA.The horizontal dotted lines
+    show the mean of each segment.}
+  \end{figure}
+
+  \spaceline
+  \textbf{PDTW = PAA + DTW}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.3]{assets/DynamicTimeWarping(DTW)_35d0b.png}
+    \caption{Example of warping path with DTW and PDTW}
+  \end{figure}
+
+  注意:$PDTW$虽然减少的计算的开销,但是精度却大大降低了。
+
 \end{document}
