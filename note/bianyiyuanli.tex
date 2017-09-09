@@ -40,8 +40,10 @@
     对某个模型机的编译器进行设计
   \end{itemize}
 
-  \textbf{编译器和解释器的区别?}
+  \textbf{编译器和解释器的区别?}\\
   编译器是转换器,解释器是执行系统。
+
+  \spaceline
 
   程序编译的过程主要分为两大阶段:
   \begin{itemize}
@@ -142,7 +144,7 @@
     作用:检查类型匹配,变量作用域等。
 
     \subsection{文法}
-    \textbf{如何描述语句?}\\
+    \textbf{如何描述语句?}
     \begin{itemize}
       \item [1.] 生成方式(文法)\\
       语言中每个句子可以用严格定义的规则进行构造
@@ -153,7 +155,7 @@
     \spaceline
     \textbf{语言:}可以是有穷的也可以是无穷的,我们要做的是,找出语言的有穷表示。
 
-    \textbf{文法的作用:}\\
+    \textbf{文法的作用:}
     \begin{itemize}
       \item [1.] 使用有穷的规则描述无穷的语言
       \item [2.] 严格定义句子的结构,是判断句子结构是否合法的依据
@@ -168,22 +170,22 @@
 
       \textbf{符号串:}字母表中的符号组成的任何有穷序列。
 
-      比如:\hl{a},\hl{aaca}是\hl{A:\{a,b,c\}}的符号串。
+      比如:$a,aca$是$A:\{a,b,c\}$的符号串。
 
       符号串的长度:符号串含有符号的个数
 
       符号串的运用:
       \begin{itemize}
         \item 连接\\
-        定义:\hl{x = "ST"} , \hl{y = "aby"}\\
-        则\hl{xy = "STaby"}
+        定义:$x = "ST", y = "aby"$\\
+        则$xy = "STaby"$
 
         \item 方幂\\
-        \hl{$a^n = \begin{array}{c}\underbrace{aa\cdots aa}\\ n个a \end{array}$}
+        $a^n = \begin{array}{c}\underbrace{aa\cdots aa}\\ \text{n个a} \end{array}$
 
         \item 集合的乘积\\
-        定义:\hl{A = \{a,b\}} , \hl{B = \{0 ,1\}}\\
-        则\hl{AB = \{a0 , a1 , b0 , b1\}}\\
+        定义:$A = \{a,b\} , B = \{0 ,1\}$\\
+        则$AB = \{a0 , a1 , b0 , b1\}$\\
         注:A,B是符号串的集合,并且AB的结果中A的符号串在前面\\
 
         \item 集合的方幂\\
@@ -201,8 +203,8 @@
         \Sigma^+ = \Sigma^* - \{\phi\}
       \end{equation}
 
-      \subsubsection{文法},
-      \textbf{产生式(规则):}一组有序对$(\alpha , \beta)$ 表示,$\alpha \to \beta$ 或$\alpha ::= \beta$
+      \subsubsection{文法}
+      \textbf{产生式(规则):}一组有序对$(\alpha , \beta)$ 表示$\alpha \to \beta$ 或$\alpha ::= \beta$
 
       \textbf{文法的定义:}四元组$(V_N,V_T , P , S)$
 
@@ -237,5 +239,71 @@
         9,<\text{数字}>
       \end{array}\right \}$\\
       $S = <\text{\text{标识符}}>$
+
+      \subsubsection{简化表示}
+      简化表示:只使用产生式来表示文法,四元组的其他三元在产生式中表示。
+      \begin{itemize}
+        \item 第一条产生式的左部表示$S$
+        \item 用大写字母或者尖括号包围表示非终结符集合
+        \item 用小写字母表示终结字符集合
+        \item 左部相同的产生式的多个,可以用\hl{$|$}(或) 来简化表示。\\
+        比如:$A\to \alpha , A \to \beta$可以简记为$A \to \alpha | \beta$\\
+        注意:$A \to \alpha | \beta$表示的是两条产生式而不是一条,其中$\alpha , \beta$为候选式。
+      \end{itemize}
+
+    \subsection{归纳与推导}
+    \textbf{直接归纳与直接推导:}\\
+    若$v\Rightarrow w$则称$v$直接推导$w$ 或 $w$ 直接归纳为 $v$
+
+    \spaceline
+
+    \textbf{归纳与推导:}使用了多条产生式,记为
+    \begin{equation}
+      \renewcommand{\arraystretch}{0.5}
+      S \begin{array}{c} + \\ \Rightarrow \end{array} \alpha
+    \end{equation}
+    或
+    \begin{equation}
+      \renewcommand{\arraystretch}{0.5}
+      S \begin{array}{c} * \\ \Rightarrow \end{array} \alpha
+    \end{equation}
+
+    注:如果使用了一条产生式,进行了多次$\Rightarrow$也为直接推导, 推导是使用了多条产生式。
+
+    \subsection{句型、句子、语言}
+    \textbf{句型与句子的定义:}\\
+    对于文法$G[S]$,若$\renewcommand{\arraystretch}{0.5}S \begin{array}{c} * \\ \Rightarrow \end{array} x$ ,则称$x$为文法$G$的句型。\\
+    若$x$仅由终结符组成,则称$x$为文法$G$的句子
+
+    注:
+    \begin{itemize}
+      \item 句型可以表示多个句子,句子是句型的一个情况之一。句子也是一个句型。
+      \item 起始符也为句型,即\\
+      隐含条件:$S\to S$ , 所以$S$也是文法$G$的句型。
+    \end{itemize}
+
+    \spaceline
+    \textbf{语言$L[G]$的定义:}语言$L[G]$是文法$G[S]$的所有句子的集合。
+
+    注:
+    \begin{itemize}
+      \item $+,(,*,$等出现在句子中的成分,也是终结符。
+      \item 可以通过产生式的具体表达,判断出某个操作的优先级。
+    \end{itemize}
+
+    \spaceline
+    \textbf{文法的等价:}\\
+    若$L[G_1] == L[G_2]$ ,则称文法$G_1$ 和 文法$G_2$ 等价。
+
+    \spaceline
+    \textbf{文法的种类:}
+    \begin{itemize}
+      \item 0型文法
+      \item 1型文法(上下文相关文法)
+      \item 2型文法(上下文无关文法)\\
+      大部分程序设计语言是2型文法
+      \item 3型文法(正规文法)\\
+      一般用来定义一个单词
+    \end{itemize}
 
 \end{document}
