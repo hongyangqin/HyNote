@@ -1,6 +1,6 @@
 \documentclass[UTF8,a4paper]{ctexart}
 \usepackage[margin=1in]{geometry}
-\usepackage{fancyhdr,hyperref}
+\usepackage{fancyhdr,hyperref,amsmath}
 \pagestyle{fancy}
 \hypersetup{hidelinks}
 
@@ -60,10 +60,100 @@
 
   UML于97年提出,是公认的标准规范描述
 
+  \section{软件危机}
+  \textbf{软件危机:}
+  \begin{itemize}
+    \item 成本高
+    \item 软件质量得不到拨正
+    \item 计算机软硬费用比
+    \item 进度难以控制
+    \item 维护困难
+  \end{itemize}
 
+  软件危机无非是关于时间、成本、质量这三个方面的问题。
 
+  \spaceline
+  质量包括可靠性、安全性、可维护性、可移植性等方面。
 
+  \spaceline
+  \textbf{可靠性:}99.99\%,表示一年之内正常工作的概率是99.99\%,或一年之内故障的概率是0.01\%
 
+  \spaceline
+  \textbf{软件危机的解决办法:}主要分为两个方面:
 
+  $\left \{\begin{array}{l}
+    \text{从管理的角度}\left \{\begin{array}{l}
+    \text{文档的标准化}\\
+    \text{软件开发的过程的研究}\\
+    \text{人们的交流方式}
+    \end{array}\right .
+    \\
+    \text{软件开发方法的研究} \left \{ \begin{array}{l}
+    \text{结构化开发方法}\\
+    \text{面向对象开发方法}
+    \end{array} \right .
+  \end{array}\right .$
+
+  管理是影响软件项目成功开发的全局性因素,而技术只是影响局部。\spaceline
+
+  \textbf{结构化与面向对象的区别?}\\
+  解决问题分为两个阶段:
+  \begin{itemize}
+    \item 问题分析
+    \item 求解(编码)
+  \end{itemize}
+
+  问题分析中,结构化与面向对象都采用相同的层次化的思想,都是自顶向下逐层细化问题。\\
+  而两者的区别主要在于编码部分,结构化采用自底向上的编码方式,而面向对象则是采用从中间向两边编码的方式。
+
+  \spaceline
+  \textbf{软件工程的三个要素:}
+  \begin{itemize}
+    \item 工具
+    \item 方法
+    \item 过程\\
+    工具与方法的综合使用
+  \end{itemize}
+
+  \spaceline
+  $\text{软件生命周期}\left \{\begin{array}{l}
+  \text{软件定义} \left \{\begin{array}{l}
+    \text{问题分析}\\
+    \text{可行性研究}\\
+    \text{需求分析}
+  \end{array} \right .\\
+  \text{软件开发} \left \{\begin{array}{l}
+    \text{总体设计,单元测试}\\
+    \text{详细设计,综合测试}\\
+    \text{编码}
+  \end{array} \right .\\
+  \text{运行维护:持续满足用户需求}
+  \end{array} \right .$
+
+  \spaceline
+  \textbf{描述bug的术语:}
+  \begin{itemize}
+    \item 错误\\
+    当人们在进行软件开发活动的过程中,出错时,例如设计人员错误理解用户需求
+    \item 故障\\
+    非正常或非期望的工作状态(比如异常?)
+    \item 失效\\
+    指系统违背了它应有的行为
+  \end{itemize}
+
+  \spaceline
+  \textbf{软件质量的各种视角:}(\color{red} ppt)
+
+  个人利益不同,评价标准也不同。
+
+  \spaceline
+  \textbf{什么是好的软件?}包括以下三个方面
+  \begin{itemize}
+    \item 产品的质量\\
+    产本本身的质量
+    \item 过程的质量\\
+    决定一个公司是否能持续的产出高质产品
+    \item 商业环境背景下产品的质量
+  \end{itemize}
 
 \end{document}
