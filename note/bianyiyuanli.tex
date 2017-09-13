@@ -306,4 +306,76 @@
       一般用来定义一个单词
     \end{itemize}
 
+  \section{上下文无关文法及其语法树}
+  上下文无关文法:2型文法,有足够的能力描述现今程序设计语言的语法结构
+
+  例子:算数表达式:
+  $E\to i|E+E|E*E|(E)$\\
+  $<\text{赋值语句}> \to i := E$\\
+  $<\text{条件语句}> \to if <\text{条件}> then <\text{语句}>$\\
+  $| if <\text{条件}> then <\text{语句}> else <\text{语句}>$
+
+  \subsection{规范推导和规范句型}
+  \textbf{最左/右 推导}:\\
+  在推导任何一步$\alpha\to \beta$时,其中$\alpha,\beta$为句型,都是对$\alpha$中的最左/右的
+  非终结符进行替换,则成为最左/右推导。
+
+  {\color{red}明确???推导到底是多次直接推导,还是多条产生式}
+
+  \textbf{规范推导:}最右推导\\
+  \textbf{规范规约:}最左规约
+
+  \textbf{语法树:}推导的过程,可以展开成语法树,但是从语法树是看不出语法树的构造顺序的(即推导的过程)\\
+  在语法树上,从左到右读取叶子节点,可以得到句型或句子。
+
+  \textbf{语法树的定义:}满足下面几个条件的树,则称为文法G的语法树。
+  \begin{itemize}
+    \item 每个节点都有标记,是终结符或者非终结符中一个符号
+    \item 根节点的标记是起始符(S)
+    \item 若一个节点至少有一个除它自己之外的子孙,则这个节点的标记一定是非终结符
+    \item 语法树得到的一定是文法G的产生式
+  \end{itemize}
+
+  \textbf{文法的二义性:}\\
+  一个文法存在某个句子对应2个不同的语法树,则称文法有二义性。
+
+  \subsection{句型的分析}
+  \textbf{句型的分析:}识别给定串是否是某文法的句型。
+
+  句型的分析主要有两种方法:
+  \begin{itemize}
+    \item 自上而下的分析法(推导)
+    \item 自下而上的分析法(规约)
+  \end{itemize}
+
+  \textbf{自上而下的算法:}从开始符出发,反复使用文法中的产生式,
+  寻找匹配的推导。(从跟节点开始不断构造语法树,找出与给定串匹配的语法树)\\
+  这个算法的关键之处是\textbf{如何选择产生式?}
+
+  \spaceline
+  \textbf{自下而上的算法:}从给定串出发,归约到起始符(从叶子节点出发,向上构造语法树)\\
+  这个算法的关键之处是\textbf{如何确定可归约串????????}
+
+  \spaceline
+  要确定可归约串,首先要了解\textbf{短语,直接短语,句子}的概念。{\color{red}为什么?回头需要去看算法的原理}\\
+  \textbf{短语:}若$\renewcommand{\arraystretch}{0.5}S\begin{array}{c} * \\ \Rightarrow \end{array} \alpha A\delta
+  \begin{array}{c} * \\ \Rightarrow \end{array} \beta$,则称$\beta$是句型{\color{red}$\alpha A \delta$}相对于$A$的短语。
+    (从语法树上来看,短语就是叶子 或者 叶子与其父(祖宗)节点 的组合对应的句型 )
+
+  {\color{red}到底是句型$\alpha A \delta$ 还是 句型$\alpha \beta \delta$}
+
+  直接短语:若$\renewcommand{\arraystretch}{0.5}S\begin{array}{c} * \\ \Rightarrow \end{array} \alpha A\delta
+   {\color{red}\Rightarrow}  \beta$,则称$\beta$是句型{\color{red}$\alpha A \delta$}相对于$A$的直接短语。
+   (从语法树上来看,每个叶子都是直接短语)
+
+   \textbf{句柄:}一个句型的最左直接短语为句柄(从语法树上来看,最左的叶子就是句柄)\\
+   \textbf{可归约串}:句柄即可归约串。
+
+   \spaceline
+   \textbf{多余规则:}
+   \begin{itemize}
+     \item 不可到达
+     \item 不可终止
+   \end{itemize}
+
 \end{document}
