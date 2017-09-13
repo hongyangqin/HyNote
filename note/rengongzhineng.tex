@@ -1,0 +1,42 @@
+\documentclass[UTF8,a4paper]{ctexart}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr,hyperref}
+\pagestyle{fancy}
+\hypersetup{hidelinks}
+
+\lhead{\bfseries \leftmark}
+\chead{}
+\rhead{SCUT}
+\lfoot{\url{https://github.com/285571052}}
+\cfoot{qhy}
+\rfoot{\thepage}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\setlength{\parindent}{0pt}
+\newcommand{\spaceline}{\vspace{\baselineskip}}
+
+\author{ qhy }
+\date{\today}
+\title{人工智能}
+
+\begin{document}
+  \maketitle
+  \tableofcontents
+  \newpage
+
+  \section{介绍}
+  1956年提出人工智能的概念。
+
+  \section{无题}
+  \textbf{对于非结构化问题,即不能使用数学来进行描述的问题,我们怎么使用计算机进行描述?}\\
+  使用\textbf{状态空间法:}
+  \begin{itemize}
+    \item 使用多元组来描述问题的状态
+    \item 每个问题有初始态和目标抬
+    \item 有些状态是非法的
+    \item 我们需要做的是,从初始态转移到目标态
+  \end{itemize}
+
+\end{document}
