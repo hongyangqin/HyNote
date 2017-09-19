@@ -1,6 +1,6 @@
 \documentclass[UTF8,a4paper]{ctexart}
 \usepackage[margin=1in]{geometry}
-\usepackage{fancyhdr,hyperref,xcolor,amsmath}
+\usepackage{fancyhdr,hyperref,xcolor,amsmath,float,graphicx}
 
 \newcommand\hl{\bgroup\markoverwith
   {\textcolor[rgb]{0.9, 0.99, 0.9}{\rule[-.5ex]{2pt}{2.5ex}}}\ULon}
@@ -377,5 +377,147 @@
      \item 不可到达
      \item 不可终止
    \end{itemize}
+
+   \section{词法分析}
+   \textbf{单词描述的工具:}正规文法(3型文法)和正则式(正则表达式)
+
+
+   \subsection{正规文法与正则式}
+   \textbf{正规文法}也称三星文法$G=(V_N , V_T , S , P)$,其P中的一条规则都有以下形式:$A\to aB$或$A \to a$,其中$A,B\in V_N , a \in V_T^*$。\\
+   即(一句话概括)文法的产生式的右侧以终结符开头。
+
+   \spaceline
+   \textbf{正则式:}也称正则表达式。
+
+   既然有了正规文法,为什么还需要正则式?(作用)\\
+   因为正则式可以直观地看出单词的构成
+
+   \spaceline
+   给定集合$\Sigma$
+   \begin{itemize}
+     \item $\epsilon$和$\Phi$\footnote{$\Phi = \{\epsilon\}$}都是某个集合$\Sigma$上的正规式。
+     \item 集合内的任意元素都是集合$\Sigma$的正规式
+     \item 正规式经过以下运算之后,还是集合$\Sigma$的正规式
+     \begin{itemize}
+       \item "$|$" 或
+       \item "$.$" 连接
+       \item "$*$" 闭包
+       \item 优先级 $* > . > |$
+     \end{itemize}
+   \end{itemize}
+
+   例子:令$\Sigma = \{a,b\}$ , $\Sigma$上的正规式和相应的正规集的例子如下:
+  \begin{table}[H]
+  \centering
+  \begin{tabular}{c|c}
+  \hline
+  正规式          & 正规集                                            \\ \hline
+  $a$          & $\{a\}$                                        \\
+  $a|b$        & $\{a,b\}$                                      \\
+  $ab$         & $\{ab\}$                                       \\
+  $(a|b)(a|b)$ & $\{aa,ab,ba,bb\}$                              \\
+  $a^*$        & $\{\epsilon , a, aa,\cdots\}$,即任意个a的串          \\
+  $(a|b)^*$    & $\{\epsilon , a, b ,aa ,ab\cdots\}$,即所有a,b组成的串 \\ \hline
+  \end{tabular}
+  \end{table}
+
+  \subsection{正规文法和正则式的等价性}
+  \textbf{将正规式转换成正规文法:}\\
+  选择一个非终结符$S$生成类似产生式的形式:$S\to r$ ,并将$S$定为$G$的识别符号。\\
+
+  \textbf{例子}:将$r = a(a|d)^*$转换成相应的正规文法。{\color{red}书本上貌似写多了,以下为自己观点}
+  \begin{itemize}
+    \item
+    $S\to a(a|d)^*$
+    \item
+    $S\to aA$\\
+    $A \to (a|d)^*$
+    \item
+    $S \to aA$\\
+    $A \to (a|d)A$  \\
+    $A \to \epsilon$
+    \item
+    $S \to aA$\\
+    $A \to aA$\\
+    $A \to dA$\\
+    $A \to \epsilon$
+  \end{itemize}
+
+  {\color{red}为什么最右推导,最左规约是合理的?有什么直观的理解?}
+
+  \subsection{有穷自动机}
+  \textbf{有穷自动机}:也称有限自动机,是一种识别装置,能准确识别正规集,即识别正规文法所定义的语言和正规式所表示的集合。\\
+  有穷自动机本质上是一个状态转移图。
+
+  \spaceline
+  \subsubsection{确定的有穷自动机(DFA)}
+  定义:一个确定的有穷自动机$M$是一个五元组
+  \[M = (K , \Sigma , f , s , z)\]
+  其中,
+  \begin{itemize}
+    \item [(1)] K是一个有穷集,它的每个元素称为一个状态
+    \item [(2)] $\Sigma$是一个有穷字母表,它的每个元素称为一个输入符号,所以也称为$\Sigma$为输入符号表。
+    \item [(3)] f是转换函数, 是$K\times \Sigma \to K$上的映像。
+    \item [(4)] $S\in K$,是唯一的一个初态
+    \item [(5)] $Z \subseteq  K$,是一个终态集,终态也称为可接受状态或结束状态。
+  \end{itemize}
+  确定性体现在:
+  \begin{itemize}
+    \item 初态是唯一的
+    \item 每个状态对应的唯一的下一个状态
+  \end{itemize}
+
+  \textbf{DFA可以使用状态图或状态矩阵表示:}图\ref{fig1}和图\ref{fig2}分别表示状态图和状态矩阵。
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_5398e.png}
+    \caption{状态转移图:初态结点冠以"$\rightarrow$"或标以"$-$",终态结点用双圈表示或标以"$+$"}
+    \label{fig1}
+  \end{figure}
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_c1ff8.png}
+    \caption{状态转移矩阵:可以用$\rightarrow$标明初态;否则第一行即初态,相应终态行在表的右端标以1,非状态标以0}
+    \label{fig2}
+  \end{figure}
+
+  \subsubsection{不确定的有穷自动机(NFA)}
+  定义:一个不确定的有穷自动机$M$是一个五元组
+  \[M = (K , \Sigma , f , s , z)\]
+  其中,
+  \begin{itemize}
+    \item [(1)] K是一个有穷集,它的每个元素称为一个状态
+    \item [(2)] $\Sigma$是一个有穷字母表,它的每个元素称为一个输入符号,所以也称为$\Sigma$为输入符号表。
+    \item [(3)] f是转换函数, 是$K\times \Sigma$到$K$的全体子集的映像,即$K\times \Sigma \to 2^K$,其中$2^K$表示$K$的幂集{\color{red}这一段是什么鬼???}
+    \item [(4)] $S\subseteq K$,是一个非空初态集
+    \item [(5)] $Z \subseteq  K$,是一个终态集
+  \end{itemize}
+  确定性体现在:
+  \begin{itemize}
+    \item 初态不唯一(有初态集)
+    \item 每个状态对应的在同一个输入,有多个可能的状态转移。(即映射不唯一,一个状态映射到所有状态的某个子集)
+  \end{itemize}
+
+  \subsubsection{NFA转换为等价的DFA}
+  \textbf{定理:}设$L$为一个由NFA接受的集合,则存在一个接受$L$的DFA。
+
+  \spaceline
+  \textbf{子集法:}将NFA转换成接受同样语言的DFA\\
+  为一个NFA狗仔相应的DFA的基本想法是让DFA的每一个状态对应NFA的一组状态。(即把可能转移的多个不确定的状态的组合表示成一个状态来看)
+
+  \begin{itemize}
+    \item $\epsilon$合并\\
+    经过$\epsilon$弧得到的状态可以合并成一个状态
+    \item 状态合并\\
+    当前状态所能直接转移到的所有状态合并成一个状态
+    \item 状态集合I的$\epsilon$闭包\\
+    $\epsilon-closure(I)$状态集I中的任何状态S经过任一条$\epsilon$弧而能到达的状态
+    \item 状态集合I的$a$弧转换\\
+    $move(I,a)$,所有那些可从$I$中的某个状态经过一条a弧而达到的状态的全体。
+  \end{itemize}
+
+  {\color{red} 后面补上一个例子}
 
 \end{document}
