@@ -1,7 +1,10 @@
 \documentclass[UTF8,a4paper]{ctexart}
 \usepackage[margin=1in]{geometry}
 \usepackage{fancyhdr,hyperref,xcolor,amsmath,float,graphicx}
-
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{automata}
+\usetikzlibrary{arrows.meta}
 \newcommand\hl{\bgroup\markoverwith
   {\textcolor[rgb]{0.9, 0.99, 0.9}{\rule[-.5ex]{2pt}{2.5ex}}}\ULon}
 
@@ -591,6 +594,105 @@
     (因为尝试的所有的输入都是转移到相同的状态(可蔓延性) , 而一致性在初始的时候已经明确)。
   \end{itemize}
 
-  {\color{red} 后面补上使用子集法以及分割法的一个例子}
+  \spaceline
+  \textbf{例子:}把图\ref{example-zijifafengefa}表示的NFA确定化和最小化。
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      [every initial by arrow/.style={double distance = 3,-Implies}]
+    \node[state,initial,initial text=,double]  (A0)  {0};
+    \node[state]  (A1)  [right=of A0] {1};
+
+    \path [->] (A0) edge [bend left]  node [above] {a,b} (A1)
+                  edge [loop above] node {a} (A0)
+          (A1) edge [bend left] node [above] {a} (A0);
+    \end{tikzpicture}
+    \caption{例子:子集法、分割法例子}
+    \label{example-zijifafengefa}
+  \end{figure}
+
+  \begin{itemize}
+    \item 确定化,见表\ref{example-zijifa}
+    \begin{table}[H]
+      \centering
+      \begin{tabular}{c|c|c}
+        \hline
+        set&input a&input b\\  \hline
+        $A=\{0\}$ & $\{0,1\}(B)$ & $\{1\}(C)$\\
+        $B=\{0,1\}$ & $\{0,1\}(B)$ & $\{1\}(C)$\\
+        $C=\{1\}$ & $\{1\}(C)$ & $\Phi$\\
+        \hline
+      \end{tabular}
+      \caption{例子:子集法 表}
+      \label{example-zijifa}
+    \end{table}
+
+    对应状态图为:见图\ref{fig-example-zijifafengefa}
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[node distance=60,
+        every initial by arrow/.style={double distance = 3,-Implies}]
+      \node[state,initial,initial text=,double]  (A)  {A};
+      \node[state,double]  (B)  [ right  of=A] {B};
+      \node[state]  (C)  [below right  of=A] {C};
+
+      \path [->] (A) edge [bend left]  node [above] {a} (B)
+                 edge [bend left]  node [above] {b} (C)
+                 (B) edge [loop above]  node [above] {a} (B)
+                  edge [bend left]  node [below] {b} (C)
+                (C) edge [bend left]  node [above] {a} (A);
+      \end{tikzpicture}
+
+      \caption{例子:子集法 图}
+      \label{fig-example-zijifafengefa}
+    \end{figure}
+    \item 最小化,见表\ref{example-fengefa}
+    \begin{table}[H]
+      \centering
+      \begin{tabular}{c|c}
+        \hline
+        input & sets\\  \hline
+        init & $\{C\}$,$\{A,B\}$\\
+        a & $\{C\}$,$\{A,B\}$ \\
+        b & $\{C\}$,$\{A,B\}$\\
+        \hline
+      \end{tabular}
+      \caption{例子:分割法 表}
+      \label{example-fengefa}
+    \end{table}
+
+    因此$A,B$两个状态是等价的。
+    对应的状态图为\ref{fig-example-fengefa}
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        [every initial by arrow/.style={double distance = 3,-Implies}]
+      \node[state,initial,initial text=,double]  (A0)  {0};
+      \node[state]  (A1)  [right=of A0] {1};
+
+      \path [->] (A0) edge [bend left]  node [above] {b} (A1)
+                    edge [loop above] node {a} (A0)
+            (A1) edge [bend left] node [above] {a} (A0);
+      \end{tikzpicture}
+      \caption{例子:分割法 图}
+      \label{fig-example-fengefa}
+    \end{figure}
+
+    另外,可以观察出,NFA的图\ref{example-zijifafengefa}和最小化后的DFA的图\ref{fig-example-fengefa}
+    只是相差的一个$a$而已,实际上他们的确是等价的。\\
+    因为  \begin{tikzpicture}
+        [every initial by arrow/.style={double distance = 3,-Implies}]
+      \node[state,initial,initial text=,double]  (A0)  {0};
+      \path [->] (A0) edge [loop above] node {a} (A0);
+      \end{tikzpicture}
+    已经足够描述任意长度的a串,而无需\begin{tikzpicture}
+      [every initial by arrow/.style={double distance = 3,-Implies}]
+    \node[state,initial,initial text=,double]  (A0)  {0};
+    \node[state]  (A1)  [right=of A0] {1};
+
+    \path [->] (A0) edge [bend left]  node [above] {a} (A1)
+          (A1) edge [bend left] node [above] {a} (A0);
+    \end{tikzpicture}
+  \end{itemize}
 
 \end{document}
