@@ -298,13 +298,22 @@
     \spaceline
     \textbf{文法的种类:}
     \begin{itemize}
-      \item 0型文法
-      \item 1型文法(上下文相关文法)
+      \item 0型文法\\
+      对任一产生式$\alpha \to \beta$ , 都有$\alpha \in (V_N\cup V_T)$ ,且至少含有一个终结符,$\beta \in (V_N\cup V_T)$\\
+      即 产生式左侧只要不是句子,就是0型文法
+      \item 1型文法(上下文相关文法)\\
+      在0型文法条件下,对任一产生式$\alpha \to \beta$ ,都有$|\beta| \leq |\alpha|$ , 仅仅$S \to \epsilon $除外($|\alpha|$指的是句型的长度)\\
+      即产生式左侧短语右侧,就是1型文法
       \item 2型文法(上下文无关文法)\\
+      在1型文法条件下,对任一产生式$\alpha \to \beta$ ,都有$\alpha \in (V_N) , \beta \in (V_N\cup V_T)$\\
+      即产生式左侧只有非终结符\\
       大部分程序设计语言是2型文法
       \item 3型文法(正规文法)\\
+      在2型文法的条件下,,对任一产生式$\alpha \to \beta$,都有形如$A\to aB$或$A \to a$,其中$A,B\in V_N , a \in V_T$\\
+      即产生式的右侧必须是以终结符开头\\
       一般用来定义一个单词
     \end{itemize}
+    4种类型的文法约束依次为:左侧不能是句子,左侧长度小于右侧,左侧只有非终结符,右侧以终结符开头
 
   \section{上下文无关文法及其语法树}
   上下文无关文法:2型文法,有足够的能力描述现今程序设计语言的语法结构
@@ -320,7 +329,7 @@
   在推导任何一步$\alpha\to \beta$时,其中$\alpha,\beta$为句型,都是对$\alpha$中的最左/右的
   非终结符进行替换,则成为最左/右推导。
 
-  {\color{red}明确???推导到底是多次直接推导,还是多条产生式}
+  {\color{blue}推导到底是多次直接推导,还是多条产生式?前者}
 
   \textbf{规范推导:}最右推导\\
   \textbf{规范规约:}最左规约
@@ -354,22 +363,28 @@
 
   \spaceline
   \textbf{自下而上的算法:}从给定串出发,归约到起始符(从叶子节点出发,向上构造语法树)\\
-  这个算法的关键之处是\textbf{如何确定可归约串????????}
+  这个算法的关键之处是\textbf{如何确定可归约串?}
+
+  自上而下的话,感觉就是凭空想象,直到退出想要的结果,而自下而上的话,则是从句子本身出发,带有明确的方向性,更为简单。
 
   \spaceline
   要确定可归约串,首先要了解\textbf{短语,直接短语,句子}的概念。{\color{red}为什么?回头需要去看算法的原理}\\
   \textbf{短语:}若$\renewcommand{\arraystretch}{0.5}S\begin{array}{c} * \\ \Rightarrow \end{array} \alpha A\delta
-  \begin{array}{c} * \\ \Rightarrow \end{array} \beta$,则称$\beta$是句型{\color{red}$\alpha A \delta$}相对于$A$的短语。
+  \begin{array}{c} * \\ \Rightarrow \end{array} \beta$,则称$\beta$是句型{\color{red}$\alpha \beta \delta$}相对于$A$的短语。
     (从语法树上来看,短语就是叶子 或者 叶子与其父(祖宗)节点 的组合对应的句型 )
 
-  {\color{red}到底是句型$\alpha A \delta$ 还是 句型$\alpha \beta \delta$}
+  {\color{blue}到底是句型$\alpha A \delta$ 还是 句型$\alpha \beta \delta$?后者}
 
   直接短语:若$\renewcommand{\arraystretch}{0.5}S\begin{array}{c} * \\ \Rightarrow \end{array} \alpha A\delta
-   {\color{red}\Rightarrow}  \beta$,则称$\beta$是句型{\color{red}$\alpha A \delta$}相对于$A$的直接短语。
+   {\color{red}\Rightarrow}  \beta$,则称$\beta$是句型{\color{red}$\alpha \beta \delta$}相对于$A$的直接短语。
    (从语法树上来看,每个叶子都是直接短语)
 
    \textbf{句柄:}一个句型的最左直接短语为句柄(从语法树上来看,最左的叶子就是句柄)\\
    \textbf{可归约串}:句柄即可归约串。
+
+   那么自下而上的算法则是,每次选取语法树的句柄归约。
+
+   {\color{red} 后面补上一个求直接短语,短语, 句柄以及归约的例子}
 
    \spaceline
    \textbf{多余规则:}
@@ -490,7 +505,11 @@
   \begin{itemize}
     \item [(1)] K是一个有穷集,它的每个元素称为一个状态
     \item [(2)] $\Sigma$是一个有穷字母表,它的每个元素称为一个输入符号,所以也称为$\Sigma$为输入符号表。
-    \item [(3)] f是转换函数, 是$K\times \Sigma$到$K$的全体子集的映像,即$K\times \Sigma \to 2^K$,其中$2^K$表示$K$的幂集{\color{red}这一段是什么鬼???}
+    \item [(3)] f是转换函数, 是$K\times {\color{red}\Sigma^*}$到$K$的全体子集的映像,即$K\times {\color{red}\Sigma^*} \to 2^K$,其中$2^K$表示$K$的幂集
+    \footnote{$K\times  Sigma^*$指的是两者的笛卡尔积,表示一个状态与每个输入的组合 ,
+    然后这里取闭包$\Sigma^*$,表示每个状态与多个可能输入的组合(也可以分解成一个状态一个输入,这样写应该是为了简化,因为画图的时候,采取前者而不是逐个画)}
+    \footnote{所谓幂集（Power Set）， 就是原集合中所有的子集（包括全集和空集）构成的集族}
+    {\color{blue}这一段是什么鬼?见脚注}
     \item [(4)] $S\subseteq K$,是一个非空初态集
     \item [(5)] $Z \subseteq  K$,是一个终态集
   \end{itemize}
@@ -505,7 +524,8 @@
 
   \spaceline
   \textbf{子集法:}将NFA转换成接受同样语言的DFA\\
-  为一个NFA狗仔相应的DFA的基本想法是让DFA的每一个状态对应NFA的一组状态。(即把可能转移的多个不确定的状态的组合表示成一个状态来看)
+  为一个NFA构造相应的DFA的基本想法是让DFA的每一个状态对应NFA的一组状态。(即把可能转移的多个不确定的状态的组合表示成一个状态来看)
+  具体算法见\ref{fig-zijifa}
 
   \begin{itemize}
     \item $\epsilon$合并\\
@@ -518,6 +538,59 @@
     $move(I,a)$,所有那些可从$I$中的某个状态经过一条a弧而达到的状态的全体。
   \end{itemize}
 
-  {\color{red} 后面补上一个例子}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.1]{assets/CompilerConstructionPrinciples_9e2c9.png}
+    \caption{子集构造算法}
+    \label{fig-zijifa}
+  \end{figure}
+
+  \begin{itemize}
+    \item C为DFA的状态集合,初始元素为起始状态的空闭包
+    \item while所做的就是不断以C中的状态转移出新的状态加入C中,直到所有的装备都被使用过
+    \item 所谓的转移,指的就是$\epsilon-closure(Move(T,a))$\\
+    其中,$T$为C中的一个状态(它的值为NFA中某些状态的集合) , $a$表示经过的弧, 结果可以简记为$I_a$
+    \item 终态的确定\\
+    上面的算法确定的NFA对应到DFA有哪些状态,但是还未确定终态。\\
+    DFA的\textbf{终态}就是DFA中和NFA中的终态有交集的状态。
+  \end{itemize}
+
+  \subsubsection{DFA的化简}
+  一个DFA可以通过\textbf{消除无用状态}和\textbf{合并等价状态}来转换成一个等价的最小状态的DFA。\\
+  也就是化简主要分两个部分。
+
+  \spaceline
+  所谓最简的DFA指的是它没有多余的状态,并且它的状态中没有两个是互相等价的。
+
+  \spaceline
+  \textbf{无用状态:}
+  \begin{itemize}
+    \item 从该自动机的开始状态出发,任何输入也不能到达的那个状态
+    \item 从这个状态没有通路到达终态
+  \end{itemize}
+  {\color{blue}有什么算法能解决上面这个问题呢?从起点开始DFS,在能到达终点的前提下,所能访问到的所有的点都是有效的。其他都是无效的。}
+
+  \spaceline
+  \textbf{等价状态:}
+  \begin{itemize}
+    \item [(1)] 一致性条件\\
+    状态s和t的必须同时为可接受状态或不可接受状态。\footnote{可接受状态指的是终态,不可接受状态指的是非终态。}
+    \item [(2)] 蔓延性\\
+    对于所有输入符号,状态s和t必须转换到等价的状态里。
+  \end{itemize}
+
+  \spaceline
+  那么如何找出等价的状态进而化简呢?\\
+  \textbf{分割法:}把一个DFA(不含多余状态)的状态分成一些不相交的子集,使得任何不同的两个子集的状态都是可区别的,而
+  同一子集中的任何两个状态都是等价的。
+
+  \begin{itemize}
+    \item 终态与非终态能初始划分出初始的两个不等价的子集。
+    \item 对于每个集合,尝试所有的输入,如果集合内的两个状态不能转移到相同集合,那么这两个状态是不等价的,需要把这两个状态拆分到两个新的子集内。
+    \item 尝试所有的输入可能,最终得到的集合内的元素就是相互等价的元素\\
+    (因为尝试的所有的输入都是转移到相同的状态(可蔓延性) , 而一致性在初始的时候已经明确)。
+  \end{itemize}
+
+  {\color{red} 后面补上使用子集法以及分割法的一个例子}
 
 \end{document}
