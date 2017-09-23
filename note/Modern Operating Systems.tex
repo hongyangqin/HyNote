@@ -1,6 +1,6 @@
 \documentclass[UTF8,a4paper]{ctexart}
 \usepackage[margin=1in]{geometry}
-\usepackage{fancyhdr,hyperref,float,graphicx,color}
+\usepackage{fancyhdr,hyperref,float,graphicx,color,amsmath}
 \pagestyle{fancy}
 \hypersetup{hidelinks}
 
@@ -109,6 +109,101 @@
     \item [8.] 唤醒
 
   \end{itemize}
+
+    \subsection{地址空间}
+    一般情况,内核空间的地址较大,而用户空间的地址较小。比如
+    \begin{tabular}{|c|}
+      \hline\\
+      $0xFFFF\cdots$内核空间\\
+      $stack$\\
+      $\cdots$\\
+      $heap$\\
+      $0x0000\cdots$用户空间(code和data)\\
+      \hline
+    \end{tabular}
+    即,用户代码与数据 和 内核代码 分别放在地址空间两端,而堆和栈则放在次两端, 这样就能保证堆和栈在增长的时候
+    有空间可以用,而无需拷贝移动到更大的地址空间中。
+
+    \spaceline
+    \textbf{程序区段:}
+    \begin{itemize}
+      \item Text
+      \item Data
+      \item Stack
+      \item Heap
+    \end{itemize}
+
+    \subsection{进程控制块(Process Control Block ,PCB)}
+
+    \textbf{PCB:}记录进程相关的信息,见图\ref{fig-PCB}
+
+    \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.45]{assets/ModernOperatingSystems_fe620.png}
+      \caption{Process Control Block}
+      \label{fig-PCB}
+    \end{figure}
+    {\color{red} 貌似没有保存堆相关的信息?然后栈虽然保存了,但是在实际进程切换的过程中,它是怎么处理的呢?}
+
+    \subsection{上下文切换 Context Switch}
+    \textbf{上下文切换}:切换CPU的进程,主要分为以下几个步骤。
+    \begin{itemize}
+      \item 保存旧进程的PCB
+      \item 载入新进程的PCB
+      \item 刷新缓存Cache
+      \item 改变内存映射表(TLB)
+    \end{itemize}
+
+    \textbf{CPU利用率:}直接定义是$\frac{\text{CPU有效时间}}{\text{CPU总时间}}$,$1 - p^n$,其中$p$为一个进程等待$I/O$的时间与其停留在内存时间的比,n为同在内存的进程数。
+    {\color{blue}这个n次方怎么理解?p表示一个进程没有利用到CPU的时间的比例, 但是这个比例中,有部分是被其他进程所使用的
+    ,因此再乘上其他进程没用到的比例才是CPU总体没被利用的比例,这里去了近似,所有的进程未利用的比例都是p,因此是$p^n$}
+
+    \subsection{线程 Thread}
+    \textbf{线程:}
+    \begin{itemize}
+      \item 轻量级进程 Lightweight Process
+      \item 一个进程可以同时做多件事情
+      \item 同进程的线程可以共享进程内的相同资源
+      \item 每个线程都有自己的栈空间\\
+      因为并行处理,栈空间是不能共享的,否则会发生冲突。\\
+      {\color{blue}那么问题来了,栈到底是怎么实现的?其实就是取一块内存块作为栈空间,因此栈的大小并不是无限大的,而是有限制的
+      ,这也是为什么会存在爆栈的现象。
+      }
+    \end{itemize}
+
+    \textbf{POSIX线程标准:}某个线程标准,在C中使用\textbf{pthread.h}调用相关函数。
+
+    \spaceline
+    \textbf{线程的实现方式:}
+    \begin{itemize}
+      \item 在用户空间中实现线程(Old linux)\\
+      即线程表放在用户空间中,调用一个进程,运行的是线程。\\
+      内核对线程一无所知。
+      \item 在内核空间中实现(Windows XP/2000)\\
+      即线程表放在内核中,由内核来管理线程。
+      \item 上面两种的混合型(Solaris)\\
+      用户级线程与内核线程多路复用。\\
+      一个内核线程可以对应多个用户线程。{\color{red}什么意思?}
+    \end{itemize}
+
+    \textbf{调度程序激活机制:}尽管内核级线程在一个关键点上优于用户级线程,但是内核线程速度慢,因此采用调度程序激活机制来
+    保持优良特性的情况下改进速度。
+
+    {\color{red}内核级线程有什么优良特性?后面再补充这一方面的内容。}
+
+    \spaceline
+    \textbf{弹出式线程}
+    {\color{red}后面再补充这一方面的内容。}
+
+    \spaceline
+    \textbf{作业:P95-97 , 1 , 6 ,7 11,12}
+
+    \spaceline
+    \textbf{等待时间:}到任务启动的时间\\
+    \textbf{周转时间:}等待时间+任务执行时间
+
+    \spaceline
+    \textbf{老化算法:}预测下一次任务的执行时间,计算方法是前两次的时间之和乘以老化因子,然后结果再和下一个时间重复操作。
 
     \subsection{调度}
     \textbf{为什么需要调度?}\\
