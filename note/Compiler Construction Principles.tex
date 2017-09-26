@@ -543,7 +543,7 @@
 
   \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.1]{assets/CompilerConstructionPrinciples_9e2c9.png}
+    \includegraphics[scale = 0.1]{assets/CompilerConstructionPrinciples_763bd.png}
     \caption{子集构造算法}
     \label{fig-zijifa}
   \end{figure}
@@ -694,5 +694,123 @@
           (A1) edge [bend left] node [above] {a} (A0);
     \end{tikzpicture}
   \end{itemize}
+
+  \subsubsection{正规式与有穷自动机的等价性}
+  正规式和有穷自动机的等价性由以下两点说明:
+  \begin{itemize}
+    \item 对于字母表(输入表)$\Sigma$上的NFA M,可以构造一个$\Sigma$上的正规式r,使得$L(r) = L(M)$
+    \item 对于$\Sigma$上的每个正规式r,可以构造一个$\Sigma$上的NFA M,使得$L(r) = L(M)$
+  \end{itemize}
+
+  \textbf{正规式$\to$NFA}:分两个步骤
+  \begin{itemize}
+    \item 建立x节点,使用$\epsilon$连接到初态,建立y节点,使用$\epsilon$弧连接终态
+    \item 不断消去弧,直到只剩下x,y两个节点
+  \end{itemize}
+  消去规则:
+  \begin{itemize}
+    \item \begin{tikzpicture}
+        [every initial by arrow/.style={double distance = 3,-Implies}]
+      \node[state]  (A0)  {0};
+      \node[state]  (A1)  [right=of A0] {1};
+      \node[state]  (A2)  [right=of A1] {2};
+      \path [->] (A0) edge  node [above] {$r_1$} (A1);
+      \path [->] (A1) edge  node [above] {$r_2$} (A2);
+      \end{tikzpicture} $\to$ \begin{tikzpicture}
+          [every initial by arrow/.style={double distance = 3,-Implies}]
+        \node[state]  (A0)  {0};
+        \node[state]  (A2) [right=of A0] {2};
+        \path [->] (A0) edge  node [above] {$r_1r_2$} (A2);
+        \end{tikzpicture}
+
+    \item \begin{tikzpicture}
+        [every initial by arrow/.style={double distance = 3,-Implies}]
+      \node[state]  (A0)  {0};
+      \node[state]  (A1) [right=of A0] {1};
+      \path [->] (A0) edge  node [above] {$r_1$} (A1);
+      \path [->] (A0) edge  node[above]  {$r_2$} (A1);
+      \end{tikzpicture} $\to$ \begin{tikzpicture}
+          [every initial by arrow/.style={double distance = 3,-Implies}]
+        \node[state]  (A0)  {0};
+        \node[state]  (A1) [right=of A0] {1};
+        \path [->] (A0) edge  node[above]  {$r_1|r_2$} (A1);
+        \end{tikzpicture}
+
+    \item \begin{tikzpicture}
+        [every initial by arrow/.style={double distance = 3,-Implies}]
+      \node[state]  (A0)  {0};
+      \node[state]  (A1) [right=of A0] {1};
+      \node[state]  (A2) [right=of A1] {2};
+      \path [->] (A0) edge  node[above]  {$r_1$} (A1);
+      \path [->] (A1) edge  node [above] {$r_3$} (A2);
+      \path [->] (A1) edge [loop above] node [above] {$r_2$} (A1);
+      \end{tikzpicture} $\to$ \begin{tikzpicture}
+          [every initial by arrow/.style={double distance = 3,-Implies}]
+        \node[state]  (A0)  {0};
+        \node[state]  (A1) [right=of A0] {1};
+        \path [->] (A0) edge  node[above]  {$r_1r_2^*r_3$} (A1);
+        \end{tikzpicture}
+  \end{itemize}
+
+  \textbf{NFA$\to$ 正则式}:
+  \begin{itemize}
+    \item 环对应闭包\\
+    注意,闭包是包括空的
+    \item 连续输入对应与
+    \item 分枝对应或
+  \end{itemize}
+
+  \subsubsection{正规文法和有穷自动机的等价性}
+  主要有以下几点性质:
+  \begin{itemize}
+    \item 弧的输入(字母表)就是终结符
+    \item 非终结符就是状态
+    \item 新增一个状态Z作为终态
+    \item 对于形如$A\to tB$的产生式,得到$f(A,t) = B$的转换函数。即\begin{tikzpicture}
+        [every initial by arrow/.style={double distance = 3,-Implies}]
+      \node[state]  (A0)  {A};
+      \node[state]  (A1) [right=of A0] {B};
+      \path [->] (A0) edge  node[above]  {t} (A1);
+      \end{tikzpicture}
+
+    \item 对于形如$A\to t$的产生式,得到$f(A,t) = Z$的转换函数,即\begin{tikzpicture}
+        [every initial by arrow/.style={double distance = 3,-Implies}]
+      \node[state]  (A0)  {A};
+      \node[state,double]  (A1) [right=of A0] {Z};
+      \path [->] (A0) edge  node[above]  {t} (A1);
+      \end{tikzpicture}
+  \end{itemize}
+
+  \textbf{正则式,正规文法,有穷自动机的关系?}\\
+  正则式和正规文法是描述工具,有穷自动机是识别工具,三者可等价相互转换。
+
+  \subsection{词法分析程序的构造}
+  词法分析程序的构造主要分为4个步骤:
+  \begin{itemize}
+    \item 接口类型的确定\\
+    语法分析程序可以有种利用方式:\\
+    一是作为单独的子程序,其结果作为语法分析程序的输入。\\
+    二是作为语法分析程序的一部分
+    \item 确定单词的分类和Token串结构\\
+    单词常见的类型有:关键字,标识符等\\
+    token串一般为2元组(单词的种别,单词自身的值)  (需要自己对种类进行编号)
+
+    \item 特殊问题
+    \begin{itemize}
+      \item 标识符和保留字的区分
+      \item 空格、制表符及换行符的处理\\
+      无用空格和制表符要删除\\
+      字符串内的空格不能删\\
+      换行符不能删,对于错误处理起作用
+      \item 复合型Token的处理\\
+      比如"!=" ,读取到"!"的时候,还必须读取下一个字符进行判断
+      \item 括号,引号等成对符号的匹配问题\\
+      这一个本应是语法分析的工作,但是可以词法分析程序中完成
+    \end{itemize}
+
+    \item 使用状态转换图构造语法分析程序
+  \end{itemize}
+
+  {\color{red}后面补上正规式,正规文法与有穷自动机相互转换的例子}
 
 \end{document}
