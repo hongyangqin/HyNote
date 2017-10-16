@@ -266,4 +266,61 @@
     \item InfiniBand
   \end{itemize}
 
+
+  \section{并行算法设计技术}
+  \subsection{平衡树方法}
+  叶节点为输入,中间节点处理
+
+  \subsubsection{求最大值}
+  \subsubsection{计算前缀和}
+  平衡树,正向求和,反向便利传播求前缀和
+
+  \subsection{倍增技术}
+
+  \subsubsection{表序问题}
+  \subsubsection{求森林根}
+
+  \subsection{分治策略}
+
+  \subsubsection{快排}
+  见PPT 26
+
+
+  \begin{itemize}
+    \item 同时写
+    \item 从根节点开始构造二叉树
+    \item 每个节点为快排的支点
+    \item 每个节点均写入root,最终留在root中的作为支点
+    \item 其他节点与父节点比较,确定左子树还是右子树
+    \item 每个子树重复这个步骤
+    \item 中序遍历得到排序结果
+  \end{itemize}
+
+  {\color{red}写入root的时候是随意写的,而读取root的时候未必能保证root已经写完了,如果没写完,那么读取的节点就不一定是根节点呀}
+
+  \subsection{划分原理}
+  排序算法
+  \subsubsection{方根划分}
+  \subsubsection{对数划分}
+  \subsubsection{功能划分}
+
+  \subsection{流水线}
+  \subsubsection{DFT计算}
+  贝叶斯变换的计算
+  \section{并行算法一般设计过程}
+  并行算法一般设计过程:PCAM,划分,通信,组合,映射
+
+  \textbf{划分:}
+  \begin{itemize}
+    \item 域划分
+    \item 功能划分
+  \end{itemize}
+
+  4种通信模式:
+  \begin{itemize}
+    \item 1
+  \end{itemize}
+
+  {\color{red}16,17周三下午进行实验}
+
 \end{document}
