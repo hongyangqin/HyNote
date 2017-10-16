@@ -27,7 +27,7 @@
 \author{ qhy }
 \date{\today}
 \title{编译原理}
-\includeonly{}
+% \includeonly{}
 \begin{document}
   \maketitle
   \tableofcontents
@@ -131,8 +131,8 @@
 \begin{itemize}
   \item 求FIRST\\
   \begin{itemize}
-    \item X1不为空,FIRST(a)=FIRST(X_1)
-    \item 对于前j个可达空,$FIRST(a)$ = FIRST(A) + FIRST(X_J) - {$\epsilon$}
+    \item X1不为空,$FIRST(a)=FIRST(X_1)$
+    \item 对于前j个可达空,$FIRST(a) = FIRST(A) + FIRST(X_J) - \{\epsilon\}$
     \item 循环,直到FIRST不变
   \end{itemize}
   \item 求FOLLOW\\
