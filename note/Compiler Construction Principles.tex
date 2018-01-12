@@ -29,146 +29,877 @@
 \title{编译原理}
 % \includeonly{}
 \begin{document}
-  \maketitle
-  \tableofcontents
-  \newpage
-  \include{CompilerConstructionPrinciples-part1}
-  \textbf{综合例题:}
-  为正规文法$G[S]$\\
-  $S = \to aA|bQ$\\
-  $A \to aA|bB|b$\\
-  $B\to bD|aQ$\\
-  $Q\to aQ|bD|b$\\
-  $D\to bB|aA$\\
-  $E\to aB|bF$\\
-  $F\to bD|aE|b$\\
-  构造出相应的最小的DFA。
-  \begin{itemize}
-    \item 正规文法$\to$NFA\\
-    \begin{tikzpicture}
+\maketitle
+\tableofcontents
+\newpage
+\include{CompilerConstructionPrinciples-part1}
+\textbf{综合例题:}
+为正规文法$G[S]$\\
+$S = \to aA|bQ$\\
+$A \to aA|bB|b$\\
+$B\to bD|aQ$\\
+$Q\to aQ|bD|b$\\
+$D\to bB|aA$\\
+$E\to aB|bF$\\
+$F\to bD|aE|b$\\
+构造出相应的最小的DFA。
+\begin{itemize}
+ \item 正规文法$\to$NFA\\
+       \begin{tikzpicture}
         [every initial by arrow/.style={double distance = 3,-Implies}]
-      \node[state,initial,initial text=]  (S)  {S};
-      \node[state]  (AA) [above=of S,draw=none] {};
-      \node[state]  (A) [right=of S] {A};
-      \node[state]  (B) [right=of A] {B};
-      \node[state]  (E) [below =of B] {E};
-      \node[state]  (D) [below =of A] {D};
-      \node[state,double]  (Z) [right=of B] {Z};
-      \node[state]  (F) [below=of Z] {F};
-      \node[state]  (BB) [below=of F,draw=none] {};
-      \node[state]  (Q) [below =of S] {Q};
+        \node[state,initial,initial text=]  (S)  {S};
+        \node[state]  (AA) [above=of S,draw=none] {};
+        \node[state]  (A) [right=of S] {A};
+        \node[state]  (B) [right=of A] {B};
+        \node[state]  (E) [below =of B] {E};
+        \node[state]  (D) [below =of A] {D};
+        \node[state,double]  (Z) [right=of B] {Z};
+        \node[state]  (F) [below=of Z] {F};
+        \node[state]  (BB) [below=of F,draw=none] {};
+        \node[state]  (Q) [below =of S] {Q};
 
-      \path [->] (S) edge   node[above]  {a} (A)
-                  (S) edge   node[above]  {b} (Q)
-                  (A) edge [loop above]  node[above]  {a} (A)
-                  (A) edge   node[above]  {b} (B)
-                  (A) edge [bend left]  node[above]  {b} (Z)
-                  (B) edge [bend left]  node[above]  {b} (D)
-                  %(B) edge [out = 135, in = 135]  node[above]  {a} (Q)
-                  (B) edge [bend right]  node[above]  {a} (AA)
-                  (AA) edge [bend right]  node[above]  {a} (Q)
+        \path [->] (S) edge   node[above]  {a} (A)
+        (S) edge   node[above]  {b} (Q)
+        (A) edge [loop above]  node[above]  {a} (A)
+        (A) edge   node[above]  {b} (B)
+        (A) edge [bend left]  node[above]  {b} (Z)
+        (B) edge [bend left]  node[above]  {b} (D)
+        %(B) edge [out = 135, in = 135]  node[above]  {a} (Q)
+        (B) edge [bend right]  node[above]  {a} (AA)
+        (AA) edge [bend right]  node[above]  {a} (Q)
 
-                  (Q) edge [loop below]  node[above]  {a} (Q)
-                  (Q) edge   node[above]  {b} (D)
-                  %(Q) edge [out=-45 , in = -45]  node[above]  {b} (Z)
-                  (Q) edge [bend right]  node[above]  {b} (BB)
-                  (BB) edge [bend right]  node[above]  {b} (Z)
+        (Q) edge [loop below]  node[above]  {a} (Q)
+        (Q) edge   node[above]  {b} (D)
+        %(Q) edge [out=-45 , in = -45]  node[above]  {b} (Z)
+        (Q) edge [bend right]  node[above]  {b} (BB)
+        (BB) edge [bend right]  node[above]  {b} (Z)
 
-                  (D) edge   node[above]  {b} (B)
-                  (D) edge   node[above]  {a} (A)
-                  (E) edge   node[above]  {a} (B)
-                  (E) edge [bend left]  node[above]  {b} (F)
-                  (F) edge [bend left]  node[above]  {b} (D)
-                  (F) edge [bend left]  node[above]  {a} (E)
-                  (F) edge   node[above]  {b} (Z);
-      \end{tikzpicture}
+        (D) edge   node[above]  {b} (B)
+        (D) edge   node[above]  {a} (A)
+        (E) edge   node[above]  {a} (B)
+        (E) edge [bend left]  node[above]  {b} (F)
+        (F) edge [bend left]  node[above]  {b} (D)
+        (F) edge [bend left]  node[above]  {a} (E)
+        (F) edge   node[above]  {b} (Z);
+       \end{tikzpicture}
 
-  \end{itemize}
+\end{itemize}
 
-  \section{自顶向下的语法分析}
-  \subsection{确定的自顶向下的语法分析}
+\section{自顶向下的语法分析}
+\subsection{确定的自顶向下的语法分析}
 
-  \textbf{开始符号集:}\\
-  设$G = (V_T , V_N , P , S)$是上下文无关文法。(产生式左侧只有非终结符)\\
-  $\renewcommand{\arraystretch}{0.5}
-  FIRST(\alpha) = \{a | \alpha \begin{array}{c} * \\ \Rightarrow \end{array}  a \beta , a \in V_T , \alpha ,\beta\in V^*\}$\\
-  则称$\renewcommand{\arraystretch}{0.5}
-  FIRST(\alpha)$为$\alpha$的\textbf{开始符号集} 或 \textbf{首符号集}。(可以包含空弧$\epsilon$)\\
-  {\color{blue} 也就是求产生式的第一个可能的终结符}
+\textbf{确定分析的条件:}从文法的开始符号出发,如果能根据当前的输入符号(单词符号)\textbf{唯一地}确定选用那个产生式进行推导,则分析是确定的。
 
-  \spaceline
-  \textbf{后跟符号:}\\
-  设$G = (V_T , V_N , P , S)$是上下文无关文法,$A\in V_N , S$是开始符号\\
-  $\renewcommand{\arraystretch}{0.5}FOLLOW(A) = \{ a | S \begin{array}{c} * \\ \Rightarrow \end{array}
-  \mu A\beta\text{且}a\in FIRST(\beta) ,\mu\in V^*_T , \beta\in V^+ \}$(特别的,\#表示输入串的结束符)\\
-  {\color{blue} 也就是求产生式第二个可能的终结符,但是只有在有空弧的情况才考虑即($\epsilon \in FIRST(A)$)}
+确定的分析有以下3种可能情况:
+\begin{itemize}
+ \item $S\to pA|bA$\\
+       产生式的右部由终结符开头,同一个非终结符的不同的产生式由不同的终结符开头,我们可以直接地,唯一确定选用那个产生式
+ \item $S\to Ap|Bq$\\
+       产生式的右部以(非空)终结符开头,同一个非终结符的右部由不同的符号开头\\
+       这种情况,我们无法确定选用哪个产生式,关键是 \textbf{判断产生式右部推出的开始符号集} , 若$A$和$B$的开始符号集不相交分析过程是确定的
+ \item $A \to \epsilon$\\
+       对于空产生式左部的非终结符,关键是 \textbf{判断该非终结符的后跟符号集},分析过程可能是确定的。
+\end{itemize}
 
-  \spaceline
-  \textbf{选择符号集:}\\
-  一个产生式的选择符号集合SELECT 。给定上下文无关文法的产生式\\
-  $A\to \alpha , A\in V_N , \alpha \in V^*$\\
-  若$\renewcommand{\arraystretch}{0.5} \alpha \begin{array}{c} * \\ \cancel{\Rightarrow} \end{array} \epsilon $,\\
-  则$SELECT(A \to \alpha) = FIRST(\alpha)$\\
-  若$\renewcommand{\arraystretch}{0.5} \alpha \begin{array}{c} * \\ \Rightarrow \end{array} \epsilon $,\\
-  则$SELECT(A \to \alpha) = (FIRST(A) - \{\epsilon\})\cup FOLLOW(A)$\\
-  {\color{blue} 也就是可选的非终结符,在没空弧的情况就是$FIRST$ , 在有空弧的情况就还要考虑$FOLLOW$(同时去掉空弧)}
+要进行确定的自顶向下分析,文法要满足 是 $LL(1)$文法
 
-  \spaceline
-  \textbf{LL(1)文法的充要条件}
-  \begin{itemize}
-    \item 上下文无关文法
-    \item 对于每个非终结符$A$的两个产生式$A \to \alpha ,A \to \beta$,满足
-    \[SELECT(A\to a) \cup SELECT(A \to \beta) = \phi\]
-    其中,$\alpha , \beta$不同时能$\renewcommand{\arraystretch}{0.5} \begin{array}{c} * \\ \Rightarrow \end{array} \epsilon$\\
-    {\color{blue}也就是同一个非终结符的产生式的第一个可能终结符不能相同}
-  \end{itemize}
+\textbf{开始符号集:}\\
+设$G = (V_T , V_N , P , S)$是上下文无关文法。(产生式左侧只有非终结符)\\
+$\renewcommand{\arraystretch}{0.5}
+ FIRST(\alpha) = \{a | \alpha \begin{array}{c} * \\ \Rightarrow \end{array}  a \beta , a \in V_T , \alpha ,\beta\in V^*\}$\\
+则称$\renewcommand{\arraystretch}{0.5}
+ FIRST(\alpha)$为$\alpha$的\textbf{开始符号集} 或 \textbf{首符号集}。(可以包含空弧$\epsilon$)\\
+{\color{blue} 也就是求产生式的第一个可能的终结符}
 
-{\color{red}后面根据课本完善...}
+\spaceline
+\textbf{后跟符号:}\\
+设$G = (V_T , V_N , P , S)$是上下文无关文法,$A\in V_N , S$是开始符号\\
+$\renewcommand{\arraystretch}{0.5}FOLLOW(A) = \{ a | S \begin{array}{c} * \\ \Rightarrow \end{array}
+ \mu A\beta\text{且}a\in FIRST(\beta) ,\mu\in V^*_T , \beta\in V^+ \}$(特别的,\#表示输入串的结束符)\\
+{\color{blue} 也就是求产生式第二个可能的终结符,但是只有在有空弧的情况才考虑即($\epsilon \in FIRST(A)$)}
+
+\textbf{划重点:\# 不要忘了},初始状态:$\# \in FOLLOW(S)$
+
+\spaceline
+\textbf{选择符号集:}\\
+一个产生式的选择符号集合SELECT 。给定上下文无关文法的产生式\\
+$A\to \alpha , A\in V_N , \alpha \in V^*$\\
+若$\renewcommand{\arraystretch}{0.5} \alpha \begin{array}{c} * \\ \cancel{\Rightarrow} \end{array} \epsilon $,\\
+则$SELECT(A \to \alpha) = FIRST(\alpha)$\\
+若$\renewcommand{\arraystretch}{0.5} \alpha \begin{array}{c} * \\ \Rightarrow \end{array} \epsilon $,\\
+则$SELECT(A \to \alpha) = (FIRST(A) - \{\epsilon\})\cup FOLLOW(A)$\\
+{\color{blue} 也就是可选的非终结符,在没空弧的情况就是$FIRST$ , 在有空弧的情况就还要考虑$FOLLOW$(同时去掉空弧)}
+
+\spaceline
+\textbf{LL(1)文法的充要条件}
+\begin{itemize}
+ \item 上下文无关文法
+ \item 对于每个非终结符$A$的两个产生式$A \to \alpha ,A \to \beta$,满足
+       \[SELECT(A\to a) \land SELECT(A \to \beta) = \phi\]
+       其中,$\alpha , \beta$不同时能$\renewcommand{\arraystretch}{0.5} \begin{array}{c} * \\ \Rightarrow \end{array} \epsilon$\\
+       {\color{blue}也就是同一个非终结符的产生式的第一个可能终结符不能相同}
+\end{itemize}
+
 \spaceline
 \textbf{LL(1)文法的判别:}
-充要条件$\to$SELECT集$\to$FIRST+FOLLOW$\to$$\epsilon$
+\textbf{一个上下文无关文法是LL(1)文法的}充要条件$\to$SELECT集$\to$FIRST+FOLLOW$\to$$\epsilon$
 
+ \textbf{1的含义:}1表明只需要向前看一个符号便可以决定选哪个产生式进行推导,类似的$LL(k)$文法需要向前看$k$个符号才可以确定选用哪个产生式
+
+ \begin{itemize}
+  \item 求能推导出$\epsilon$的非终结符
 \begin{itemize}
-  \item 求FIRST\\
-  \begin{itemize}
-    \item X1不为空,$FIRST(a)=FIRST(X_1)$
-    \item 对于前j个可达空,$FIRST(a) = FIRST(A) + FIRST(X_J) - \{\epsilon\}$
-    \item 循环,直到FIRST不变
-  \end{itemize}
-  \item 求FOLLOW\\
-  A = aBC
-  \begin{itemize}
-    \item B不能达到空,FOLLOW(A) = FOLLOW(A)
-    \item 可以达空,FOLLOW(A) = FOLLOW(A) + FIRST(C)
-    \item 循环直到FOLOW(A)不再增加
-    \item 初始 FOLLOW(S) = {$\#$}
-  \end{itemize}
-  \item 求SELECT\\
-  根据定义进行即可
+  \item 标记每个非终极符的状态
+  \item 使用直接推导能推导出空的,标记是
+  \item 循环推导,直到标记表不再发生变换\\
+        有些不确定能推导出空的非终结符后来确定可以的时候,它所在的产生式也可能推导出空,因此循环处理
 \end{itemize}
+  \item 求FIRST
+        $a \to X_1 X_2 \cdots X_n$
+        \begin{itemize}
+         \item $X_1$不为空,$FIRST(a)=FIRST(X_1)$
+         \item 对于前j个可达空,$FIRST(a) = FIRST(A) + FIRST(X_J) - \{\epsilon\}$
+         \item 循环,直到FIRST不变
+        \end{itemize}
+  \item 求FOLLOW\\
+        $A = aBC$
+        \begin{itemize}
+         \item C不能达到空,FOLLOW(B) = FOLLOW(C)
+         \item 可以达空,FOLLOW(B) = FOLLOW(A) + FIRST(C)
+         \item 循环直到FOLOW不再增加
+         \item 初始 FOLLOW(S) = {$\#$}
+        \end{itemize}
+  \item 求SELECT\\
+        根据定义进行即可
+ \end{itemize}
 
-{\color{red}后面补上一个例子}
+ {\color{red}后面补上一个例子}
 
-\subsubsection{非LL(1)文法转LL(1)文法}
-不是LL(1)文法:
-\begin{itemize}
+ \subsubsection{非LL(1)文法转LL(1)文法}
+ 不是LL(1)文法:
+ \begin{itemize}
   \item 消除左递归
   \item 提取左公因子
-\end{itemize}
+ \end{itemize}
 
-算法实现:......
+ \textbf{提取左公因子}:
 
+ 对于含有$A \to ab | ac$的文法,显然不是$LL(1)$文法
 
-\subsection{不确定的自顶向下分析}
-对于非$LL(1)$文法,就不能确定选择哪个产生式规则,对于待选的产生式,采用回溯搜索,逐条试探的方式进行
-其实就是回溯算法啦
+ 我们可以提取左公因子转换成$LL(1)$文法:
+$A\to aB , B\to b|c$
 
-注:空弧不需要不断加深,只需要加深一次即可?
+\spaceline
+ \textbf{直接左递归:}$A \to Ab$,含有左递归的产生式,称为直接左递归
 
-\subsection{确定的自顶向下算法}
-\begin{itemize}
+ \textbf{间接左递归:}$A\to Ba  , B \to Ab$,即$A\Rightarrow^+ A$,称为间接左递归
+
+ \spaceline
+ 以直接左递归为例子:$A \to Aa, A \to b$
+
+ 有:
+$Select(A\to Aa) \supseteq First(Aa) \supseteq First(b)$
+
+$Select(A\to b)\supseteq First(b)$
+ 因此,含有左递归的文法都不是$LL(1)$文法
+
+ \textbf{消除直接左递归}:
+
+$S\to Sa|b$
+
+ 改写成
+
+$S\to bS' , S' \to aS' | \epsilon$
+
+ \textbf{消除间接左递归}:通过代入等方法把间接左递归变成直接左递归,对于间接左递归下,还嵌套有直接左递归,那么先消除直接左递归,再代入
+
+ \subsection{不确定的自顶向下分析}
+ 对于非$LL(1)$文法,就不能确定选择哪个产生式规则,对于待选的产生式,采用回溯搜索,逐条试探的方式进行
+
+ 其实就是回溯算法啦
+
+ \textbf{含有空弧的情况有什么特殊处理的地方吗?}
+
+ \subsection{确定的自顶向下算法-实现}
+ \begin{itemize}
   \item 递归子程序算法
   \item 预测分析法
+ \end{itemize}
+
+ \subsubsection{递归子程序法}
+ \textbf{实现思想}:对文法中的每个非终结符编写一个递归过程,识别由该终结符推出的串。当非终结符含有多条产生式时,按当前输入属于哪条产生式的SELECT集可唯一确定(LL(1)文法)哪个产生式进行匹配。
+
+ \begin{itemize}
+  \item 当识别到终结符时与输入符号匹配并读取下一输入符。
+  \item 当识别到非终结符时,则调用该终结符相应的过程
+ \end{itemize}
+
+ 特点:
+ \begin{itemize}
+  \item 优点:简单直观,易于构造
+  \item 缺点
+        \begin{itemize}
+         \item 对文法要求高,必须满足$LL(1)$文法
+         \item 递归调用多
+        \end{itemize}
+  \item 实用性:许多高级语言,如Pascal、c 等编译系统常常采用此方法
+ \end{itemize}
+
+ \subsubsection{预测分析法}
+ 一个预测分析器由3个部分组成:
+ \begin{itemize}
+  \item 预测分析程序\\
+        控制分析过程的进行
+  \item 分析栈\\
+        存放从文法开始符号出发的自顶向下的推导过程中等待匹配的文法符号。\\
+        开始时放入 \textbf{\#} 和文法开始符号\\
+        结束时栈应该是空的。
+  \item 预测分析表\\
+        是一张二维表,元素$M[A,a]$的内容是当前非终结符面临输入符号a时应该选取的产生式\\
+        当无产生式时,元素内容为转向出错处理
+ \end{itemize}
+
+ \textbf{构造预测分析表}:
+ \begin{itemize}
+  \item 把文法转变为$LL(1)$文法
+  \item 求出每条产生式的$SELECT$集
+  \item 依照$SELECT$集把产生式填入分析表
+  \item 用a表示终结符或 \textbf{\#} ,若$a\in SELECT(A\to b)$,则把$A\to b$放入$M[A,a]$中,把所有无定义的$M[A,a]$标上出错标记
+ \end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_7723b.png}
+\end{figure}
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_7a51c.png}
+ \end{figure}
+
+ \begin{figure}[H]
+   \centering
+   \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_0adb6.png}
+   \caption{描述'i+i*i'的分析过程}
+ \end{figure}
+ \begin{figure}[H]
+   \centering
+   \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_1fd6a.png}
+ \end{figure}
+
+ 递归子程序和预测分析法的对比:
+
+ 两者的思想是一致的,根据当前的状态来选取合适的产生式进行推导
+
+ 区别是递归下降子程序是利用递归程序的便利免除对环境的保存操作,而预测分析法则是手写栈保存过程中的记录。
+
+ \section{LR分析法}
+ \textbf{LR分析法}:根据当前分析栈种的符号串(通常以状态表示)和向右顺序查看输入串的K个($K\geq 0$)符号就可以唯一地确定句柄。
+
+ \textbf{LR(k)}的含义:
+ \begin{itemize}
+  \item L表示从左到右扫描输入串
+  \item R表示最左规约(即最右推到的逆过程)
+  \item k表示向右查看输入符号串的个数
+ \end{itemize}
+
+ 当$k=1$时,能满足当前绝大多数高级语言编译程序的需求
+
+ \textbf{LR分析器的特点:}
+ \begin{itemize}
+  \item 是规范规约
+  \item 适用范围广,适合于大多数上下文无关文法描述的语言
+  \item 分析速度快,能准确定位错误
+  \item 缺点:LR分析器的构造工作量大
+ \end{itemize}
+
+ \textbf{LR分析器的构成:}
+ \begin{itemize}
+  \item 总控程序\\
+        所有LR分析器总共程序相同
+  \item 分析表
+        \begin{itemize}
+         \item 不同文法有不同的分析表
+         \item 同一文法采用的LR分析器不同,分析表也不同
+         \item 分析表分为 \textbf{action表}(动作表) 和 \textbf{goto表}(状态转移表)
+         \item GOTO表表示当前状态面临文法符号时应转向的下一个状态
+         \item ACTION表 表示当前状态 面临 输入符号 时应采取的动作
+        \end{itemize}
+  \item 分析栈\\
+        包括 \textbf{状态栈S} 和 \textbf{文法符号栈X}
+ \end{itemize}
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_e8d30.png}
+  \caption{LR分析表}
+ \end{figure}
+
+ 为节省空间:
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_a9086.png}
+  \caption{LR分析表2}
+ \end{figure}
+
+ ACTION表 中的 动作 有4种:
+ \begin{itemize}
+  \item 移进$s_k$\\
+        把状态$k$移入状态栈;\\
+        若当前状态(未移入时的栈顶)是i,且 $k = GOTO[i,a]$ , 把a移入符号栈\\
+        注:状态栈栈顶为当前状态;k为转移的状态,如果k为空的话,则报错
+  \item 归约 $r_k$\\
+        用第$k$条产生式进行归约,此时栈顶形成了句柄$\beta$,文法中第$k$条产生式为
+        $A \to \beta$ , 且$|\beta| = r$\\
+        归约时从状态栈和符号栈弹出$r$个符号,把$A$移入符号栈,$j = GOTO[i,A]$移入状态栈,其中状态$i$为修改后的栈顶状态
+  \item 接受(acc)\\
+        当符号栈只剩下文法开始符S,并且当前输入符为 \textbf{\#} , 则分析成功
+  \item 报错\\
+        当状态栈顶的状态遇到了不应该出现的文法符号,则报错,说明输入串不是该文法的句子
+ \end{itemize}
+
+ \subsection{LR(0)文法}
+ \begin{itemize}
+  \item LR(0) 分析器在分析的过程中只根据符号栈的内容就能确定句柄,不需要向右查看输入符号
+  \item 对文法的限制较大, 对绝大多数高级语言的语法分析器不适用
+  \item 构造LR(0)分析表的思想和方法是构造其他LR分析表的基础
+ \end{itemize}
+
+ LR(k)分析法通过 \textbf{活前缀来帮助确定句柄}
+ \begin{itemize}
+  \item 规范句型的可归约前缀和活前缀
+  \item 构造文法的识别活前缀及可归前缀的DFA
+  \item 按DFA构造相应分析表
+  \item 按进行表进行$LR(k)$分析
+ \end{itemize}
+
+ \textbf{可归前缀:}规范句型中 \textbf{句柄之前} 包括 \textbf{句柄在内} 的串
+
+ \textbf{活前缀}:形成 \textbf{可归前缀}之前(包括可归前缀在内)的所有规范句型的前缀,即规范句型的不含句柄右边符号的前缀。
+
+ 比如:规范句型$aAbcde$ 中,若$Ab$为句柄,则可归前缀为$aAb$,活前缀为:$\epsilon , a , aA , aAb$
+
+ \textbf{可归前缀和活前缀在LR分析中的作用:}
+ \begin{itemize}
+  \item 在LR分析过程中,实际上是把 \textbf{活前缀} 列出放在符号栈中
+  \item 一旦在栈中出现 \textbf{可归前缀} , 即 \textbf{句柄} 已经形成,就用相应的产生式进行归约
+  \item 在分析的过程中,只要符号栈中的符号串是一个活前缀,就可保证已被分析过得部分是该文法规范句型的正确部分
+ \end{itemize}
+
+ 使用 \textbf{DFA} 来识别前缀,为了构造这个DFA, 需要扩广文法
+
+ \textbf{扩广文法:}使用$S'$作为文法的唯一开始,只要归约到$S'$即表示归约结束
+
+ \textbf{扩广的原因:}文法开始符S可能出现在产生式的右部,在归约过程中,不能判断是归约到最后开始符,还是归约到在产生式右部出现的开始复,$S'$只出现在产生式的左部,确保不会混淆
+
+ 利用LR分析表分析步骤:
+ \begin{itemize}
+  \item 查找产生式的右部
+  \item 左部将归约后的结果入栈
+  \item ACC动作,分析结束
+  \item 空白部分表示出错
+ \end{itemize}
+
+ 问题:怎么得到LR分析表?LR分析表$\to$可归前缀$\to$DFA$\to$扩广文法+项目
+
+ \spaceline
+ \textbf{LR(0)项目}:在产生式的右侧适当位置添加一个小圆点,构成一个项目,小圆点后面部分表示待分析项
+
+ 比如:产生式$U\to XYZ$对应4个项目:$U\to \cdot XYZ,U\to X\cdot YZ,U\to XY\cdot Z,U\to XYZ\cdot $
+
+ 注:$A\to \epsilon$只有一个项目$A\to \cdot$
+
+ 项目的出现是为了标明当前所处的位置,以便后续的输入顺利进行。
+
+ 圆点的含义:
+ \begin{itemize}
+  \item 圆点在最左边,表示希望有产生式的右部归约
+  \item 圆点在最右边,表示句柄已经形成,可以进行归约
+  \item 圆点左部的内容,表示分析过程中已经识别过的部分
+  \item 圆点右部的内容,表示待识别部分
+ \end{itemize}
+
+ 项目分类:
+ \begin{itemize}
+  \item 移进项目,圆点后面为 \textbf{终结符}\\
+        这个项下目输入a,表示移进操作
+  \item 待约项目,圆点后面为 \textbf{非终结符}
+  \item 归约项目,圆点在最右端\\
+        表示句柄已经形成,在该项目下应该进行归约操作
+  \item 接受项目:$S' \to S\cdot$
+  \item 开始项目:$S' \to \cdot S$
+ \end{itemize}
+
+ \spaceline
+ 构造识别活前缀的NFA:
+ \begin{itemize}
+  \item 扩广文法
+  \item 构造新状态,产生$LR(0)$项目\\
+        所有项目为NFA的一个状态, 开始项目为初态,其他项目为活前缀的识别态(其中,归约项目为终态 , 接受项目为接受态)
+  \item 确定状态的转换关系\\
+        对于项目$i:A\to a\cdot Xb$ ,$j:A\to aX\cdot b$
+        \begin{itemize}
+         \item i和j连一条标记为X的箭弧
+         \item 若X是非终结符($X\in V_N$), 对于X的所有产生式圆点在最左边的项目k , i和所有k 都连一条标记为$\epsilon$的箭弧
+        \end{itemize}
+  \item $NFA \to DFA$
+ \end{itemize}
+
+ 整理:
+ \begin{itemize}
+  \item 考虑分析过程需要,引入项目的概念
+  \item 随着分析过程,待归约串会发生变化,因而输入非终结符X需$X$和$\epsilon$两种弧(未识别出X的时候,走$
+         \epsilon$,当识别出$X$时,走$X$弧)
+ \end{itemize}
+
+ \spaceline
+ 上述描述太过麻烦,工作量大,不实用,能否直接构造出$DFA$?
+ 解:可以,使用\textbf{项目集}作为$DFA$的状态
+
+ 运算:项目集 闭包,空串引发的子节点均合并到父节点上(实际上就是把上面$NFA\to DFA$的过程合并到创建过程上)
+
+ \textbf{例:}
+$S'\to E , E\to aA|bB,A\to cA | d , B\to cB | D$
+
+$I = \{S' \to \cdot E\}$
+
+ 则$CLOSURE(I) = \{S'\to \cdot E , E\to \cdot aA , E\to \cdot bB\}$,为DFA的一个状态(因为后两条$\cdot$后面是非终结符,因此停止)
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_30568.png}
+  \caption{识别活前缀的DFA}
+ \end{figure}
+
+ \spaceline
+ \textbf{LR(0)分析表的构造}:由$DFA$生成$LR(0)$分析表($S'\to \cdot S$表示初始状态)
+ \begin{itemize}
+  \item 输入终结符(LR(0)分析法要求这移进和归约操作不发生冲突)
+        \begin{itemize}
+         \item 如果项目集有归约项目,那么执行归约操作
+         \item 否则执行移进操作
+        \end{itemize}
+  \item 输入非终结符,直接进行状态转移
+ \end{itemize}
+
+ 问:如果当前的项目集既有归约项目进行归约,又能后续进行移进操作,怎么处理?SLR(0) , LR(1) ,LALR
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_dfa7c.png}
+  \caption{从DFA构造LR(0)分析表}
+ \end{figure}
+
+ \spaceline
+ \textbf{由LR(0)分析表分析过程:}查表$\to$状态转移$\to$acc或报错
+
+ \begin{itemize}
+  \item 移进$s_k$\\
+        把状态$k$移入状态栈,若当前状态是i,且 $k = GOTO[i,a]$ , 把a移入符号栈
+  \item 归约 $r_k$\\
+        用第$k$条产生式进行归约,此时栈顶形成了句柄$\beta$,文法中第$k$条产生式为
+        $A \to \beta$ , 且$|\beta| = r$\\
+        归约时从状态栈和符号栈弹出$r$个符号,把$A$移入符号栈,$j = GOTO[i,A]$移入状态栈,其中状态$i$为修改后的栈顶状态
+  \item 接受(acc)\\
+        当符号栈只剩下文法开始符S,并且当前输入符为 \textbf{\#} , 则分析承购
+  \item 报错\\
+        当状态栈顶的状态遇到了不应该出现的文法符号,则报错,说明输入串不是该文法的句子
+ \end{itemize}
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_a04e8.png}
+  \caption{使用LR(0)分析表进行分析}
+ \end{figure}
+
+ \subsection{SLR(1)文法}
+ 文法可能存在'移进$\to$归约'和'归约$\to$归约'冲突
+
+ \textbf{LR(0)文法:}项目集中既不存在'移进$\to$归约'也不存在'归约$\to$归约'冲突的文法
+
+ \spaceline
+ 解决冲突的方法:使用$SLR(1)$文法:向前看一个输入符号,对于归约项目$A\to r \cdot$只有当后面的输入符号$a$,满足$a \in FOLLOE(A)$时才使用A的产生式进行归约
+
+ \textbf{例:}对于$I = \{A\to a\cdot bc , A\to r \cdot , B\to e\cdot \}$
+
+ \textbf{若$\{b\},FOLLOW(A) , FOLLOW(B)$两两不相交},当状态$I$面临输入符$a$时可采取以下动作:
+ \begin{itemize}
+  \item 若$a = b$ , 移进
+  \item 若$a\in FOLLOW(A)$,则用$A\to r$归约
+  \item 若$a\in FOLLOW(B)$,则用$B\to e$归约
+  \item 否则,报错
+ \end{itemize}
+
+ \spaceline
+ \textbf{例子:}P156 练习题T1 ,手机图片
+
+ \subsection{LR(1)文法}
+ SLR文法并不能完全解决冲突问题,因此需要进一步判断($LR(1)$文法)
+
+ \spaceline
+ \textbf{基本思想:}
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_3b12f.png}
+  \caption{LR(1)分析的基本思想}
+ \end{figure}
+
+ \spaceline
+ \textbf{LR(1)文法}:
+ 对于产生式:$A\to\alpha B \beta$,除了看$FOLLOE(B)$之外,还要看$FIRST(\beta)$,并把$First(\beta)$作为项目集的一个部分,通过这样进一步缩小可归约的范围
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_87792.png}
+  \caption{LR(1)分析的DFA}
+ \end{figure}
+
+ \spaceline
+ \textbf{LR(1)文法的优点:}使用广度大
+
+ \textbf{LR(1)文法的缺点:}LR(1)文法的状态数目庞大
+
+ \subsection{LALR(1)文法}
+ LALR(1)文法:$LR(1)$的状态数目太过庞大,不好计算,只有在$SLR(1)$文法无法解决问题的部分,才采用$LR(1)$文法进行解决。
+
+ \section{中间代码生成}
+ \subsection{属性文法}
+ \textbf{属性:}对文法的每个符号,引进一些属性,这些属性代表与文法符号相关的信息,如类型、值、存储位置等
+
+ \textbf{语义规则:}为文法的每个产生式配备的计算属性的计算规则
+
+ \textbf{属性文法}:带属性的文法
+
+ \textbf{例:}$E\to A + B \{A.t = int \quad AND \quad B.t = int\}$
+
+ (花括号内为$E$的语义规则)
+
+ \textbf{属性分类:}
+ \begin{itemize}
+  \item 综合属性\\
+        属性值由该节点的子节点的属性值计算来\\
+        用于自下而上传递信息
+  \item 继承属性\\
+        属性值由该节点的兄弟节点或父节点的属性值计算而来\\
+        用于自上而下传递信息\\
+        终结符只有综合属性,他们由词法分析器提供\\
+        非终结符既有综合属性也有继承属性,但文法开始符没有继承属性
+ \end{itemize}
+
+ \subsection{语法制导的翻译}
+ 基本思想:在语法分析过程中,随着分析的步步进展,每当使用一条产生式进行推导或归约,就执行该产生式所对应的语义动作,完成相应的翻译工作
+
+ 语法制导翻译法不论对自上而下还是自下而上的分析都适用
+
+ 一旦语法分析确认输入符号串是一个句子,它的值也同时由语义规则计算出来
+
+ 对于LR分析(自下而上)的语法分析来说,在归约后调用语义规则的功能需要增加予以栈,语义值放到与符号栈同步操作的语义栈中,多项语义值可设多个语义栈
+
+ 栈结构格式为:
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_c4498.png}
+  \caption{LR分析栈结构}
+ \end{figure}
+
+ 例:
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_443d1.png}
+  \caption{简单算数表达式求值的属性文法}
+ \end{figure}
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_4966b.png}
+  \caption{计算2+3*5}
+ \end{figure}
+
+ \subsection{中间代码}
+
+ \textbf{中间代码:}
+ 中间代码是一种复杂性介于源程序语言和机器语言之间的一种表示形式,与具体机器无关,可以进行与机器无关的优化
+
+ \textbf{中间代码的形式:}
+ \begin{itemize}
+  \item 逆波兰记号\\
+        也叫后缀式,运算对象写在前面
+  \item 三元式
+  \item 四元式
+  \item 树
+ \end{itemize}
+
+ \subsection{中间代码生成}
+ 属性和语义规则中用到的变量、过程和函数:
+
+ 属性:
+ \begin{itemize}
+  \item id.name\\
+        表示单词id的名字
+  \item E.place\\
+        表示存放E值的变量名在符号表的入口地址或临时变量编码
+ \end{itemize}
+
+ 变量、函数和过程:
+ \begin{itemize}
+  \item nextstat\\
+        给出在输出序列中下一个四元式的序号
+  \item lookup(id.name)\\
+        查询id.name是否出现在符号表中,是则返回id的入口地址,否则返回nil
+  \item emit\\
+        向输出序列输出一个四元式\\
+        emit每调用一次,nextstat的值增加1
+  \item newtemp\\
+        生成一个新的临时变量
+  \item error\\
+        进行错误处理
+ \end{itemize}
+
+ \subsubsection{简单赋值语句的翻译}
+ 语义主要审查标识符是否已经声明
+ \begin{itemize}
+  \item \begin{figure}[H]
+         \centering
+         \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_733a7.png}
+        \end{figure}
+  \item \begin{figure}[H]
+         \centering
+         \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_74c0a.png}
+        \end{figure}
+  \item \begin{figure}[H]
+         \centering
+         \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_f88bc.png}
+        \end{figure}
+  \item \begin{figure}[H]
+         \centering
+         \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_45864.png}
+        \end{figure}
+  \item \begin{figure}[H]
+         \centering
+         \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_4cdaf.png}
+        \end{figure}
+  \item \begin{figure}[H]
+         \centering
+         \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_75972.png}
+        \end{figure}
+ \end{itemize}
+
+ \subsubsection{布尔表达式的翻译}
+ \textbf{直接翻译:}把结果保存在临时变量,对于比较运算,则采用赋值语句进行结果的赋值
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_e815e.png}
+ \end{figure}
+
+ \textbf{短路翻译:}对于布尔表达式,一旦确定了真假,就无需进行后续的判断,直接进行跳转即可
+
+ 主要有以下3种代码:
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_36d92.png}
+ \end{figure}
+
+ 对于$a\quad rop\quad b$形式,生成以下代码:
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_7394b.png}
+ \end{figure}
+
+ 但是,在翻译E的时候,我们并不能确定两个跳转语句将要跳转的位置,
+ 因此我们需要保存这两条四元式的序号,以便生成完后续的代码之后进行回填
+
+ \begin{itemize}
+  \item E.true \\
+        是一个链表,E的中间代码中,判断E为"真"时发生跳转的四元式的编号
+  \item E.false \\
+        是一个链表,E的中间代码中,判断E为"假"时发生跳转的四元式的编号
+ \end{itemize}
+
+ 为了完成翻译过程:我们定义以下过程和变量:
+ \begin{itemize}
+  \item merge(p1,p2)\\
+        把p1和p2为链首的两条链,并返回合并后的链首
+  \item backpatch(p,t)\\
+        把链首p所连接的每个四元式的第四区段填为转移目标t
+  \item E.codebegin\\
+        表示E的第一个四元式的序号
+ \end{itemize}
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_859b6.png}
+ \end{figure}
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_844ba.png}
+ \end{figure}
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_38961.png}
+ \end{figure}
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_4c318.png}
+ \end{figure}
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_f65f3.png}
+ \end{figure}
+
+ \subsubsection{if,while,repeat 语句的翻译}
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_d0192.png}
+ \end{figure}
+
+ \begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_ba2f4.png}
+ \end{figure}
+
+ \textbf{C.chain}的含义:表示C的四元式中,跳转到C的代码块末尾(出口)的四元式的集合
+
+ 实际上,$E.true$和 $E.false$已经能够翻译出语句了,但是为什么还需要$C.chain$?
+
+\begin{itemize}
+  \item 对于语句嵌套的时候,如果没有回填$chain$,那么就需要经过 \textbf{多次跳转}才能跳到出口
+  \item 在 $if$ 语句中,$then$ 代码块结束之后,需要跳过$else$的代码块,如果使用$chain$之后,就不需要在$if$的子程序里面对这个$jmp$进行填写
+\end{itemize}
+
+
+比如:以下代码
+while E do
+\quad if A then B
+
+在while结束的时候,会有一条 \textbf{jmp1}语句跳转到while语句的开头
+
+在 \textbf{if}语句为false的时候,会有 \textbf{jmp2} 跳转到 if语句块的结束,也就是 \textbf{jmp1} 语句,再由jmp1跳转到while开头(\textbf{注意,这里jmp了两次})
+
+由chain的定义,我们可以知道 \textbf{$IF.chian = jmp2$} , 也就是前图中的 \textbf{$S^3.chain = jmp2$}
+
+我们 \textbf{回填} while.codebegin 到 \textbf{jmp2}的话,那么执行 \textbf{jmp2}的时候,就直接到了while 的开头,而无需再经过 \textbf{jmp1} (划重点:\textbf{回填chain后,只jmp了一次})
+
+\textbf{例:}
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_1152a.png}
+\end{figure}
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_b905b.png}
+\end{figure}
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_8744b.png}
+\end{figure}
+
+\section{符号表}
+\textbf{符号表}:符号表是存放标识符信息的一种表,其中的信息表示是标识符的属性(语义)
+
+\textbf{符号表的作用:}符号表是连接声明和引用的桥梁。
+\begin{itemize}
+ \item 一个名字在声明时,相关信息被写进符号表
+ \item 在引用时,根据符号表中的信息生成相应的可执行语句
+\end{itemize}
+
+\textbf{符号表的生存周期:}编译过程中,每当遇到标识符时,就要查填符号表
+\begin{itemize}
+ \item 若是新的标识符,就向符号表中填入一个新的表项
+ \item 否则,根据情况向符号表中的已有表项 \textbf{增填} 信息(如填入分析的存储地址)或者 \textbf{查获}信息(如语义检查)
+
+\end{itemize}
+
+\section{代码优化}
+\textbf{代码优化:}对代码进行等价变换,使得变换后的代码效率更高(节省运行时间、存储空间 或者两者兼而有之)
+
+\begin{itemize}
+ \item 中间代码优化(不依赖具体计算机)
+ \item 目标代码优化(依赖具体计算机)
+\end{itemize}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_9646f.png}
+ \caption{编译的优化工作阶段}
+\end{figure}
+
+\textbf{优化的分类:}
+\begin{itemize}
+ \item 局部优化\\
+       在只有一个入口、一个出口的基本快上进行优化
+ \item 循环优化\\
+       对循环中的代码进行优化
+ \item 全局优化\\
+       在整个程序范围内进行的优化
+\end{itemize}
+
+\subparagraph{中间代码优化}
+\textbf{中间代码常用计数:}
+\begin{itemize}
+ \item 删除多余运算(删除公共子表达式)\\
+       如果子表达式E在前面计算过,且之后E中的变量值都未改变,那么E的重复出现称为 \textbf{公共子表达式},可避免重复计算
+ \item 合并已知量与复写传播\\
+       如果运算量都是已知量,则在编译时就算出它的值,称 \textbf{合并已知量}\\
+       若有$A:= B$,称为把B \textbf{复写}到A,如果其后有引用A的地方,且其间A、B的值都未改变,则可把对A的引用改为对B的引用,称为 \textbf{复写传播}
+ \item 删除无用赋值\\
+       有些变了的赋值从未被引用,称为无用赋值,应删除
+       \begin{itemize}
+        \item 变量被赋值,但在程序中从未被引用
+        \item 变量赋值后未被引用又重新赋值,则前面赋值是无用的
+        \item 变量的赋值只计算变量自己引用,其他变量都不引用它
+       \end{itemize}
+\end{itemize}
+
+\subsection{局部优化}
+\textbf{局部优化:}指基本块内的优化
+
+\textbf{基本块:}是指一个程序中顺序执行的语句序列,其中只有一个入口语句和出口语句。执行时 \textbf{只能从入口语句进入,从其出口语句退出}
+
+\textbf{划分基本块}:
+\begin{itemize}
+ \item 求基本块的入口语句:
+       \begin{itemize}
+        \item 程序的第一个语句
+        \item 条件转移或无条件转移语句的转移目标语句
+        \item 紧跟在条件转移语句后面的语句
+       \end{itemize}
+ \item 对每一入口语句,构造其所属的基本块
+       \begin{itemize}
+        \item 它是由该入口语句到下一入口语句
+        \item 或到转移语句
+        \item 或到停止语句
+       \end{itemize}
+ \item 凡未被纳入某一基本块的语句,是不会被执行到的语句,可以把它们删除
+\end{itemize}
+
+\textbf{利用DAG进行优化}
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_723f0.png}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_e4017.png}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale = 0.3]{assets/CompilerConstructionPrinciples_e1d5a.png}
+\end{figure}
+
+\subsection{循环优化}
+\begin{itemize}
+ \item 代码外提\\
+       把循环不变运算,即结果独立于循环执行次数的表达式,提到循环外面,使之只在循环外计算一次
+ \item 强度削弱\\
+       把程序中强度大的运算替换成强度小的运算\\
+       比如把乘法运算换成加法运算
+ \item 变换循环控制条件(删除归纳变量)
 \end{itemize}
 
 \end{document}
