@@ -1,0 +1,14 @@
+'.text.tex.latex':
+  'figure':
+    'prefix': 'figure'
+    'body': """
+            \\\\begin{figure}[H]
+              \\\\centering
+              \\\\includegraphics[scale = ${1:0.3}]{$2}
+              \\\\caption{$3}
+              \\\\label{$4}
+            \\\\end{figure}
+            """
+  'textbf':
+      'prefix': 'bf'
+      'body': '\\\\textbf{$1}'
