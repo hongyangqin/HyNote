@@ -38,3 +38,7 @@
     4. 通过访问`drive`目录访问drive下的文件
 
 4. coding
+
+[Pickle + Drive FUSE example.ipynb - Colaboratory](https://colab.research.google.com/notebook#fileId=1mhRDqCiFBL_Zy_LAcc9bM0Hqzd8BFQS3&scrollTo=c99EvWo1s9-x)
+
+[Google免费GPU使用教程（亲测可用）](http://www.cnblogs.com/infaraway/p/8372881.html)
