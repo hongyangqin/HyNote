@@ -6,6 +6,11 @@
 
     某些算法对于每个属性满足N（0，1）的数据有效 ， 或者N(0，1)是算法的基本假设 ， 比如PCA
 
+    这个原因可能有两个方面：
+
+    1. 现实的一些变化往往满足高斯分布
+    2. 归一化后可以简化问题的计算，直接基于N(0,1)对问题进行求解
+
     ![](assets/StandardizationNormalizationFeaturebinarization/2018-03-10-16-12-21.png)
 
 2. Normalization: 是在样本维度上，对每个样本的所有属性进行归一化
