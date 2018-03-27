@@ -50,6 +50,24 @@ html body {
                 counter(h5counter) "."
                 counter(h6counter) ".\0000a0\0000a0";
     }
+
+    //标题编号
+    ol {
+        counter-reset: item;
+    }
+
+    ol > li {
+        counter-increment: item;
+    }
+
+    ol ol > li {
+        display: block;
+    }
+
+    ol ol > li:before {
+        content: counters(item, ".") ". ";
+        margin-left: -20px;
+    }
 }
 ```
 
@@ -58,3 +76,5 @@ html body {
 [MarkDown标题自动添加编号 | yanwei.github.io](https://yanwei.github.io/misc/markdown-auto-number-title.html)
 
 [使用css让markdown生成的网页里图片居中 | Trefoil](http://trefoil.github.io/2013/10/23/cssmarkdown.html)
+
+[css - Html ordered list 1.1, 1.2 (Nested counters and scope) not working - Stack Overflow](https://stackoverflow.com/questions/10405945/html-ordered-list-1-1-1-2-nested-counters-and-scope-not-working)
