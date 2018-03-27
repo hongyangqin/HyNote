@@ -28,4 +28,7 @@ def next_batch(num, data, labels):
     return data_shuffle, labels_shuffle
 ```
 
+## 参考
+
+[shuffle numbers in a vector - MATLAB Answers - MATLAB Central](https://cn.mathworks.com/matlabcentral/answers/20789-shuffle-numbers-in-a-vector)
 [how to implement tensorflow's next_batch for own data](https://stackoverflow.com/a/40995666)
