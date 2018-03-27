@@ -1,4 +1,14 @@
-# tensorflow 实现 next_batch
+# next_batch
+
+## matlab shuffle
+
+```matlab
+function v=shuffle(v)
+     v=v(randperm(length(v)));
+end
+```
+
+## tensorflow 实现 next_batch
 
 ```python
 def next_batch(num, data, labels):
