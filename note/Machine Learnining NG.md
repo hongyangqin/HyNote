@@ -173,3 +173,19 @@ L is a matrix with **0 at the top** left and 1's down the diagonal, with 0's eve
 $$J(\theta) = - \frac{1}{m} \sum_{i=1}^m \large[ y^{(i)}\ \log (h_\theta (x^{(i)})) + (1 - y^{(i)})\ \log (1 - h_\theta(x^{(i)}))\large] + \frac{\lambda}{2m}\sum_{j=1}^n \theta_j^2$$
 
 The second sum $\sum_{j=1}^n \theta_j^2$ means to explicitly **exclude the bias term $\theta_0$**.
+
+## Neural Networks
+
+输入样本(input feature):$x_1 , x_2 , \cdots , x_n$ , n 个神经元
+
+还有一个 **bias unit** , $x_0 \equiv 1$
+故总共 n+1个神经元
+
+$$\begin{align*} a_1^{(2)} = g(\Theta_{10}^{(1)}x_0 + \Theta_{11}^{(1)}x_1 + \Theta_{12}^{(1)}x_2 + \Theta_{13}^{(1)}x_3) \newline a_2^{(2)} = g(\Theta_{20}^{(1)}x_0 + \Theta_{21}^{(1)}x_1 + \Theta_{22}^{(1)}x_2 + \Theta_{23}^{(1)}x_3) \newline a_3^{(2)} = g(\Theta_{30}^{(1)}x_0 + \Theta_{31}^{(1)}x_1 + \Theta_{32}^{(1)}x_2 + \Theta_{33}^{(1)}x_3) \newline h_\Theta(x) = a_1^{(3)} = g(\Theta_{10}^{(2)}a_0^{(2)} + \Theta_{11}^{(2)}a_1^{(2)} + \Theta_{12}^{(2)}a_2^{(2)} + \Theta_{13}^{(2)}a_3^{(2)}) \newline \end{align*}$$
+
+### Multiclass Classification in NN
+
+We can define our set of resulting classes as y:
+![](assets/MachineLearniningNG/2018-03-31-21-46-35.png)
+
+Each y(i) represents a different image corresponding to either a car, pedestrian, truck, or motorcycle. 
