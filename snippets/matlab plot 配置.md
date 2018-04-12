@@ -34,3 +34,9 @@ xlabel('y');
 % 标题
 title('title');
 ```
+
+## 参考
+
+[控制图窗窗口的外观和行为 - MATLAB - MathWorks 中国](https://ww2.mathworks.cn/help/matlab/ref/matlab.ui.figure-properties.html)
+[控制坐标区的外观和行为 - MATLAB - MathWorks 中国](https://ww2.mathworks.cn/help/matlab/ref/matlab.graphics.axis.axes-properties.html#budumk7-XTick)
+[设置图形对象属性 - MATLAB set - MathWorks 中国](https://ww2.mathworks.cn/help/matlab/ref/set.html)
