@@ -233,3 +233,44 @@ Theta3 = rand(1,11) * (2 * INIT_EPSILON) - INIT_EPSILON;
 ```
 
 > Ex4.: One effective strategy for choosing $\epsilon_{init}$ is to base it on the number of units in the network. A  good choice of $\epsilon_{init}$ is  $\epsilon_{init} = \frac{\sqrt 6}{\sqrt{L_{in} + L_{out}}}$ , where $L_{in} = s_l$ and $L_{out} = s_{l + 1}$ are the number of units in the layers adjacent to $\Theta^{l}$.
+
+## Advice for Applying Machine Learning
+
+### Evaluate a Learning Algorithm
+
+Training set + Cross Validation set + Test set
+
+* Evaluation : Test Set
+* Model Selection : Cross Validation
+
+### Bias and Variance
+
+* Regularization
+* Learning Curve
+
+#### Learning Curve
+
+* Experiencing high bias:
+
+    * Low training set size: causes $J_{train}(\Theta)$ to be low and $J_{CV}(\Theta)$ to be high.
+    * Large training set size: causes both $J_{train}(\Theta)$ and $J_{CV}(\Theta)$ to be high with $J_{train}(\Theta)$≈$J_{CV}(\Theta)$.
+
+    If a learning algorithm is suffering from high bias, getting more training data will not (by itself) help much.
+
+* Experiencing high variance:
+
+    * Low training set size: $J_{train}(\Theta)$ will be low and $J_{CV}(\Theta)$will be high.
+    * Large training set size: $J_{train}(\Theta)$ increases with training set size and $J_{CV}(\Theta)$continues to decrease without leveling off. Also, $J_{train}(\Theta)$ < $J_{CV}(\Theta)$but the difference between them remains significant.
+
+    If a learning algorithm is suffering from high variance, getting more training data is likely to help.
+
+### Revisited
+
+Our decision process can be broken down as follows:
+
+* Getting more training examples: Fixes high variance
+* Trying smaller sets of features: Fixes high variance
+* Adding features: Fixes high bias
+* Adding polynomial features: Fixes high bias
+* Decreasing λ: Fixes high bias
+* Increasing λ: Fixes high variance.
