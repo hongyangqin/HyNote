@@ -189,3 +189,47 @@ We can define our set of resulting classes as y:
 ![](assets/MachineLearniningNG/2018-03-31-21-46-35.png)
 
 Each y(i) represents a different image corresponding to either a car, pedestrian, truck, or motorcycle. 
+
+### Cost Function
+
+$$\begin{gather*} J(\Theta) = - \frac{1}{m} \sum_{i=1}^m \sum_{k=1}^K \left[y^{(i)}_k \log ((h_\Theta (x^{(i)}))_k) + (1 - y^{(i)}_k)\log (1 - (h_\Theta(x^{(i)}))_k)\right] + \frac{\lambda}{2m}\sum_{l=1}^{L-1} \sum_{i=1}^{s_l} \sum_{j=1}^{s_{l+1}} ( \Theta_{j,i}^{(l)})^2\end{gather*}$$
+
+* $L$ = total number of layers in the network
+* $s_l$ = number of units (not counting bias unit) in layer $l$
+* $K$ = number of output units/classes
+
+gradient:
+...
+
+### Gradient checking
+
+$$\dfrac{\partial}{\partial\Theta}J(\Theta) \approx \dfrac{J(\Theta + \epsilon) - J(\Theta - \epsilon)}{2\epsilon}$$
+
+With multiple theta matrices, we can approximate the derivative with respect to Θj as follows:
+
+$$\dfrac{\partial}{\partial\Theta_j}J(\Theta) \approx \dfrac{J(\Theta_1, \dots, \Theta_j + \epsilon, \dots, \Theta_n) - J(\Theta_1, \dots, \Theta_j - \epsilon, \dots, \Theta_n)}{2\epsilon}$$
+
+```matlab
+epsilon = 1e-4;
+for i = 1:n,
+  thetaPlus = theta;
+  thetaPlus(i) += epsilon;
+  thetaMinus = theta;
+  thetaMinus(i) -= epsilon;
+  gradApprox(i) = (J(thetaPlus) - J(thetaMinus))/(2*epsilon)
+end;
+```
+
+### Random Initialization
+
+ initialize each $\Theta^{(l)}_{ij}$ to a random value between$[-\epsilon,\epsilon]$
+
+```matlab
+If the dimensions of Theta1 is 10x11, Theta2 is 10x11 and Theta3 is 1x11.
+
+Theta1 = rand(10,11) * (2 * INIT_EPSILON) - INIT_EPSILON;
+Theta2 = rand(10,11) * (2 * INIT_EPSILON) - INIT_EPSILON;
+Theta3 = rand(1,11) * (2 * INIT_EPSILON) - INIT_EPSILON;
+```
+
+> Ex4.: One effective strategy for choosing $\epsilon_{init}$ is to base it on the number of units in the network. A  good choice of $\epsilon_{init}$ is  $\epsilon_{init} = \frac{\sqrt 6}{\sqrt{L_{in} + L_{out}}}$ , where $L_{in} = s_l$ and $L_{out} = s_{l + 1}$ are the number of units in the layers adjacent to $\Theta^{l}$.
