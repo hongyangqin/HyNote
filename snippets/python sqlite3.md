@@ -113,3 +113,5 @@ def generateJson(page, tags):
 ## 参考
 
 [Python标准库14 数据库 (sqlite3) - Vamei - 博客园](http://www.cnblogs.com/vamei/p/3794388.html)
+
+[SQLite Limit 子句 | 菜鸟教程](http://www.runoob.com/sqlite/sqlite-limit-clause.html)
