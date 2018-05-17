@@ -52,3 +52,4 @@ class TaskQueue(queue.Queue):
 ## 参考
 
 [Python 30 行代码实现小型多线程任务队列 - Python - 伯乐在线](http://python.jobbole.com/84327/)
+[17.7. queue — A synchronized queue class — Python 3.6.5 documentation](https://docs.python.org/3.6/library/queue.html)
