@@ -37,6 +37,8 @@ int dfs(int u){
                         if(vis[v] < 0)  return 0;
 
                         //如果当前节点已经被访问过（被之前的toposort访问过，排除环的情况）
+						//无环的情况，存在 链的后半部分已经被访问过了的情况
+						//如果仅仅判断的vis[v]的true，false，就无法区分这种情况到底是环还是后者，因此vis需要3个标记
                         if(!vis[v] && !dfs(v))  return 0;
                 }
         }
@@ -48,7 +50,7 @@ int toposort(){
         t = n;
         memset(vis,0,sizeof(vis));
         //枚举每一个点,如果存在环（同向环）,就返回0
-        for(int u = 1;u < n+1;u++){
+        for(int u = 1;u < n+1;u++){//需要遍历每个节点，因为不知道哪个节点才是根，添加vis来避免重复遍历
                 if(!vis[u] && !dfs(u))
                         return 0;
         }
@@ -113,7 +115,7 @@ int toposort() {
 		//更新所有零度节点相连的另一个节点的度数
 		for (int i = 0; i < sz; ++i) {
 			int t = v[s][i];
-			//当出现零度节点就入队		
+			//当出现零度节点就入队
 			if (--d[t] == 0) {
 				q.push(t);
 				//统计出现的0度节点的个数
