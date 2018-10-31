@@ -21,6 +21,8 @@ sizeof  (长度运算符)
 
 即: 派生类继承父类的成员之后, 这些成员在派生类中的访问权限
 
+通过 `using` 和 `typedef` 可以修改派生类中基类成员的访问权限
+
 - [C++继承：公有，私有，保护 - csqlwy - 博客园](https://www.cnblogs.com/qlwy/archive/2011/08/25/2153584.html)
 - [C++继承权限和继承方式_C语言中文网](http://c.biancheng.net/cpp/biancheng/view/2984.html)
 - [派生类 - cppreference.com](https://zh.cppreference.com/w/cpp/language/derived_class)
