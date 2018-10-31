@@ -142,3 +142,16 @@
         有序组织同类或相关代码
     2. 跨文件，使用时只包含所需，只与使用部分形成编译依赖
     3. 易于扩展，同命名空间下新建头文件即可
+
+3. 全特化 `swap`
+
+    ```cpp
+    namespace std{
+        template<>
+        void swap<ClassA>(ClassA &a, ClassA &b){
+            a.swap(b);
+        }
+    }
+    ```
+    - 当 `std:swap` 对自定义的类型效率不高时，提供一个 `swap` 成员函数，并确定这个函数不抛出异常
+
