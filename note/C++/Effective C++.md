@@ -234,3 +234,35 @@
 
     - 大部分调试器对 `inline` 束手无策, 仅仅只能 在调试版程序中 **禁止发生** `inlining`
 
+4. 将文件间的编译依存关系降至最低
+    原因: 如果一个头文件有任何改变, 或头文件所依赖的其他头文件有任何改变, 那么每个包含该头文件的文件就得需要重新编译
+    解决: 接口与实现分离
+    具体实现:
+    - `handle` class: 使用一个 `实现类` 作为 该类的成员函数
+        ```cpp
+        //Person.h
+        class Person{
+        public:
+        ...
+            std::string name() const;
+        private:
+            std::tr1::shared_ptr<PersonImpl> pImpl; //指针, 指向实现物
+        }
+        //Person.cpp
+        std::string Person::name() const{
+            return pImpl->name();   //调用具体实现
+        }
+        ```
+        每一次访问会增加一层间接访问, 而每个对象消耗的内存数量必须增加
+
+    - `interface` class: 使用抽象类
+        ```cpp
+        //Person.h
+        class Person{
+        public:
+        ...
+            virtual std::string name() const = 0;
+        }
+        ```
+        除非 `interface class` 的接口被修改, 否则其客户不需要重新编译
+        必须为每次函数调用付出一个间接跳跃成本(`virtual`)
