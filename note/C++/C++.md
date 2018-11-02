@@ -77,3 +77,38 @@ sizeof  (长度运算符)
     注:
     类成员函数取得的地址, 实际上并不是一个地址, 因为这个函数关联的对象还没确定, 也因此, 在使用的时候, 需要指定具体的对象
 
+## lambda 表达式
+
+- 声明形式
+    ![](assets/C++/2018-11-02-12-13-15.png)
+    1. Capture 子句（在 C++ 规范中也称为 lambda 引导。）
+    2. 参数列表（可选）。 （也称为 lambda 声明符)
+    3. 可变规范（可选）。
+    4. 异常规范（可选）。
+    5. 尾随返回类型（可选）。
+    6. “lambda 体”
+
+- 参数含义:
+    - `capture`
+    它指定要捕获的变量以及是通过值还是引用进行捕获。 有与号 (&) 前缀的变量通过引用访问，没有该前缀的变量通过值访问。
+    [&] 表示通过引用捕获引用的所有变量，而 [=] 表示通过值捕获它们。
+
+- 例子
+    ```cpp
+    #include <algorithm>
+    #include <cmath>
+
+    void abssort(float* x, unsigned n) {
+        std::sort(x, x + n,
+            // Lambda expression begins
+            [](float a, float b) {
+                return (std::abs(a) < std::abs(b));
+            } // end of lambda expression
+        );
+    }
+
+    ```
+- 参考
+    - [C++ 中的 Lambda 表达式](https://msdn.microsoft.com/zh-cn/library/dd293608.aspx)
+    - [Lambda 表达式 (C++11 起) - cppreference.com](https://zh.cppreference.com/w/cpp/language/lambda)
+
