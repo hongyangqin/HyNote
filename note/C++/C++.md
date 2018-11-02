@@ -187,3 +187,16 @@ C++代码在编译时会根据参数列表对函数进行重命名，例如void 
 1. 一个对象以值传递的方式传入函数体
 2. 一个对象以值传递的方式从函数返回
 3. 一个对象需要通过另外一个对象进行初始化。
+
+## `typeid`
+
+
+例子: 判断两个变量是否同类型
+```cpp
+#include <typeinfo>
+#include<typeindex>
+template<typename T, typename U>
+bool isSameType(T &a, U& b) {
+	return (std::type_index(typeid(typename T)) == std::type_index(typeid(typename U)));
+}
+```
