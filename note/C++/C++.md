@@ -112,3 +112,22 @@ sizeof  (长度运算符)
     - [C++ 中的 Lambda 表达式](https://msdn.microsoft.com/zh-cn/library/dd293608.aspx)
     - [Lambda 表达式 (C++11 起) - cppreference.com](https://zh.cppreference.com/w/cpp/language/lambda)
 
+## placement new
+
+一般类的 `new` 重载形式如下:
+```cpp
+void* operator new  ( std::size_t count );
+```
+
+而如果, 除了 `std::size_t count` 之外, 还有其他参数的重载形式, 则称为 `placement new`, 使用时, 在`new` 后立即跟着`(<参数变量名>)`, 来表示输入
+
+`::new` 申请内存, 而未构造, 而 `placement new` 负责构造函数的调用工作
+
+`void* operator new(std::size_t, void*)`, 它们简单地返回不更改的第二参数. 这被用于在已分配的存储构造对象. (上面这个函数已实现在 `<new>` 头文件中)
+
+```cpp
+char* ptr = new char[sizeof(T)]; // 分配内存
+T* tptr = new(ptr) T;            // 在已分配存储（“位置”）构造
+tptr->~T();                      // 析构
+delete[] ptr;                    // 解分配内存
+```
