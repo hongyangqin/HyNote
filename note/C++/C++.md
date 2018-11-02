@@ -27,3 +27,53 @@ sizeof  (长度运算符)
 - [C++继承权限和继承方式_C语言中文网](http://c.biancheng.net/cpp/biancheng/view/2984.html)
 - [派生类 - cppreference.com](https://zh.cppreference.com/w/cpp/language/derived_class)
 - [访问指定符 - cppreference.com](https://zh.cppreference.com/w/cpp/language/access)
+
+## 函数指针
+
+- 普通函数指针
+    声明方式:
+    ```cpp
+    <返回类型> (*变量名)(参数类型列表);
+    ```
+    例子:
+    ```cpp
+    int globalFunc() {
+        return 1;
+    }
+    int(*pgFunc)() = globalFunc;
+    cout << pgFunc() << endl;	//1
+    cout << pgFunc << endl;		//00B8129E
+    ```
+
+- `typedef` 简化定义
+    普通指针的声明格式前加 `typedef`, `变量名` 的含义变成 `类型名`
+    ```cpp
+    typedef int(*FP)();
+	FP fp = globalFunc;
+    ```
+
+- 静态成员函数
+    声明和普通函数指针一样, 通过 `<类型>::<静态函数名>` 的方式获取静态成员函数地址
+    ```cpp
+    int(*pStaticBaseFunc)() = Test::staticBaseFunc;
+    ```
+
+- 类成员函数
+    取地址:
+    ```cpp
+    int (<类型名>::*<变量名>)() = &类型名::<函数名>; //普通成员函数需要&
+    ```
+    使用:
+    ```cpp
+    (<对象变量名>.*<函数指针名>)();   //普通成员函数需要指明对象
+    ```
+    例子:
+    ```cpp
+    Test a(3);
+    int (Test::*pBaseFunc)() = &Test::baseFunc; //普通成员函数需要&
+    cout << (a.*pBaseFunc)() << endl;	//3, 普通成员函数需要指明对象
+    cout << pBaseFunc << endl;	//1, 成员你函数得到的不是地址
+    ```
+    注:
+    类成员函数取得的地址, 实际上并不是一个地址, 因为这个函数关联的对象还没确定, 也因此, 在使用的时候, 需要指定具体的对象
+
