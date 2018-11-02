@@ -267,3 +267,587 @@
         ```
         除非 `interface class` 的接口被修改, 否则其客户不需要重新编译
         必须为每次函数调用付出一个间接跳跃成本(`virtual`)
+
+## 继承与面向对象设计
+
+1. `public` 继承
+    表示 `is-a` 的关系, 基类能做的事情, 子类都能够做到
+
+2. 避免遮掩继承而来的名称
+    当子类存在一个和父类相同名字函数, 就会遮掩父类的所有同名的函数(包括函数的重载形式)
+
+    想要使用继承来的名字, 在子类中使用 `using` 关键字, 告诉编译器要使用父类的函数
+    ```cpp
+    class Derived: public Base{
+    public:
+        using Base::mf1;    //当Base的mf1在Derived中可见, 且都为public
+    }
+    ```
+    - `Base::mf1` 在子类中都可见
+        若不想继承弗雷德所有函数, 应该采用 `private` 继承
+    - `Base::mf1` 的访问权限被指定为 `public`
+    - 当子类的 `mf1` 和父类的有相同的参数, 调用的是子类的 `mf1`
+
+3. 区分接口继承与实现继承
+    采用实现继承(为非纯 虚函数指定函数声明和函数缺省行为), 可能存在 子类未明白说出"继承"的情况下, 就继承了父类(接口)的缺省行为实现.
+
+    一个解决的办法是: 以不同的函数分别提供接口和缺省实现(这不是最好的, 比较好的是为纯虚函数提供定义), 但这可能因过度雷同的名称而引起类命名空间污染问题
+    ```cpp
+    class Airplane{
+    public:
+        virtual void fly(...) = 0;
+    protected:
+        void defaultFly(...);
+    };
+    void Airplane::defaultFly(...){
+        ...
+    }
+    ```
+
+    更好的解决办法是: 为纯虚函数提供定义, 这个定义不会被继承, 只能通过指定类名的方式访问
+    ```cpp
+    Airplane::fly(...)
+    ```
+    前一个例子调用 `defaultFly` 的地方都替换成 `Airplane::fly`, 避免类命名空间污染的问题
+
+4. 考虑 `virtual` 函数意外的其他选择
+    1. non-virtual interface (NVI)手法 (模板设计模式)
+        令客户通过 `public non-virtual` 成员函数间接调用 `private virtual` 函数, 允许子类重新定义 `virtual` 函数, 从而赋予它们 **如何实现机能** 的控制能力, 但基类保留诉说 **函数何时被调用** 的权利.
+
+    2. 策略(Strategy)模式
+        NVI手法对于所有的子类对象, 都只能同样的行为, 但如果希望(同一个子类)不同的对象, 有不同的行为呢?
+        解决办法: 策略模式, 由某个变量确定某个行为
+
+        1. 由 函数指针 实现
+            使用一个函数指针, 指明需要的行为
+            该办法还可以在 `运行期` 进行行为的变更
+
+            运用函数指针替代 `virtual` 函数, 其优点是否足以弥补缺点, 需要根据每个设计情况的不同而抉择.
+
+        2. 由 `tr1::function` 实现 策略模式
+            使用函数指针还是有一定的约束的, 比如必须是函数, 而不能是函数对象(实现 `operator()`), 也不能是成员函数, 也不能是可以隐式转换成对应返回值的函数(比如返回值是 `int` 的话, 返回值是 `double`也是不被允许的).
+
+            这些问题, 采用 `tr1::function` 对象 替换 函数指针即可解决.
+            `tr1::function`接收任何可调用(`callable`)对象
+            > 注: 从`C++11`起, 为`std::function`, 在`<functional>`有文件里
+
+            声明:
+            ```cpp
+            #include<functional>
+            typedef std::function<int(const int &a)> Func;
+            ```
+
+        3. 古典 策略模式
+            将虚函数替换成另一个继承体系内的虚函数
+            即创建一个策略基类, 派生不同的策略子类
+
+5. 绝不冲定义继承而来的缺省参数值
+    子类重写的时候, 虽然可以继续写成相同的缺省参数值, 但是, 这却导致了代码的重复, 代码重复又带来的相依性
+
+    解决办法: 可采用 `NVI` 手法, 在 `public non-virtual` 函数里面指定缺省参数, 来调用 不带缺省参数的 `private virutal`函数
+
+    虚函数是动态绑定的，但缺省参数是静态绑定的。所以当父类指针指向子类对象，调用虚函数时，虚函数的默认参数由父类的定义决定。
+    ```cpp
+    #include<iostream>
+    using namespace std;
+
+    class Base {
+    public:
+        virtual void func1(int num = 1) {
+            cout <<"Base:func1:"<< num << endl;
+        }
+
+        void func2() {
+            cout << "Base:func2" << endl;
+        }
+    };
+
+    class Derive : public Base{
+    public:
+        void func1(int num = 2) {
+            cout << "Derive:func1:" << num << endl;
+        }
+
+        void func2() {
+            cout << "Derive:func2" << endl;
+        }
+    };
+    int main() {
+        Base * pbase = (Base*)new Derive();
+        Derive * pderive = (Derive *)pbase;
+        pbase->func1();     //Derive:func1:1, 子类的函数, 但参数值来自父类
+        pderive->func1();   //Derive:func1:2
+        pbase->func2();     //Base:func2
+        pderive->func2();   //Derive:func2
+        return 0;
+    }
+    ```
+
+6. `private` 继承
+    - 特点
+        如果类之间的继承关系是 `private`, 编译器不会自动将一个子类对象转换成基类对象
+
+        因为子类对象继承来的所有成员, 在子类中都会变成 `private`, 因此, 能访问父类共有成员(函数)的方法, 却不能访问子类.
+
+        具体而言: 当参数是父类, 如果子类是 `private` 继承, 那么不能传入子类对象作为参数
+
+        `private` 继承纯粹只是实现技术, 在软件设计层面没有意义. 即子类采用父类的某个实现.
+
+    - 与 `复合` 的关系(类的成员为 "前文`private`继承的父类" 的对象)
+        两者都能实现相同的功能(利用父类/复合对象的实现, 去实现类的功能)
+
+        取舍: 尽可能使用 `复合`, 当涉及 `protected`成员或 `虚函数`, 或 对 **空间要求** 十分激进时, 才使用 `private` 继承
+
+        1. 涉及 `protected`成员 或 `虚函数`
+            需要重写某个虚函数, 如果只是定义为成员变量, 并不能改变这个成员变量的函数的定义, 因此采用继承, 然后重写
+
+            或需要访问 该类的`protected`成员, 类外无法访问, 需要继承才能访问
+
+            但此方法, 也可以使用 "派生一个重写虚函数/重定义成员为public后的类" 定义为成员变量 的方法代替
+
+        2. 涉及 `空间`, `private` 继承占更少的空间
+            C++ 裁定凡是独立(非附属)对象都必须有非零大小
+            因此, 对于一个空类的对象, 其大小不为0, 即使它什么都不包含
+
+            先看复合的情况: 定义一个空类, 和一个只有 `int`成员的类
+            ```cpp
+            class Empty {};
+            class HoldsAnInt {
+            private:
+                int x;
+                Empty e;
+            };
+            ```
+            看各个类的大小:
+            ```cpp
+            cout << sizeof(HoldsAnInt) << endl;	//8
+            cout << sizeof(int) << endl;		//4
+            cout << sizeof(Empty) << endl;		//1
+            ```
+            1. `sizeof(HoldsAnInt) != sizeof(int)` 和 `sizeof(Empty)`
+                这个现象, 说明了 `Empty` 类即使没有任何成员变量, 也是占空间的
+            2. `sizeof(HoldsAnInt) - sizeof(int) != sizeof(Empty)`
+                这个现象说明了, 编译器会对位对齐进行优化
+
+            在看 `private` 继承的情况:
+            ```cpp
+            class HoldsAnInt : private Empty{
+            private:
+                int x;
+            };
+            ```
+            大小为:
+            ```cpp
+            cout << sizeof(HoldsAnInt) << endl;	//4
+            cout << sizeof(int) << endl;		//4
+            cout << sizeof(Empty) << endl;		//1
+            ```
+            可以看出, `private` 继承下, `Empty`类不占任何空间, 称 `EBO`(empty base optimization: 空白基类最优化)
+
+            (用处)问:`Empty` 类什么都没有, 要来有什么用呢?
+            `Empty`并不是`empty`, 它从未拥有 `non-static` 成员, 却可以含有 `typedefs`, `enums`, `static`成员变量 或 `non-virtual`函数.
+            这样的继承很少增加子类的大小, 也就是说, 继承了遗产, 却不占空间.
+
+7. 谨慎使用多重继承
+    1. 当多个父类出现多个同名函数(参数相同)是怎么办?
+        明确指数使用哪个基类的函数
+        ```
+        a.BaseOne::func();
+        ```
+
+    2. 虚继承(钻石型多重继承)
+        当出现父类们的父类相同的情况, C++默认情况下, 执行赋值操作, 即有多个父类的父类的成分, 即使这个类相同
+
+        如果希望只有一个这样的成分(共享同一个父类的父类), 则父类们需声明为 `虚继承`
+
+        ```cpp
+        class File{...};
+        class InputFile: virtual public File{...};
+        class OutputFile: virtual public File{...};
+        class IOFile: public InputFile, public OutputFile{...};
+        ```
+
+        但是, 为了避免继承得来的成员变量重复, 即使用虚继承的类所产生的对象, 往往比 非虚-继承的大, 访问虚基类的成员变量时, 也比访问 非虚基类的成员变量慢
+
+## 模板与泛型编程
+
+1. 模板板元编程: template metaprogramming
+    在C++编译器内执行并于编译完成时停止执行 的程序
+
+2. 隐式接口 与 编译期多态
+    隐式接口: 当使用模板时, 模板 `T` 所用过的操作, 为 `T` 必须满足的条件, 这些条件就是 隐式接口
+
+    编译期多态: 以不同的模板参数具现化, 会导致调用不同的函数, 这就是编译期多态
+
+3. `typename` 和 `class`
+    在 **声明模板参数** 时, 不论使用关键字 `typename` 还是`class`意义完全相同
+    ```cpp
+    template<class T> class A;
+    template<typename T> class A;
+    ```
+
+    使用 `typename`的时机:
+    缺省情况下, 嵌套从属名称(`::`)不是类型, 如果指的是类型, 则必须在它前面放上关键字 `typename`(有2个例外情况, 在基类列表和初值列表前不需要加 `typename`)
+
+    给定以下代码:
+    ```cpp
+    template<typename C>
+    void print2nd(const C& container){
+        C::const_iterator* x;
+        ...
+    }
+    ```
+    此处, `C::const_iterator`默认不是类型, 而是变量, 因此, 上式的含义是 `C::const_iterator` 乘(`*`)上 `x`.
+
+    如果需要指明 `C::const_iterator` 是类型 而不是变量, 则
+    ```cpp
+    typename C::const_iterator* x;
+    ```
+
+    例外情况: 基类列表和初值列表
+    ```cpp
+    template<typename T>:
+        public Base<T>::Nested{ //不需要 typename
+            explicit Derived(int x):
+                Base<T>::Nested(x){} //不需要 typename
+    }
+    ```
+
+4. 处理基类模板内的名称
+    基类模板可能会被特化, 而特化的版本可能并不提供与基类模板相同的接口, 因此, 编译器不会再基类模板内寻找继承而来的名称(即, 派生类里面不能使用基类的方法)
+
+    解决办法: 告诉编译器, 假设方法会被继承
+    1. 在基类函数调用动作之前加 `this->`
+        即在 子类中调用父类的方法的形式如下:
+        ```cpp
+        this->baseFunc(); //假设baseFunc将被继承
+        ```
+
+    2. 使用 `using` 声明式
+        ```cpp
+        using Bast<T>::baseFunc;    //告诉编译器, baseFunc位于Base里
+        ```
+
+    3. 指明被调用函数在基类内
+        ```cpp
+        Base<T>::baseFunc();    //调用基类的方法与实现
+        ```
+        此方式会关闭 `virtual` 的绑定行为, 使用调用父类的实现
+
+5. 将与参数无关的代码抽离 `templates`
+    使用 `templates` 可能会导致代码膨胀, 其二进制码带着重复(几乎重复)的代码或数据.
+
+    比如:
+    1. 接收非类型参数
+    ```cpp
+    template<typename T, std::size_t n> ...
+    ```
+
+    2. `int` 和 `long` 虽然在某些平台有相同的二进制表述, 但可能导致代码膨胀, 即
+    ```cpp
+    template<T> class A;
+    ```
+    "`A<int>`和`A<long>`" 或 类似 "`A<vector<int>>`和`A<vector<long>>`" 都各自产生一份底层实现, 即使它们是一样的
+
+6. 运用成员函数模板接收所有兼容类型
+    同一个 `template`的不同具现体之间并不存在任何与生俱来的关系,如果我们希望他们之间有相互转换的能力, 需要明确地编写出来(比如不同类型的指针之间的转换).
+
+    ```cpp
+    template<typename T>
+    class SmartPtr{
+    public:
+        template<typename U>
+        SmartPtr(const SmartPtr<U>& pther):heldPtr(other.get()){...}
+        T* get() const{ return heldPtr };
+        ...
+    private:
+        T* heldPtr;
+    }
+    ```
+    上面代码中, 初始化列表的含义是, 只有当 "存在某个隐式转换可将一个`U*`转换成一个`T*`指针" 时才能通过编译.
+
+7. 需要类型转换时, 请为模板定义非成员函数
+    template实参推导的过程中, 从不将隐式类型转换函数纳入考虑.
+    即
+    ```cpp
+    template<typename T>
+    const Rational<T> operator*(
+        const Rational<T> lhs,
+        const Rational<T> rhs
+        ) {
+        return Rational<T>(lhs.getnumerator() * lhs.getdenominator(), rhs.getnumerator()*rhs.getdenominator());
+    }
+    ```
+    上述模板, 仅当`a * b`且`a`和`b`都是同一类`Rational<T>`对象时才会具现出具体的代码.
+    `a*2`, 或者 `2*a` 都会导致编译错误(没有定义`*`运算符)
+    即:
+    ```cpp
+    Rational<int> onehalf(1, 2);
+    Rational<int> result = onehalf * 2;//编译错误
+    ```
+
+    解决此问题的办法是, 把`const Rational<T> operator*`作为友元函数放入类模板内:
+    ```cpp
+    class Rational {
+    public:
+        friend const Rational<T> operator*(
+                const Rational<T> lhs,
+                const Rational<T> rhs
+            );	//只是声明是不行的
+        ...
+    };
+    ```
+    如此, 当对象`onehalf`被具现出来, 而作为过程的一部分, 友元函数`operator*`也被自动声明出来.
+
+    **然而**, 这份代码虽然编译不会出错, 但是却无法连接, 因为函数被声明在`Rational<int>`, 却并没有被定义出来. 我们意图令类外的`operator*`模板提供定义式, 但是行不通.
+
+    因此, 需要把定义也放入类内, 为减少inline所带来的影响(体积,代码重复), 调用一个外部函数, 代码如下:
+    ```cpp
+    template<typename T>
+    class Rational {
+    public:
+        friend const Rational<T> operator*(
+            const Rational<T> lhs, const Rational<T> rhs) {
+            return domulti(lhs, rhs);   //友元定义, 调用外部函数
+        }
+        Rational(const T& _numerator = 0, const T& _denominator = 1):
+            numerator(_numerator), denominator(_denominator){};
+        const T getnumerator() const;
+        const T getdenominator() const;
+    private:
+        T numerator;
+        T denominator;
+    };
+
+    template<typename T>
+    const Rational<T> domulti(
+        const Rational<T> lhs, const Rational<T> rhs) {
+        return Rational<T>(lhs.getnumerator() * lhs.getdenominator()
+            , rhs.getnumerator()*rhs.getdenominator());
+    }
+
+    template<typename T>
+    const T Rational<T>::getnumerator() const {
+        return numerator;
+    }
+
+    template<typename T>
+    const T Rational<T>::getdenominator() const {
+        return denominator;
+    }
+
+    Rational<int> onehalf(1, 2);
+    Rational<int> result = onehalf * 2;
+    ```
+
+8. 使用 `traits classes` 表现类型信息
+    1. 原理
+        模板具现出的不同类型, 在模板内均通过 `typedef` 定义出同名字的新类型 `type`, 如此, 均可以通过 `类型::type` 来获取类型信息
+        比如: `list` 和 `vector` 均可以通过 `iterator_category` 判断迭代器类型
+
+        比如:
+        ```cpp
+        template <typename T>
+        class A {
+        public:
+            typedef T type;
+        };
+
+        template <typename T>
+        class B {
+        public:
+            typedef T type;
+        };
+        ```
+        这里仅判断具现模板时用的T相同, 就归为同类, 即`A<int>`与`B<int>`同类, 而和 `A<char>` 不同类
+
+        使用 `typeid` 验证:
+        ```cpp
+        typeid(A<int>) == typeid(B<int>)   //0
+
+        typeid(typename A<int>::type) ==
+            typeid(typename B<int>::type)  //1
+
+        typeid(typename A<int>::type) ==
+            typeid(typename A<char>::type) //0
+
+        typeid(typename A<int>::type) ==
+            typeid(typename A<long>::type) //0
+
+        typedef int newInt;
+        typeid(typename A<int>::type) ==
+            typeid(typename A<newInt>::type)) //1
+        ```
+        `A<int>`和`A<long>`不同而和`typedef`得到的`A<newInt>`相同, 也验证了前面的说法, "虽然 `int` 和 `long` 的底层实现可能一样, 但编译器把他们看做不同的类型"
+
+    2. 原理实现
+        1. 模板封装 `typeid`
+            由于知道变量名而不知道其变量名, 因此, 需要使用函数模板封装, 通过函数调用的方式获取到变量类型
+
+            例子1:
+            ```cpp
+            template<typename T, typename U>
+            bool isSameType(T &a, U& b) {
+                return std::type_index(typeid(typename T::type))
+                    == std::type_index(typeid(typename U::type));
+            }
+            ```
+
+            例子2:
+            使用:
+            ```cpp
+            template<typename T>
+            void doFunc(T &a) {
+                if (std::type_index(typeid(typename T::type))
+                    == std::type_index(typeid(int))) {
+                    cout << "Int" << endl;
+                }
+                else cout << "Not Int" << endl;
+            }
+
+            A<int> typeInt1;
+            B<int> typeInt2;
+            A<char> typeChar;
+            doFunc(typeInt1);//Int
+            doFunc(typeInt2);//Int
+            doFunc(typeChar);//Not Int
+            ```
+
+            但还是建议使用重载方式, 原因如下:
+            1. 实际上, `T::type` 和 `U::type` 在编译的时候已经确定了, 为什么要在运行期才做这件事呢? 不仅浪费时间, 也造成可执行文件膨胀.
+                > 为什么可执行文件会膨胀?
+                > 验证结果如下, 的确如此
+                > |类型|文件大小|占用空间|
+                > |---|---------------|-------|
+                > |typeid|11,776 Bytes|12,288 Bytes|
+                > |重载|11,264 Bytes|12,288 Bytes|
+
+            2. 其次, 上面代码中 `cout << "Int" << endl;` 对`int`和`char`而言都是一样的, 因此编译成功.
+            但如果这一句代码是非`int`不能执行(不考虑类型转换), 那么就会导致错误, 因为类型`T`并没有 `if` 成立下所要求的隐式接口
+
+        2. 利用重载
+            通过传入 `type` 的变量, 来利用重载
+            ```cpp
+            template<typename T, typename U>
+            void doFunc(T &a, U b) {
+                cout << "Not Int" << endl;
+            }
+
+            template<typename T>
+            void doFunc(T &a, int b) {
+                cout << "Int" << endl;
+            }
+
+            template<typename T>
+            void doFunc(T &a) {
+                doFunc(a, T::type());
+            }
+            ```
+            注意, 此处, `T::type()` 被定义成 `int`, 而实际我们并不关心它的值, 值关心它的类型, 因此, 如果不是 `int` 而是其他类, 若是值的占空间大就造成浪费.
+            一般, 声明若干个空白类来定义`type`而不是采用`int`这些, 从而减少空间消耗.
+            可以通过空白类的继承, 实现隐式转换, 比如 `Derived` 类可以调用所有参数类型为 `Base`的类
+
+    3. `traits` 实现
+        要求: 对内置类型和用户自定义类型的表现一样好, 即 `traits` 能施于内置指针上
+
+        运作方式: 针对每一个类型`A`, 在 `traits<A>` 内声明某个 `typedef` 名为 `category`, 这个 `typedef` 来确认 `A` 的分类.
+
+        > 疑问: 利用上面的特性已经可以实现类型信息的查看了, 为什么还需要整理成一个 `traits` 类模板? 这样可以使得获取类型信息就像调用函数一样?
+
+        步骤:
+        1. 若干个空白类, 空白类的继承关系, 表示实际类的继承关系
+            ```cpp
+            struct random_tag {};
+            struct sequential_tag {};
+            ```
+        2. 为特定的类 `typedef` 类型
+            ```cpp
+            template <typename T>
+            class List {
+            public:
+                typedef sequential_tag access_tag;
+            };
+
+            template <typename T>
+            class Array {
+            public:
+                typedef random_tag access_tag;
+            };
+            ```
+        3. 声明 `traits` 模板类整合所有类型
+            ```cpp
+            template<typename T>
+            struct traits {
+                typedef typename T::access_tag access_tag;
+            };
+            ```
+        4. 指针类型下, 特例化 `traits` 模板
+            因为指针的 `typedef` 不能嵌套, 这里直接把指针认定为 `random_tag`
+            ```
+            template<typename T>
+            struct traits<T*> {
+                typedef random_tag access_tag;
+            };
+            ```
+        5. 使用:
+            ```cpp
+            template<typename T>
+            void doFunc(T&a) {
+                doFunc(a, traits<T>::access_tag());
+            }
+
+            template<typename T>
+            void doFunc(T&a, random_tag) {	//省略第二个参数的变量名
+                cout << "random access" << endl;
+            }
+
+            template<typename T>
+            void doFunc(T&a, sequential_tag) {
+                cout << "sequential access" << endl;
+            }
+
+            List<int> list;
+            Array<double> arr;
+            doFunc(list);		//sequential access
+            doFunc(arr);		//random access
+            ```
+
+    4. STL中的 `traits`
+        `is_fundamental<T>`, `is_array<T>`, `is_base_of<T1, T2>`
+
+9. `template` 元编程(TMP: Template metaprograms)
+
+好处:
+1. 它让某些事情变得更加容易, 如果没有它,那些事情将是困难的, 甚至不可能的
+2. 由于TMP执行与C++编译期, 因此可将工作从运行期转移到编译器
+    这导致的一个结果是, 某些错误原本通常在运行期才能侦测到, 现在可以在编译器找出来
+    另一个结果是, 使用TMP的C++代码可能在每一方面都更加高效: 较小的可执行文件, 较短的运行期, 较少的内存要求
+    然而, 将工作从运行期转移至编译器的另一个结果是, 编译时间变长了.
+
+    运行高效:
+    1. `traits` 引发编译期发生与类型身上的 if-else 计算
+    2. 可以预计算出所需要的结果, 从而减少运行期的时间
+        比如,阶乘
+        ```cpp
+        template<unsigned n>
+        struct Factorial{
+            enum { Value = n * Factorial<n - 1>::Value };
+        };
+
+        template<>
+        struct Factorial<0> {
+            enum { Value = 1 };
+        };
+
+        cout << Factorial<5>::Value << endl;	//120
+        cout << Factorial<10>::Value << endl;	//3628800
+        ```
+
+        反汇编查看, 结果是已经计算出来的: `0x78=120, 0x375F00=3628800`
+        ```
+        011A100B  |.  6A 78         push    78
+        011A100D  |.  FF15 44201A01 call    dword ptr [<&MSVCP140.std::basic>;  MSVCP140.std::basic_ostream<char,std::char_traits<char> >::operator<<
+
+        011A1026  |.  68 005F3700   push    375F00
+        011A102B  |.  FF15 44201A01 call    dword ptr [<&MSVCP140.std::basic>;  MSVCP140.std::basic_ostream<char,std::char_traits<char> >::operator<<
+        ```
