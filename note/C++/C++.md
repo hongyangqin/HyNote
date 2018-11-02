@@ -77,6 +77,17 @@ sizeof  (长度运算符)
     注:
     类成员函数取得的地址, 实际上并不是一个地址, 因为这个函数关联的对象还没确定, 也因此, 在使用的时候, 需要指定具体的对象
 
+    即成员函数存在一个隐式的参数, 就是对象本身, 可以通过 `std::bind` 方法进行绑定
+
+    使用
+    ```cpp
+    Test a(3);
+    function< int() > paBaseFunc = std::bind(pBaseFunc, a);
+	paBaseFunc();
+    //using std::placeholders::_1;        //若pBaseFunc有一个参数
+    //function< int(int) >  paBaseFunc = std::bind(pBaseFunc, a, _1);
+    ```
+
 ## lambda 表达式
 
 - 声明形式
