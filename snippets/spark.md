@@ -177,6 +177,60 @@ Spark运行基本流程
 
 ---
 
+## RDD的设计与运行原理
+
+### 背景
+
+不同计算阶段之间会重用中间结果, 即一个阶段的输出结果会作为下一个阶段的输入, 不同RDD之间的转换操作形成依赖关系，可以实现管道化，从而避免了中间结果的存储，大大降低了数据复制、磁盘IO和序列化开销
+
+一个RDD就是一个分布式对象集合，本质上是一个**只读**的分区记录集合，每个RDD可以分成多个分区，每个分区就是一个数据集片段，并且一个RDD的**不同分区可以被保存到集群中不同的节点**上，从而可以在集群中的不同节点上进行并行计算
+
+RDD提供了一组丰富的操作以支持常见的数据运算，分为“行动”（Action）和“转换”（Transformation）两种类型, 前者用于执行计算并指定输出的形式，后者指定RDD之间的相互依赖关系
+两类操作的主要区别是，转换操作（比如map、filter、groupBy、join等）接受RDD并返回RDD，而行动操作（比如count、collect等）接受RDD但是返回非RDD（即输出一个值或结果）
+
+![](assets/spark/2018-11-19-22-15-50.png)
+
+---
+
+启动 spark 交互环境:
+
+```bash
+PYSPARK_PYTHON=python3 ./bin/pyspark
+```
+
+输入以下代码:
+```python
+fileRDD = sc.textFile('hdfs://localhost:9000/test.txt') #创建RDD
+def contains(line):
+    return 'hello world' in line
+filterRDD = fileRDD.filter(contains)    #转换, 得到新的RDD, 此时只是构建了 DAG, 还未执行
+filterRDD.cache()   # 对filterRDD进行持久化，把它保存在内存(cache())或磁盘中，方便后续重复使用
+filterRDD.count()   # count()是一个行动操作，用于计算一个RDD集合中包含的元素个数
+```
+
+---
+
+### RDD之间的依赖关系
+
+RDD中的依赖关系分为窄依赖（Narrow Dependency）与宽依赖（Wide Dependency）
+
+窄依赖: 一个父分区对应一个子分区(map, union, filter)
+宽依赖: 一个父分区对应多个子分区(groupByKey, sortByKey)
+
+![](assets/spark/2018-11-19-22-29-21.png)
+
+对于窄依赖的RDD，可以以流水线的方式计算所有父分区，不会造成网络之间的数据混合。对于宽依赖的RDD，则通常伴随着Shuffle操作，即首先需要计算好所有父分区数据，然后在节点之间进行Shuffle
+
+---
+
+### 阶段划分
+
+具体划分方法是：在DAG中进行反向解析，遇到宽依赖就断开，遇到窄依赖就把当前的RDD加入到当前的阶段中；将窄依赖尽量划分在同一个阶段中，可以实现流水线计算
+
+### RDD执行过程
+
+![](assets/spark/2018-11-19-22-37-00.png)
+
 ## 参考
 
 - [运用Spark进行交通数据案例分析：大型活动大规模人群的检测与疏散 - 云+社区 - 腾讯云](https://cloud.tencent.com/developer/article/1059262)
