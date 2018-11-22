@@ -69,6 +69,8 @@ Spark的设计遵循"一个软件栈满足不同应用场景"的理念, 逐渐�
 
 ## 运行
 
+scala 交互环境:
+
 ```bash
 ./bin/spark-shell --master local[2]
 ```
@@ -78,6 +80,74 @@ Spark的设计遵循"一个软件栈满足不同应用场景"的理念, 逐渐�
 ```bash
 ./bin/spark-submit examples/src/main/python/pi.py 10
 ```
+
+---
+
+python 交互环境:
+
+```bash
+./bin/pyspark --master local[4]
+```
+
+---
+
+spark独立应用编程:
+
+添加环境变量, 引入 `pyspark` 包
+
+```bash
+echo 'export SPARK_HOME=~/spark-2.4.0-bin-hadoop2.7' >> ~/.bashrc
+echo 'export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH' >>  ~/.bashrc
+source ~/.bashrc
+```
+
+添加测试代码文件:
+
+```bash
+cd ~
+vim test.py
+```
+
+```python
+from pyspark import SparkContext
+sc = SparkContext( 'local', 'test')
+logFile = "file:///home/hy/spark-2.4.0-bin-hadoop2.7/README.md"
+logData = sc.textFile(logFile, 2).cache()
+numAs = logData.filter(lambda line: 'a' in line).count()
+numBs = logData.filter(lambda line: 'b' in line).count()
+print('Lines with a: %s, Lines with b: %s' % (numAs, numBs))
+```
+
+执行结果如下:
+
+```bash
+Lines with a: 62, Lines with b: 31
+```
+
+![](assets/spark/2018-11-19-23-22-48.png)
+
+<!-- ---
+
+其中 `logFile` 是 `test.py` 所在主机的本地文件???????
+
+在windows下执行该python代码(spark还是同一个, 在linux上运行):
+
+```python
+import sys
+sys.path.append("D:/Program/spark-2.4.0-bin-hadoop2.7/python")
+sys.path.append("D:/Program/spark-2.4.0-bin-hadoop2.7/python/lib/py4j-0.10.7-src.zip")
+# windows 下配置环境变量 zip文件无法打开, 因此, 在 python代码里面添加
+
+from pyspark import SparkContext
+sc = SparkContext( 'spark://192.168.159.131:7077', 'test')
+logFile = "file:///C:/Users/qhy28/Desktop/readme.txt"
+logData = sc.textFile(logFile, 2).cache()
+numAs = logData.filter(lambda line: 'a' in line).count()
+numBs = logData.filter(lambda line: 'b' in line).count()
+print('Lines with a: %s, Lines with b: %s' % (numAs, numBs))
+```
+
+结果如下(另一个文件): -->
 
 ---
 
@@ -230,6 +300,71 @@ RDD中的依赖关系分为窄依赖（Narrow Dependency）与宽依赖（Wide D
 ### RDD执行过程
 
 ![](assets/spark/2018-11-19-22-37-00.png)
+
+## Spark SQL
+
+spark SQL的架构:
+![](assets/spark/2018-11-21-18-12-52.png)
+
+Spark SQL增加了SchemaRDD（即带有Schema信息的RDD），使用户可以在Spark SQL中执行SQL语句，数据既可以来自RDD，也可以来自Hive、HDFS、Cassandra等外部数据源，还可以是JSON格式的数据
+
+### DataFrame
+
+RDD与DataFrame的区别:
+![](assets/spark/2018-11-21-18-17-41.png)
+
+DataFrame的推出，让Spark具备了处理大规模结构化数据的能力，不仅比原有的RDD转化方式更加简单易用，而且获得了更高的计算性能。
+
+RDD是分布式的 Java对象的集合，比如，RDD[Person]是以Person为类型参数，但是，Person类的内部结构对于RDD而言却是不可知的。
+
+DataFrame是一种以RDD为基础的分布式数据集，也就是分布式的Row对象的集合（每个Row对象代表一行记录），提供了详细的结构信息，也就是我们经常说的模式（schema），Spark SQL可以清楚地知道该数据集中包含哪些列、每列的名称和类型
+
+和RDD一样，DataFrame的各种变换操作也采用惰性机制，只是记录了各种转换的逻辑转换路线图（是一个DAG图），不会发生真正的计算，这个DAG图相当于一个逻辑查询计划，最终，会被翻译成物理查询计划，生成RDD DAG
+
+## Spark MLlib
+
+通常情况下机器学习算法参数学习的过程都是迭代计算的，即本次计算的结果要作为下一次迭代的输入，这个过程中，如果使用 MapReduce，我们只能把中间结果存储磁盘，然后在下一次计算的时候从新读取，这对于迭代 频发的算法显然是致命的性能瓶颈。
+
+Spark 立足于内存计算，天然的适应于迭代式计算。
+
+Spark提供了一个基于海量数据的机器学习库，它提供了常用机器学习算法的分布式实现，开发者只需要有 Spark 基础并且了解机器学习算法的原理，以及方法相关参数的含义，就可以轻松的通过调用相应的 API 来实现基于海量数据的机器学习过程。
+
+其次，Spark-Shell的即席查询也是一个关键。算法工程师可以边写代码边运行，边看结果。
+
+MLlib由一些通用的学习算法和工具组成，包括分类、回归、聚类、协同过滤、降维等，同时还包括底层的优化原语和高层的管道API。具体来说，其主要包括以下几方面的内容：
+
+1. 算法工具：常用的学习算法，如分类、回归、聚类和协同过滤；
+2. 特征化工具：特征提取、转化、降维，和选择工具；
+3. 管道(Pipeline)：用于构建、评估和调整机器学习管道的工具;
+4. 持久性：保存和加载算法，模型和管道;
+5. 实用工具：线性代数，统计，数据处理等工具。
+
+部分已包含的算法:
+![](assets/spark/2018-11-21-18-29-26.png)
+
+## Spark Streaming
+
+流计算图示:
+![](assets/spark/2018-11-21-18-36-32.png)
+
+* 数据实时采集：数据实时采集阶段通常采集多个数据源的海量数据，需要保证实时性、低延迟与稳定可靠。
+* 数据实时计算：流处理系统接收数据采集系统不断发来的实时数据，实时地进行分析计算，并反馈实时结果。
+* 实时查询服务：流计算的第三个阶段是实时查询服务，经由流计算框架得出的结果可供用户进行实时查询、展示或储存。
+
+Spark Streaming是构建在Spark上的实时计算框架，它扩展了Spark处理大规模流式数据的能力。Spark Streaming可结合批处理和交互查询，适合一些需要对历史数据和实时数据进行结合分析的应用场景。
+
+![](assets/spark/2018-11-21-18-31-46.png)
+
+Spark Streaming的基本原理是将实时输入数据流以时间片（秒级）为单位进行拆分，然后经Spark引擎以类似批处理的方式处理每个时间片数据，执行流程如下图所示。
+
+![](assets/spark/2018-11-21-18-32-26.png)
+
+Spark Streaming和Storm最大的区别在于，Spark Streaming无法实现毫秒级的流计算，而Storm可以实现毫秒级响应。
+Spark Streaming无法实现毫秒级的流计算，是因为其将流数据按批处理窗口大小（通常在0.5~2秒之间）分解为一系列批处理作业，在这个过程中，会产生多个Spark 作业，且每一段数据的处理都会经过Spark DAG图分解、任务调度过程
+
+Spark Streaming构建在Spark上，一方面是因为Spark的低延迟执行引擎（100毫秒左右）可以用于实时计算，另一方面，相比于Storm，RDD数据集更容易做高效的容错处理
+
+Spark Streaming采用的小批量处理的方式使得它可以同时兼容批量和实时数据处理的逻辑和算法，因此，方便了一些需要历史数据和实时数据联合分析的特定应用场合
 
 ## 参考
 
