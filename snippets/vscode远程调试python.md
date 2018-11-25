@@ -141,7 +141,7 @@
             {
                 "label": "start bind",
                 "type": "shell",
-                "command": "ssh 192.168.159.131 -l hy \"python -m ptvsd --wait --host 192.168.159.131 --port 3000 /home/hy/python/${relativeFile}\"&"
+                "command": "ssh 192.168.159.131 -l hy \"python -m ptvsd --wait --host 192.168.159.131 --port 3000 /home/hy/python/${relativeFile} 1>/dev/null 2>&1\"&"
             }
         ]
     }
