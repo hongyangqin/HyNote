@@ -56,7 +56,7 @@
 6. 调试
     下断点, `F5` 进行调试
 
-## 自动同步
+## 自动同步 `vscode-remote-workspace`
 
 前4步的安装一样, 后面配置同步
 
@@ -97,6 +97,66 @@
     2. 远程进入 "等待绑定状态"
     ![](assets/vscodeyuanchengtiaoshipython/2018-11-25-16-34-34.png)
     ![](assets/vscodeyuanchengtiaoshipython/2018-11-25-16-34-52.png)
+    也可以在控制台ssh到远程电脑
 
     3. 启动调试
     ![](assets/vscodeyuanchengtiaoshipython/2018-11-25-16-35-19.png)
+
+但此方法还有一些不足, 比如在本地不知道这个目录所在的临时文件夹在哪, 比如 无法添加 `.vscode` 文件夹, 因为添加后, 由于目录不在本地, 无法识别(会提示 `Error: No search provider registered for scheme: sftp`, 因此, 很多功能受限, 比如无法搜索, 无法创建task).
+
+至少 在当前插件的版本`v0.37.0`中还没有解决这个问题.
+
+## samba 同步文件夹
+
+1. ubuntu: 安装 `samba`
+    ```bash
+    sudo apt-get install samba
+    ```
+
+2. ubuntu: 配置文件
+    ```bash
+    sudo cp  /etc/samba/smb.conf  /etc/samba/smb.conf.bak
+    sudo echo "[python]
+    path = /home/hy/python
+    writeable = yes
+    browseable = yes
+    guest ok = yes" >> /etc/samba/smb.conf
+    ```
+    <!-- sudo /etc/init.d/samba restart -->
+
+3. windows: 右键开始菜单->运行->`gpedit.msc`->计算机配置-管理模板-网络-lanman工作站-启用不安全的来宾登陆
+    ![](assets/vscodeyuanchengtiaoshipython/2018-11-25-19-17-33.png)
+
+4. windows: 我的电脑->右键:网络->映射网络驱动器->`\\192.168.159.131\python`
+    ![](assets/vscodeyuanchengtiaoshipython/2018-11-25-19-18-51.png)
+
+5. 其他操作和最开始的`手动同步 + 配置`一样
+
+6. 添加task, 避免手动ssh进入等待连接状态(预先配置免密登陆)
+    创建 `.vscode/task.json`, 并添加以下内容:
+    ```json
+    {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "start bind",
+                "type": "shell",
+                "command": "ssh 192.168.159.131 -l hy \"python -m ptvsd --wait --host 192.168.159.131 --port 3000 /home/hy/python/${relativeFile}\"&"
+            }
+        ]
+    }
+    ```
+    `launch.json`添加`preLaunchTask`
+    ```json
+    {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                ...
+                "preLaunchTask": "start bind"
+            }
+        ]
+    }
+    ```
+
+    自此, `F5` 即可直接调试
