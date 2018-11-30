@@ -58,6 +58,20 @@
 
     ![](assets/Sparksqlfangwenhbase/2018-11-30-15-52-26.png)
 
+6. 写操作:
+    ```python
+    # 写入, 更新直接写即可
+    # df=sc.parallelize([('title1', 'author1'), ('b', 'authorb')]).toDF(schema=['title', 'author'])
+    df=sc.parallelize([ Row(title='title1', author='author1'), Row(title='b', author='authorb')]).toDF()
+    df.write.format('org.apache.hadoop.hbase.spark') \
+        .option('hbase.table','books') \
+        .option('hbase.columns.mapping', \
+                'title STRING :key, \
+                author STRING info:author') \
+        .option('hbase.spark.use.hbasecontext', False) \
+        .save()
+    ```
+
 ---
 
 ## 探索过程
