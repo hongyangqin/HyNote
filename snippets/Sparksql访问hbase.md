@@ -379,6 +379,44 @@ df = sqlc.read.format('org.apache.hadoop.hbase.spark') \
 
 ---
 
+在读取hbase的表格后, 进行条件查询时, 会提示 `NoSuchMethodError: org.apache.hadoop.hbase.util.ByteStringer.wrap`
+
+```java
+py4j.protocol.Py4JJavaError: An error occurred while calling o31.showString.
+: java.lang.NoSuchMethodError: org.apache.hadoop.hbase.util.ByteStringer.wrap([B)Lcom/google/protobuf/ByteString;
+        at org.apache.hadoop.hbase.spark.SparkSQLPushDownFilter.toByteArray(SparkSQLPushDownFilter.java:259)
+```
+
+代码如下:
+
+```python
+df = sqlc.read.xxx
+df.where("title = 'b'").show()
+```
+
+猜测还是版本问题, 查找 [protobuf][21] 版本:
+
+```xml
+<!--Internally we use a different version of protobuf. See hbase-protocol-shaded-->
+<external.protobuf.version>2.5.0</external.protobuf.version>
+```
+
+根据注释, 查看 `hbase-protocol-shaded` 内的 [`protobuf`][22] 版本:
+
+```xml
+<internal.protobuf.version>3.5.1-1</internal.protobuf.version>
+```
+
+直接修改`pom.xml`的版本后重新编译 hbase connector
+
+```xml
+
+```
+
+运行 `python test.py`
+
+---
+
 后续: 关于那个 `map` 的配置, 也就是 spark dataframe 的列 和 hbase 的列对应的方式, 应该还可以通过定义 `catalog` 这种方式传参, 这样就和 hbase 的文档的写一致(文档的代码是scala的)
 
 ```scala
@@ -486,3 +524,7 @@ def apply(params: Map[String, String]): HBaseTableCatalog = {
 [19]: https://blog.csdn.net/strongyoung88/article/details/52197522
 
 [20]: https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-using-spark-query-hbase
+
+[21]:https://github.com/apache/hbase-connectors/blob/825f8abaaa0fed7c1c428cd712f4d1efdbe3b59b/pom.xml#L137
+
+[22]:https://github.com/apache/hbase/blob/rel/2.1.1/hbase-protocol-shaded/pom.xml#L39
