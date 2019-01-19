@@ -200,3 +200,206 @@ bool isSameType(T &a, U& b) {
 	return (std::type_index(typeid(typename T)) == std::type_index(typeid(typename U)));
 }
 ```
+
+## 初始化
+
+初始化的3种格式:
+
+```c++
+( expression-list )
+= expression
+{ initializer-list }
+```
+
+---
+
+- 默认初始化
+    不使用初始化器构造变量时执行的初始化。
+
+    语法:
+    ```cpp
+    T object;
+    new T;
+    new T ( ); (C++03 前)
+    ```
+    非类类型的值时不确定的, 比如 int的变量的值是随机的一个数字, `new T ( );` 在c++03以前被归为默认初始化, 后考虑为值初始化
+    对于类类型, 则调用默认构造函数进行初始化
+
+- 零初始化
+    ```
+    cpp
+    static T object ;   (1.)
+    T () ;              (2.)(C++11 起)
+    T t = {} ;          (2.)(C++11 起)
+    T {} ;              (2.)(C++11 起)
+    CharT array [ n ] = "";	(3.)
+    ```
+    对比默认初始化, 进行零初始化后的值时确定的
+
+    零初始化时机:
+    1. 静态变量的初始化
+    2. 作为非类类型值初始化序列和无默认构造函数的类类型成员的值初始化序列的一部分，包含未提供初始化器的聚合体元素的值初始化。(类类型包含的是隐式的默认构造函数, 先零初始化, 再进行默认初始化)
+    3. 以较短的字符串字面量初始化任何字符类型数组时，零初始化数组的剩余部分
+
+---
+
+- 值初始化
+    语法:
+    ```cpp
+    T();	(1)
+    new T ();	(2)
+    Class::Class(...) : member() { ... }	(3)
+    T object {};	(4)	(C++11 起)
+    T{};	(5)	(C++11 起)
+    new T {};	(6)	(C++11 起)
+    Class::Class(...) : member{} { ... }	(7)	(C++11 起)
+    ```
+
+    值初始化: 以空初始化器构造时进行的初始化(这里应该是显示调用的空初始化构造器, 比如`int n{}`, 而不是指 `int n`, 后者指的是默认初始化), 此时会调用对应类类型的默认构造函数, 非类类型则是零初始化
+    > 也就是调用无参数的构造函数(默认构造函数)
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <vector>
+
+    struct T1 {
+        int mem1;
+        std::string mem2;
+    };  // 隐式默认构造函数
+
+    struct T2 {
+        int mem1;
+        std::string mem2;
+        T2(const T2&) {}  // 用户提供的复制构造函数
+    };                    // 无默认构造函数
+
+    struct T3 {
+        int mem1;
+        std::string mem2;
+        T3() {}  // 用户提供的默认构造函数
+    };
+
+    std::string s{};  // 类 => 默认初始化，值为 ""
+
+    int main() {
+        int n{};                 // 标量 => 零初始化，值为 0
+        double f = double();     // 标量 => 零初始化，值为 0.0
+        int* a = new int[10]();  // 数组 => 每个元素的值初始化
+                                //          每个元素的值为 0
+        T1 t1{};                 // 有隐式默认构造函数的类 =>
+                                //     t1.mem1 被零初始化，值为 0
+                                //     t1.mem2 被默认初始化，值为 ""
+        //  T2 t2{};                // 错误：类无默认构造函数
+        T3 t3{};                // 有用户提供默认构造函数的类 =>
+                                //     t3.mem1 被默认初始化为不确定值
+                                //     t3.mem2 被默认初始化，值为 ""
+        std::vector<int> v(3);  // 值初始化每个元素
+                                // 每个元素的值为 0
+        std::cout << s.size() << ' ' << n << ' ' << f << ' ' << a[9] << ' ' << v[2]
+                << '\n';
+        std::cout << t1.mem1 << ' ' << t3.mem1 << '\n';
+        delete[] a;
+    }
+    ```
+
+    注意: `int a();` 这个形式不是初始化语句, 而是一个函数的声明式;
+
+- 直接初始化
+    从构造函数参数的显式集合初始化对象。
+
+    语法:
+    ```cpp
+    T object ( arg );
+    T object ( arg1, arg2, ... );    (1)
+    T object { arg };	(2)	(C++11 起)
+    T ( other )
+    T ( arg1, arg2, ... )    (3)
+    static_cast< T >( other )	(4)
+    new T(args, ...)	(5)
+    Class::Class() : member(args, ...) { ... }	(6)
+    [arg](){ ... }	(7)	(C++11 起)
+    ```
+    > 同样 语法 (1) （带圆括号）的变量声明和函数声明之间有歧义的情况下，编译器始终选择函数声明。
+
+    调用时机:
+    1. 参数类型和构造函数参数类型一直
+    2. 同1
+    3. 包含隐式转换
+    4. `static_cast`
+    5. new 时
+    6. 类成员初始化时给
+    7. lambda 表达式
+
+- 复制初始化
+    ```cpp
+    T object = other;	(1)
+    T object = {other} ;	(2)	(C++11 前)
+    f(other)	(3)
+    return other;	(4)
+    throw object;
+    catch (T object) (5)
+    T array[N] = {other};	(6)
+    ```
+    1. 等号
+    2. 带花括号, 此类从 C++11开始被划分为列表初始化
+    3. 按值传递参数
+    4. 函数返回值
+    5. 以值抛出或捕获异常
+    6. 作为聚合初始化的一部分
+
+- 列表初始化
+    从花括号初始化器列表初始化对象
+
+    直接列表初始化
+    ```cpp
+    T object { arg1, arg2, ... };	(1)
+    T { arg1, arg2, ... }	(2)
+    new T { arg1, arg2, ... }	(3)
+    Class { T member { arg1, arg2, ... }; };	(4)
+    Class::Class() : member{arg1, arg2, ...} {...	(5)
+    ```
+    复制列表初始化
+    ```cpp
+    T object = {arg1, arg2, ...};	(6)
+    function( { arg1, arg2, ... } )	(7)
+    return { arg1, arg2, ... } ;	(8)
+    object[ { arg1, arg2, ... } ]	(9)
+    object = { arg1, arg2, ... }	(10)
+    U( { arg1, arg2, ... } )	(11)
+    Class { T member = { arg1, arg2, ... }; };	(12)
+    ```
+
+- 聚合初始化
+    ```cpp
+    T object = {arg1, arg2, ...};	(1)
+    T object {arg1, arg2, ...};	(2)	(C++11 起)
+    T object = { .designator = arg1 , .designator { arg2 } ... };	(3)	(C++20 起)
+    T object { .designator = arg1 , .designator { arg2 } ... };	(4)	(C++20 起)
+    ```
+- 引用初始化
+    ```cpp
+    T & ref = object ;
+    T & ref = { arg1, arg2, ... };
+    T & ref ( object ) ;
+    T & ref { arg1, arg2, ... } ;    (1)
+
+    T && ref = object ;
+    T && ref = { arg1, arg2, ... };
+    T && ref ( object ) ;
+    T && ref { arg1, arg2, ... } ;    (2)	(C++11 起)
+
+    给定 R fn ( T & arg ); 或 R fn ( T && arg );
+    fn ( object )
+    fn ( { arg1, arg2, ... } )    (3)
+
+    T & fn () 或 T && fn () 内
+    return object ;    (4)
+
+    给定 Class 内的 T & ref ; 或 T && ref ;
+    Class::Class(...) : ref( object) {...}    (5)
+    ```
+
+详见: [初始化 - cppreference.com]
+
+[初始化 - cppreference.com]:https://zh.cppreference.com/w/cpp/language/initialization
