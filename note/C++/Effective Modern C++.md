@@ -157,6 +157,7 @@ int x4{27};
 ```
 
 对于此种语法:
+
 ```cpp
 auto x3 = {27}; //型别是 std::initializer_list<int>
 auto x4{27};
@@ -168,11 +169,93 @@ auto x4{27};
 2. `std::initializer_list<T>`中`T`的模板型别推导
 
 若`{}`内型别不一致, 即
+
 ```cpp
 auto x = {1.0,2}
 ```
+
 则 `T`的推导失败
 
 ---
 
 C++14中, 允许使用 `auto` 来说明函数的返回值需要推导, 此时 `auto` 的用法是在使用模板型别推导而非 `auto` 型别推导
+
+### decltype
+
+`decltype`(declared type): 返回给定的名字或表达式的确切型别, 在C++11中主要用于声明返回值依赖于形参型别的 **函数模板**
+
+- 对于型别为`T`的左值**表达式**, 除非该表达式仅有一个名字, `decltype`总是得到型别 `T&`
+
+---
+返回值型别尾序语法(trailing return type syntax):
+
+```cpp
+template <typename Container, typename Index>
+auto authAndAccess(Container& c, Index i) -> decltype(c[i]) {
+    // auth...
+    return c[i];
+}
+```
+
+此种方式可以使用函数形参来指定返回值型别(因为`c[i]`要出现在`c`和`i`的后面)
+
+---
+在C++14中可以去掉返回值型别尾序语法
+
+```cpp
+//这个不是我们想要的
+template <typename Container, typename Index>
+auto authAndAccess(Container& c, Index i) {
+    // auth...
+    return c[i];
+}
+```
+
+这个语法和我们的期望是不同的, 我们期望返回的是和`c[i]`完全相同的型别, 比如`int&`, 原本带有`decltype`尾序语法可以达到目的,
+而上述的代码则仅仅按照模板型别推导来推导类型, 此时会忽略类型的引用性, 即返回的不会是 `int`
+因而, 就无法有以下赋值用法: `authAndAccess(v, 0) = 1;`
+
+要达到上述目的, C++14的语法应该如下:
+
+```cpp
+template <typename Container, typename Index>
+decltype(auto) authAndAccess(Container& c, Index i) {
+    // auth...
+    return c[i];
+}
+```
+
+使用`decltype(auto)`替换`auto`, `auto`表明需要进行型别推导, `decltype`则表明使用 `decltype` 的推导规则来进行型别推导
+
+---
+
+不过, 形参部分`Container& c`也意味着无法向该函数传递右值容器, 右值是不能保定到左值引用的.
+
+即不支持以下用法:
+
+```cpp
+//authAndAccess(vector<int>(), 0); //error
+```
+
+因此考虑万能引用`&&`, 同时对万能引用要应用`std::forward`, 因此:
+
+```cpp
+template <typename Container, typename Index>
+decltype(auto) authAndAccess(Container&& c, Index i) {
+    // auth...
+    return std::forward<Container>(c)[i];
+}
+```
+
+---
+
+对于`int x = 0;`, `decltype(x)` 是 `int`, 但对于一个更复杂的表达式`(x)`(该表达式的值是`int`), `decltype( (x) )`的结果是 `int&`
+
+因此, 可能会导致返回一个局部变量的引用的错误:
+
+```cpp
+decltype(auto) f() {
+    int x;
+    return (x);//`decltype( (x) )`的结果是 `int&`, 所以f返回的是 int&
+}
+```
