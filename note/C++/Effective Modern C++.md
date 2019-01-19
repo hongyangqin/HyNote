@@ -9,7 +9,7 @@
 > , 并增加了两套规则, 一套用于 `auto`, 一套用于 `decltype`
 > C++14又扩展了能够运用 `auto` 和 `decltype` 的语境
 
-### 型别推导理解
+### 模板型别推导理解
 
 函数模板基本形式:
 
@@ -142,3 +142,37 @@ const char *ptrToName = name;       //数组退化成指针
     > 该函数声明为 `constexpr`, 能够使得其返回值在编译期间就可用.
 
     函数型别也同样会退化函数指针, 和数组类似.
+
+### auto 型别推导
+
+为auto推导型别, 除了在一个例外情况, 其余和为模板推导型别一模一样
+
+区别: `auto` 会嘉定用大括号括起来的初始化表达式代表一个`std::initializer_list`, 但模板却不会
+
+C++ 11 为了支持统一初始化(uniform initialization), 增加了下面的语法选项:
+
+```cpp
+int x3 = {27};
+int x4{27};
+```
+
+对于此种语法:
+```cpp
+auto x3 = {27}; //型别是 std::initializer_list<int>
+auto x4{27};
+```
+
+此处包含两重推导,
+
+1. auto关于`{}`的推导: `std::initializer_list<T>`
+2. `std::initializer_list<T>`中`T`的模板型别推导
+
+若`{}`内型别不一致, 即
+```cpp
+auto x = {1.0,2}
+```
+则 `T`的推导失败
+
+---
+
+C++14中, 允许使用 `auto` 来说明函数的返回值需要推导, 此时 `auto` 的用法是在使用模板型别推导而非 `auto` 型别推导
