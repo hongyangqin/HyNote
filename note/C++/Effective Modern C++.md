@@ -259,3 +259,25 @@ decltype(auto) f() {
     return (x);//`decltype( (x) )`的结果是 `int&`, 所以f返回的是 int&
 }
 ```
+
+![](assets/EffectiveModernC++/2019-01-19-19-23-21.png)
+
+### 如何查看型别推导的结果?
+
+IDE编辑器: 把鼠标指针悬停到某个程序实体, 如变量、形参、函数等
+![](assets/EffectiveModernC++/2019-01-19-19-20-25.png)
+
+---
+
+编译器诊断信息:
+
+1. 声明一个类模板, 但不去定义它
+    ```cpp
+    template<typename T> class TD;
+    ```
+
+2. 结合`decltype`试图具现该模板, 然后诱发一个错误消息, 原因是找不到具体模板的定义
+    ```cpp
+    TD<decltype(authAndAccess(v, 0))> vType;
+    ```
+    ![](assets/EffectiveModernC++/2019-01-19-19-26-19.png)
