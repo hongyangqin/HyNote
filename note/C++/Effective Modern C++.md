@@ -281,3 +281,50 @@ IDE编辑器: 把鼠标指针悬停到某个程序实体, 如变量、形参、�
     TD<decltype(authAndAccess(v, 0))> vType;
     ```
     ![](assets/EffectiveModernC++/2019-01-19-19-26-19.png)
+
+## auto
+
+使用 `auto` 可以少打一些字, 同时还能阻止那些由于手动执行型别带来的潜在错误和性能问题, 但, 某些 auto 型别推导结果尽管是按部就班地符合标准规定的推导算法, 然而从程序员的视角来看却是错误的, 此时需要正确地引导 auto 得到正确结果
+
+---
+
+优先使用 `auto` 而非显示型别声明
+
+看以下代码:
+
+```cpp
+std::unordered_map<std::string, int> m;
+for (const std::pair<std::string, int> &p : m) {
+    //实际这里不是引用, 还是会每次都复制一份
+    //...
+}
+```
+
+m的一个元素实际上是 `std::pair<const std::string, int>`, 因此, 通过一次复制操作, 把`std::pair<const std::string, int>`(哈希表中的元素)对象转换成`std::pair<const std::string, int>`(p的型别)
+
+但使用`auto`可以轻松化解该问题
+
+```cpp
+for (const auto &p : m) {
+    //...
+}
+```
+
+---
+
+当 `auto` 推导的型别不符合要求时, 使用带显式型别的初始化物习惯用法
+
+看以下代码:
+
+```cpp
+vector<bool> vb;
+auto flag = vb[5];
+```
+
+`flag` 的型别是 `std::_Bit_reference` 而不是我们所期望的 `bool`
+> 对于其他型别`T`, 比如`int`, `vector` 的 `operator[]` 操作总是返回 `T&`(auto推导出为`T`)
+> 而唯独 `bool` 不是, `vector` 对 `bool` 类型作了特化, 采用 `bit` 数组来表示真假, 而不是采用 `bool` 数组
+
+因为对`vector`对`bool`的特化实现, 导致了`auto`并不是我们所期望的`bool`
+
+在 `bool` 这个例子中, 真正的危害是`flag`可能包含一个空悬的指针, 从而导致未定义的行为.
