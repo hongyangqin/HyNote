@@ -365,3 +365,38 @@ int z {0};
 ---
 
 优先使用 `nullptr` 而非 `0` 或 `NULL`
+
+因为`0`和`NULL`都不具备指针型别, 在指针型别和整数之间进行重载时可能会发生意外(C++98), 使用 `nullptr`而非`0`和`NULL`就避免了重载决议中的意外, 但这不是它仅有的有点, 它还可以提高代码的清晰性.
+
+指导原则: 不要在指针型别和整型之间做重载(C++98, C++11)
+
+---
+
+优先使用别名声明(`using`), 而非`typedef`
+
+别名声明处理设计函数指针的型别时, 比较容易理解:
+
+```cpp
+typedef void (*FP)(int, const std::string&);
+using FP = void (*)(int, const std::string&);
+```
+
+压倒性的理由是: 别名声明可以模板化(别名模板), 而`typedef`不行
+
+```cpp
+template<typename T>
+using MyAllocList = std::list<T>;
+```
+
+使用 `typedef` 的话需要嵌套在`struct`里的`typedef`才能实现:
+
+```cpp
+template <typename T>
+struct MyAllocList {
+    typedef std::list<T> type;
+};
+
+MyAllocList<int>::type w;//在模板里面则需要在前面添加 typename
+```
+
+别名模板可以让人免写`::type`, 并且在模板内, 对于内嵌`typedef`的引用经常要求加上`typename`前缀
