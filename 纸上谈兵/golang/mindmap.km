@@ -1,0 +1,293 @@
+{
+    "root": {
+        "data": {
+            "id": "cb09pee3v4o0",
+            "created": 1619705569369,
+            "text": "golang"
+        },
+        "children": [
+            {
+                "data": {
+                    "id": "cb09pg6bt0o0",
+                    "created": 1619705573252,
+                    "text": "strings字符串"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb09pinqcm00",
+                            "created": 1619705578658,
+                            "text": "split"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cb09plypr940",
+                                    "created": 1619705585852,
+                                    "text": "按空白字符分割"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "cb09px4suoo0",
+                                            "created": 1619705610165,
+                                            "text": "strings.Fields"
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "data": {
+                                    "id": "cb09puk37o80",
+                                    "created": 1619705604559,
+                                    "text": "正则分割"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "cb09q27azjc0",
+                                            "created": 1619705621200,
+                                            "text": "regexp.MustCompile(\"[0-9]\").Split"
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "cb09qpamvzc0",
+                            "created": 1619705671467,
+                            "text": "文章"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cb09r42in600",
+                                    "created": 1619705703628,
+                                    "text": "Splitting a String into a Slice in Golang | by Lane Wagner | Qvault | Apr, 2021 | Medium ",
+                                    "hyperlink": "https://medium.com/qvault/splitting-a-string-into-a-slice-in-golang-f179e72e0c84",
+                                    "hyperlinkTitle": ""
+                                },
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb09rv80h4g0",
+                    "created": 1619705762734,
+                    "text": "设计模式"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb09s5wbe2g0",
+                            "created": 1619705785971,
+                            "text": "options模式"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb09spmmm5c0",
+                    "created": 1619705828921,
+                    "text": "问题分析"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb09srmscmg0",
+                            "created": 1619705833284,
+                            "text": "sync.once"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb0bggtqqiw0",
+                    "created": 1619710511610,
+                    "text": "gracefule shutdown",
+                    "layout_right_offset": {
+                        "x": -1,
+                        "y": -2
+                    }
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb0bglkrcgw0",
+                            "created": 1619710521951,
+                            "text": "signal"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cb0bgsx06tk0",
+                                    "created": 1619710537929,
+                                    "text": "signal term"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cb0bgwuti2g0",
+                                    "created": 1619710546504,
+                                    "text": "signal int"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "cb0birdsmvk0",
+                                            "created": 1619710691319,
+                                            "text": "一般由用户事件触发, 比如ctrl+c"
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "cb0bhhuufc80",
+                            "created": 1619710592218,
+                            "text": "处理: 监听两个signal, 然后进行回收工作, 回收工作再加上context超时"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cb0bijd0b8o0",
+                            "created": 1619710673857,
+                            "text": "Graceful shutdown in Go | by Emre Tanriverdi | Medium ",
+                            "hyperlink": "https://emretanriverdi.medium.com/graceful-shutdown-in-go-c106fe1a99d9",
+                            "hyperlinkTitle": ""
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb0c9j0qwg00",
+                    "created": 1619712788948,
+                    "text": "闭包"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb0c9sfvr480",
+                            "created": 1619712809454,
+                            "text": "通过函数对象的方式来达到c++函数中静态变量的效果",
+                            "note": "```\nfunc fibonacci() func() int {\n first := 0\n second := 1\n f := func() int {\n   sum := first + second\n   first, second = second, sum\n   return sum\n  }\n return f\n}\n```\n"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb0cei4iojc0",
+                    "created": 1619713178820,
+                    "text": "mock"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb0cleqz53c0",
+                            "created": 1619713720020,
+                            "text": "当需要mock一个结构的方法时, 可以通过设置函数字段比如updatefunc的方式来达到mock的目的",
+                            "note": "```\ntype MockDataPersistence struct {\n SaveDataFunc func(string, string) error // mock时替换这个值\n}\n// SaveData just calls the parameter SaveDataFunc\nfunc (mdp MockDataPersistence) SaveData(key, value string) error {\n return mdp.SaveDataFunc(key, value)\n}\n```"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cb0clz6eqjc0",
+                                    "created": 1619713764489,
+                                    "text": "参考: k8s job controller的update函数(没记错的话)"
+                                },
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb0cel016340",
+                    "created": 1619713185079,
+                    "text": "打印变量和名字 "
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb0cf3tk7lk0",
+                            "created": 1619713226047,
+                            "text": "通过%+v打印, 即增加个加号即可",
+                            "note": "```\nfmt.Printf(\"%+v\", structToDisplay)\n\n// {Value1:first value Value2:2}\n```"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cb0cg72zja80",
+                            "created": 1619713311511,
+                            "text": "%#v, 类似%+v",
+                            "note": "```\nfmt.Printf(\"%#v\", structToDisplay)\n\n//main.MyStruct{Value1:\"first value\", Value2:2}\n```"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb0ci6eh4yo0",
+                    "created": 1619713466757,
+                    "text": "itoa"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb0ci8209s00",
+                            "created": 1619713470357,
+                            "text": "在const块下, 用于常量计数递增",
+                            "note": "```\ntype PossibleStates int\nconst (\n State1 PossibleStates = iota\n State2\n State3\n)\n```"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb0cj2kv2000",
+                    "created": 1619713536800,
+                    "text": "文章"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb0cj5sn42w0",
+                            "created": 1619713543801,
+                            "text": "8 coding hacks for Go that I wish I’d known when I started | by Andrew Hayes | Level Up Coding",
+                            "hyperlink": "https://levelup.gitconnected.com/8-code-hacks-for-go-that-i-wish-id-known-when-i-started-56a6f4399acf",
+                            "hyperlinkTitle": ""
+                        },
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    "template": "default",
+    "theme": "classic",
+    "version": "1.4.43"
+}
