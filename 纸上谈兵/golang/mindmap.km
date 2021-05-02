@@ -8,6 +8,212 @@
         "children": [
             {
                 "data": {
+                    "id": "cb2nu0e6s880",
+                    "created": 1619948546171,
+                    "text": "性能优化"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb2nu2vuqlc0",
+                            "created": 1619948551593,
+                            "text": "参考"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cb2nu7vi8f40",
+                                    "created": 1619948562456,
+                                    "text": "https://www.bilibili.com/medialist/play/watchlater/BV1Z64y1m7uc ",
+                                    "layout_right_offset": {
+                                        "x": 3,
+                                        "y": 0
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "cb2nue364fk0",
+                            "created": 1619948575980,
+                            "text": "latency numbers "
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cb2p115a1iw0",
+                                    "created": 1619951917469,
+                                    "text": "https://colin-scott.github.io/personal_website/research/interactive_latency.html"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "cb2o0xy7oyg0",
+                            "created": 1619949089401,
+                            "text": "USE方法"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cb2ny8oqy600",
+                                    "created": 1619948877681,
+                                    "text": "是什么?"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "cb2nyb9k4rs0",
+                                            "created": 1619948883293,
+                                            "text": "利用率 Utilization"
+                                        },
+                                        "children": []
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "cb2nye1ycug0",
+                                            "created": 1619948889363,
+                                            "text": "饱和度 Saturation"
+                                        },
+                                        "children": []
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "cb2nyf8m30w0",
+                                            "created": 1619948891943,
+                                            "text": "错误 Errors"
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "data": {
+                                    "id": "cb2o13myxzs0",
+                                    "created": 1619949101782,
+                                    "text": "有什么用?"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "cb2o15vz0400",
+                            "created": 1619949106680,
+                            "text": "RED方法"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cb2nzu8yr3s0",
+                                    "created": 1619949002980,
+                                    "text": "是什么?"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "cb2o06pbt7c0",
+                                            "created": 1619949030091,
+                                            "text": "request rate"
+                                        },
+                                        "children": []
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "cb2o0cjxnio0",
+                                            "created": 1619949042825,
+                                            "text": "error"
+                                        },
+                                        "children": []
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "cb2o099ugwo0",
+                                            "created": 1619949035685,
+                                            "text": "durations"
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "data": {
+                                    "id": "cb2o20lkuhs0",
+                                    "created": 1619949173532,
+                                    "text": "有什么用?"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "cb2o222iw600",
+                                            "created": 1619949176733,
+                                            "text": "通过不断阶梯加压来测试系统的瓶颈, 再针对瓶颈做benchmark"
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "cb2o5hn57ls0",
+                            "created": 1619949445724,
+                            "text": "工具"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cb2o5l1fmps0",
+                                    "created": 1619949453118,
+                                    "text": "pprof"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cb2o5mprlw00",
+                                    "created": 1619949456767,
+                                    "text": "fgprof"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cb2o5osvqs80",
+                                    "created": 1619949461308,
+                                    "text": "trace"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cb2o5s4twe00",
+                                    "created": 1619949468561,
+                                    "text": "perf"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "cb2o5tww9t40",
+                                            "created": 1619949472435,
+                                            "text": "外部工具"
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "data": {
                     "id": "cb09pg6bt0o0",
                     "created": 1619705573252,
                     "text": "strings字符串"
