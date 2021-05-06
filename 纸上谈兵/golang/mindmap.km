@@ -490,6 +490,49 @@
                         "children": []
                     }
                 ]
+            },
+            {
+                "data": {
+                    "id": "cb6940py5cw0",
+                    "created": 1620313253702,
+                    "text": "json"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb6941gpcnc0",
+                            "created": 1620313255320,
+                            "text": "直接json.Marshal即可解析到struct成json字符串"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cb694vp1owg0",
+                                    "created": 1620313321128,
+                                    "text": "前提是struct内的属性是大写导出的"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cb69591kh600",
+                                    "created": 1620313350183,
+                                    "text": "可通过属性后边增加 `json:\"new_name\"`的方式来自定义导出json时的字段的名字"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "cb6966t1nfs0",
+                                            "created": 1620313423679,
+                                            "text": "TODO: 确认gin bind req的时候, 是否不再需要限制地指定json?"
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
