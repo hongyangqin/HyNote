@@ -1,0 +1,118 @@
+{
+    "root": {
+        "data": {
+            "id": "cb8q2gm7kxc0",
+            "created": 1620564210358,
+            "text": "区块链"
+        },
+        "children": [
+            {
+                "data": {
+                    "id": "cb8q2ksudeo0",
+                    "created": 1620564219466,
+                    "text": "文章"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb8q2o4zcco0",
+                            "created": 1620564226731,
+                            "text": "区块链应用开发技术思考及探索",
+                            "hyperlink": "https://www.infoq.cn/article/LbWi78VJpA4ztp8GG8Ja?utm_source=rss&utm_medium=article",
+                            "hyperlinkTitle": "区块链应用开发技术思考及探索"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb8q7flnvvs0",
+                    "created": 1620564599969,
+                    "text": "特点",
+                    "expandState": "expand"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb8q5phrweo0",
+                            "created": 1620564464774,
+                            "text": "修改必须达成全局共识，才能在区块链中生效",
+                            "expandState": "expand"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cb8q6c158mw0",
+                            "created": 1620564513834,
+                            "text": "据难篡改，全程可追溯，全网透明"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb8q7c28pi80",
+                    "created": 1620564592264,
+                    "text": "使用"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb8q7qex7fk0",
+                            "created": 1620564623506,
+                            "text": "多方联盟管理区块链, 避免单点进行信息篡改, 区块上信息具有高度的可信度, 可用于司法等场景"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cb8qamgtxew0",
+                            "created": 1620564850007,
+                            "text": "也可由多方联盟提供公证服务, 第三方可加入, 一旦数据上链, 三方自己也无法篡改数据"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb8q95lbifk0",
+                    "created": 1620564734909,
+                    "text": "数据膨胀"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cb8q96xomeg0",
+                            "created": 1620564737833,
+                            "text": "减小数据规模"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cb8q9fbmwoo0",
+                            "created": 1620564756091,
+                            "text": "去掉非必需数据"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cb8q9e38r200",
+                    "created": 1620564753407,
+                    "text": "跨链"
+                },
+                "children": []
+            }
+        ]
+    },
+    "template": "default",
+    "theme": "fresh-blue",
+    "version": "1.4.43"
+}
