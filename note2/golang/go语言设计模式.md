@@ -235,3 +235,31 @@ func getInstance() *single {
 
 1 once的逻辑和第一段代码类似, 还是由double check的步骤,只是通过unit32来记录运行状态以及atomic.LoadUint32/atomic.StoreUint32来进行读写
 2 第一段代码无法保证赋值后第一行singleInstance == nil为true, 但是atomic可以, 但是lock可以保证只创建一次(即第二行singleInstance == nil一定为true)
+
+## 责任链模式
+
+handler 链状调用
+
+注: 下面代码需要手动实例化每个handler再setNext
+
+参考gin: register方法统一注册hanler(setNext), handler实际是函数不需要实例化这种方式更灵活一些
+
+```
+package main
+
+func main() {
+    cashier := &cashier{}
+    //Set next for medical department
+    medical := &medical{}
+    medical.setNext(cashier)
+    //Set next for doctor department
+    doctor := &doctor{}
+    doctor.setNext(medical)
+    //Set next for reception department
+    reception := &reception{}
+    reception.setNext(doctor)
+    patient := &patient{name: "abc"}
+    //Patient visiting
+    reception.execute(patient)
+}
+```
