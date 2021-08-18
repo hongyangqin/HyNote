@@ -263,3 +263,54 @@ func main() {
     reception.execute(patient)
 }
 ```
+
+## 命令模式
+
+![image](https://user-images.githubusercontent.com/17291060/129844679-32439519-e0b6-4560-b36d-d759421a8fad.png)
+
+`invoker.action() -> command.execute() -> recevier.do()`
+
+1. 多个地方触发同一个command
+2. command对revevier做二次封装, 比如延迟调用等
+3. recevier只实现核心的逻辑
+
+本质就是通过抽象接口解耦对象的关联以达到逻辑分离和代码复用的目的
+
+```
+type device interface {
+    on()
+    off()
+}
+func (c *onCommand) execute() {
+    c.device.on()
+}
+func (c *offCommand) execute() {
+    c.device.off()
+}
+type offCommand struct {
+    device device
+}
+type command interface {
+    execute()
+}
+func (b *button) press() {
+    b.command.execute()
+}
+func main() {
+    tv := &tv{}
+    onCommand := &onCommand{
+        device: tv,
+    }
+    offCommand := &offCommand{
+        device: tv,
+    }
+    onButton := &button{
+        command: onCommand,
+    }
+    onButton.press()
+    offButton := &button{
+        command: offCommand,
+    }
+    offButton.press()
+}
+```
