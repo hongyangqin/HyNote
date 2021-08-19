@@ -314,3 +314,39 @@ func main() {
     offButton.press()
 }
 ```
+
+## 迭代器模式
+
+对于集合对象, 创建迭代器对象, 通过迭代器接口协议遍历集合元素, 屏蔽集合的实现逻辑, 从而达到 具体算法与集合对象实现的解耦
+
+```
+type iterator interface {
+    hasNext() bool
+    getNext() *user
+}
+```
+
+```
+package main
+
+import "fmt"
+
+func main() {
+    user1 := &user{
+        name: "a",
+        age:  30,
+    }
+    user2 := &user{
+        name: "b",
+        age:  20,
+    }
+    userCollection := &userCollection{
+        users: []*user{user1, user2},
+    }
+    iterator := userCollection.createIterator()
+    for iterator.hasNext() {
+        user := iterator.getNext()
+        fmt.Printf("User is %+v\n", user)
+    }
+}
+```
