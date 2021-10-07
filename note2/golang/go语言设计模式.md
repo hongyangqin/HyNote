@@ -235,3 +235,162 @@ func getInstance() *single {
 
 1 once的逻辑和第一段代码类似, 还是由double check的步骤,只是通过unit32来记录运行状态以及atomic.LoadUint32/atomic.StoreUint32来进行读写
 2 第一段代码无法保证赋值后第一行singleInstance == nil为true, 但是atomic可以, 但是lock可以保证只创建一次(即第二行singleInstance == nil一定为true)
+
+## 责任链模式
+
+handler 链状调用
+
+注: 下面代码需要手动实例化每个handler再setNext
+
+参考gin: register方法统一注册hanler(setNext), handler实际是函数不需要实例化这种方式更灵活一些
+
+```
+package main
+
+func main() {
+    cashier := &cashier{}
+    //Set next for medical department
+    medical := &medical{}
+    medical.setNext(cashier)
+    //Set next for doctor department
+    doctor := &doctor{}
+    doctor.setNext(medical)
+    //Set next for reception department
+    reception := &reception{}
+    reception.setNext(doctor)
+    patient := &patient{name: "abc"}
+    //Patient visiting
+    reception.execute(patient)
+}
+```
+
+## 命令模式
+
+![image](https://user-images.githubusercontent.com/17291060/129844679-32439519-e0b6-4560-b36d-d759421a8fad.png)
+
+`invoker.action() -> command.execute() -> recevier.do()`
+
+1. 多个地方触发同一个command
+2. command对revevier做二次封装, 比如延迟调用等
+3. recevier只实现核心的逻辑
+
+本质就是通过抽象接口解耦对象的关联以达到逻辑分离和代码复用的目的
+
+```
+type device interface {
+    on()
+    off()
+}
+func (c *onCommand) execute() {
+    c.device.on()
+}
+func (c *offCommand) execute() {
+    c.device.off()
+}
+type offCommand struct {
+    device device
+}
+type command interface {
+    execute()
+}
+func (b *button) press() {
+    b.command.execute()
+}
+func main() {
+    tv := &tv{}
+    onCommand := &onCommand{
+        device: tv,
+    }
+    offCommand := &offCommand{
+        device: tv,
+    }
+    onButton := &button{
+        command: onCommand,
+    }
+    onButton.press()
+    offButton := &button{
+        command: offCommand,
+    }
+    offButton.press()
+}
+```
+
+## 迭代器模式
+
+对于集合对象, 创建迭代器对象, 通过迭代器接口协议遍历集合元素, 屏蔽集合的实现逻辑, 从而达到 具体算法与集合对象实现的解耦
+
+```
+type iterator interface {
+    hasNext() bool
+    getNext() *user
+}
+```
+
+```
+package main
+
+import "fmt"
+
+func main() {
+    user1 := &user{
+        name: "a",
+        age:  30,
+    }
+    user2 := &user{
+        name: "b",
+        age:  20,
+    }
+    userCollection := &userCollection{
+        users: []*user{user1, user2},
+    }
+    iterator := userCollection.createIterator()
+    for iterator.hasNext() {
+        user := iterator.getNext()
+        fmt.Printf("User is %+v\n", user)
+    }
+}
+```
+
+## 中介者模式
+
+使用中介者处理对象之间的交互, 达到对象之间解耦的效果
+
+## 备忘录模式
+
+备忘录模式（Memento Pattern）保存一个对象的某个状态，以便在适当的时候恢复对象。
+
+## 空对象模式
+
+使用一个空对象, 来避免对null的检查
+
+## 观察者模式
+
+定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新。
+
+不能循环依赖, 链式触发时, 应避免整个系统被阻塞
+
+## 状态模式
+
+使用状态机来避免条件语句, 关键的是状态机怎么实现以及多个任务共享同一个状态机怎么实现
+
+## 策略模式
+
+实现策略类来控制同一个对象的不同表现
+
+## 模板模式
+
+使用模板类封装整体的动作, 而在子类里边实现不同的具体动作
+
+## 访问者模式
+
+```
+type rectangle struct {
+}
+
+func (t *rectangle) accept(v visitor) {
+    v.visitForrectangle(t)
+}
+```
+
+提供`accept`方法, 具体动作由visitor实现, 从而达到不修改接口本身扩栈该接口方法的效果(通过实现不同的visitor)
+场景: 结构不变, 但是在结构上定义的操作经常改变
